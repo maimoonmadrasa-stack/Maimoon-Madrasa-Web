@@ -3532,7 +3532,14 @@ let DB = {
           { merge: true }
         );
         closeEditMarks(); 
-        renderResults();
+        // Refresh the list for the current class instead of going back to class selection
+        if (DB.currentUser.role === 'teacher' && resultSelectedCls) {
+          loadResultClass(resultSelectedCls);
+        } else if (DB.currentUser.role === 'admin' && resultSelectedCls) {
+          loadAdminResultClass(resultSelectedCls);
+        } else {
+          renderResults();
+        }
       } catch(e) {
         console.error("Error saving marks to database:", e);
         alert("Failed to save marks. Check database connection.");
