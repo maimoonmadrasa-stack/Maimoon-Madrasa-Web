@@ -2,12 +2,10 @@
 <html lang="en" data-theme="dark">
 
 <head>
-  <script>
-    if (localStorage.getItem('madrasa_uid')) {
-      document.documentElement.style.display = 'none';
-      window.madrasa_auto_logging_in = true;
-    }
-  </script>
+  <style>
+    /* Prevent initial white flash before compiled CSS loads */
+    html { background: #090e1a; color: #e8f0ff; }
+  </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maimoon Madrasa — Academic Portal</title>
@@ -1978,6 +1976,23 @@
 </head>
 
 <body>
+  <!-- AUTO LOGIN SPINNER -->
+  <div id="global-loader" style="display: none; position: fixed; inset: 0; background: #090e1a; z-index: 99999; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-family: sans-serif; transition: opacity 0.5s ease;">
+    <style>
+      .gl-spinner { width: 42px; height: 42px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: #3b82f6; border-radius: 50%; animation: gl-spin 1s linear infinite; margin-bottom: 24px; }
+      @keyframes gl-spin { to { transform: rotate(360deg); } }
+      body.auto-logging-in > *:not(#global-loader) { display: none !important; }
+    </style>
+    <div class="gl-spinner"></div>
+    <div style="font-weight:700;font-size:20px;letter-spacing:1px;font-family:'Cinzel', serif;">MAIMOON MADRASA</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:8px;">Connecting securely...</div>
+  </div>
+  <script>
+    if (localStorage.getItem('madrasa_uid')) {
+      document.body.classList.add('auto-logging-in');
+      document.getElementById('global-loader').style.display = 'flex';
+    }
+  </script>
   <div class="bg-orbs">
     <div class="orb orb1"></div>
     <div class="orb orb2"></div>
@@ -2680,11 +2695,15 @@ let DB = {
           } else {
             localStorage.removeItem('madrasa_uid');
             document.documentElement.style.display = '';
+            document.body.classList.remove('auto-logging-in');
+            const gl = document.getElementById('global-loader'); if(gl) gl.style.display = 'none';
             if (loginBtn) { loginBtn.disabled = false; loginBtn.innerHTML = 'Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>'; }
           }
         }).catch(e => {
           console.error('Session restore error:', e);
           document.documentElement.style.display = '';
+          document.body.classList.remove('auto-logging-in');
+          const gl = document.getElementById('global-loader'); if(gl) gl.style.display = 'none';
           if (loginBtn) { loginBtn.disabled = false; loginBtn.innerHTML = 'Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>'; }
         });
       }
@@ -2750,22 +2769,59 @@ let DB = {
           DB.nextUserId = sysData.nextUserId || 1;
         }
 
-        const usersSnap = await db.collection('users').get();
-        DB.users = usersSnap.docs.map(d => d.data());
+        window.firebaseUnlisteners = window.firebaseUnlisteners || [];
+        
+        let initialLoadComplete = false;
+        await Promise.all([
+          new Promise(resolve => {
+            window.firebaseUnlisteners.push(db.collection('users').onSnapshot(snap => {
+              DB.users = snap.docs.map(d => d.data());
+              if (initialLoadComplete) { 
+                renderOverview(); 
+                if (u.role === 'admin') { renderUsers(); renderMembersList(); renderControlCenter(); } 
+              }
+              resolve();
+            }));
+          }),
+          new Promise(resolve => {
+            window.firebaseUnlisteners.push(db.collection('attendance').onSnapshot(snap => {
+              DB.attendance = {};
+              snap.docs.forEach(d => DB.attendance[d.id] = d.data());
+              if (initialLoadComplete) {
+                if (!DB.attendance[u.id] && u.role === 'student') DB.attendance[u.id] = { days: [] };
+                renderOverview(); renderAttendance();
+              }
+              resolve();
+            }));
+          }),
+          new Promise(resolve => {
+            window.firebaseUnlisteners.push(db.collection('results').onSnapshot(snap => {
+              DB.results = {};
+              snap.docs.forEach(d => DB.results[d.id] = d.data());
+              if (initialLoadComplete) {
+                if (!DB.results[u.id] && u.role === 'student') DB.results[u.id] = { quarterly: [], halfYearly: [], final: [], model: [], public: [] };
+                renderOverview(); renderResults();
+              }
+              resolve();
+            }));
+          }),
+          new Promise(resolve => {
+            window.firebaseUnlisteners.push(db.collection('quizzes').onSnapshot(snap => {
+              DB.quizzes = snap.docs.map(d => d.data());
+              if (initialLoadComplete) { renderOverview(); renderQuiz(); }
+              resolve();
+            }));
+          }),
+          new Promise(resolve => {
+            window.firebaseUnlisteners.push(db.collection('announcements').onSnapshot(snap => {
+              DB.announcements = snap.docs.map(d => d.data());
+              if (initialLoadComplete) { renderOverview(); renderAnnouncements(); }
+              resolve();
+            }));
+          })
+        ]);
 
-        const attSnap = await db.collection('attendance').get();
-        DB.attendance = {};
-        attSnap.docs.forEach(d => DB.attendance[d.id] = d.data());
-
-        const resSnap = await db.collection('results').get();
-        DB.results = {};
-        resSnap.docs.forEach(d => DB.results[d.id] = d.data());
-
-        const quizSnap = await db.collection('quizzes').get();
-        DB.quizzes = quizSnap.docs.map(d => d.data());
-
-        const annSnap = await db.collection('announcements').get();
-        DB.announcements = annSnap.docs.map(d => d.data());
+        initialLoadComplete = true;
 
         // Update UI
         document.getElementById('sideAvatar').textContent = u.name.charAt(0).toUpperCase();
@@ -2786,12 +2842,26 @@ let DB = {
         alert('Failed to load application data. Check console.');
       } finally {
         document.documentElement.style.display = '';
+        const gl = document.getElementById('global-loader');
+        if (gl && gl.style.display !== 'none') {
+          gl.style.opacity = '0';
+          setTimeout(() => {
+            document.body.classList.remove('auto-logging-in');
+            gl.style.display = 'none';
+          }, 500);
+        } else {
+          document.body.classList.remove('auto-logging-in');
+        }
         btn.disabled = false;
         btn.innerHTML = 'Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>';
       }
     }
 
     function doLogout() {
+      if (window.firebaseUnlisteners) {
+        window.firebaseUnlisteners.forEach(unsub => unsub());
+        window.firebaseUnlisteners = [];
+      }
       localStorage.removeItem('madrasa_uid');
       closeSidebar();
       DB.currentUser = null; showPage('landingPage');
@@ -2840,7 +2910,8 @@ let DB = {
         cards = `<div class="stat-card glass blue"><div class="stat-card-label">Attendance</div><div class="stat-card-value">${pct}%</div><div class="progress-bar" style="margin-top:10px"><div class="progress-fill" style="width:${pct}%"></div></div><svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
     <div class="stat-card glass"><div class="stat-card-label">Quarterly Avg</div><div class="stat-card-value" style="color:${qAvg >= 60 ? '#22c55e' : '#ef4444'}">${qAvg || '—'}${qAvg ? '%' : ''}</div></div>
     <div class="stat-card glass"><div class="stat-card-label">Quizzes Done</div><div class="stat-card-value">${quizCount}</div></div>`;
-        panel = `<div class="panel-header"><div class="panel-title">Recent Announcements</div></div>${DB.announcements.slice(0, 2).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} · ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div></div>`).join('')}`;
+        panel = `<div class="panel-header"><div class="panel-title">Recent Announcements</div></div>${[...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 2).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} · ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div></div>`).join('')}`;
+        panel += renderTop3Rankers(u.standard, currentResultTab, u.id);
       } else if (u.role === 'teacher') {
         document.getElementById('overviewSub').textContent = 'Assigned: ' + u.assignedClasses.map(c => 'Class ' + c).join(', ');
         const myS = DB.users.filter(s => s.role === 'student' && u.assignedClasses.includes(s.standard));
@@ -3206,10 +3277,16 @@ let DB = {
         const hasM = res.length > 0;
         const total = res.filter(r => !r.absent).reduce((a, b) => a + (b.marks || 0), 0);
         const max = res.reduce((a, b) => a + (b.max || 100), 0);
-        return `<div class="user-row"><div class="user-meta">
-      <div class="avatar" style="width:34px;height:34px;font-size:12px;background:${s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)'}">${s.name.charAt(0)}</div>
-      <div><div style="font-size:13px;font-weight:600">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">${hasM ? total + "/" + max + " marks" : "No marks yet"}</div></div>
-    </div><span class="badge ${hasM ? 'badge-green' : 'badge-yellow'}">${hasM ? "Entered" : "Pending"}</span></div>`;
+        return `<div class="class-label-btn" onclick="this.nextElementSibling.classList.toggle('open');this.classList.toggle('open')">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="avatar" style="width:28px;height:28px;font-size:10px;background:${s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)'}">${s.name.charAt(0)}</div>
+            <div>${s.name} <span style="font-size:11px;color:var(--text-muted);font-weight:400;margin-left:6px">${hasM ? total + "/" + max + " marks" : "No marks"}</span></div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="class-content">
+          ${hasM ? renderExamData(res, s.standard) : '<div style="text-align:center;font-size:12px;color:var(--text-muted);padding:10px">Marks not published.</div>'}
+        </div>`;
       }).join('')}</div>`;
     }
 
@@ -3256,6 +3333,39 @@ let DB = {
       </tr>`;
       }).join('')}</tbody>
   </table></div>`;
+    }
+
+    function renderTop3Rankers(std, examType, myId) {
+      const classStudents = DB.users.filter(s => s.role === 'student' && s.standard === std);
+      if (!classStudents.length) return '';
+      const ranked = classStudents.map(s => {
+        const res = (DB.results[s.id] || {})[examType] || [];
+        const total = res.filter(r => !r.absent).reduce((a, b) => a + (b.marks || 0), 0);
+        return { ...s, total, hasMarks: res.length > 0 };
+      }).filter(s => s.hasMarks).sort((a, b) => b.total - a.total).slice(0, 3);
+      
+      if (!ranked.length) return '';
+      const label = examType === 'halfYearly' ? '2nd Term' : examType === 'final' ? 'Final Exam' : examType === 'public' ? 'Public Exam' : '1st Term';
+      
+      return `
+      <div class="panel-header" style="margin-top:24px"><div class="panel-title">Top Rankers</div><span class="badge badge-yellow">${label}</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px">
+        ${ranked.map((s, i) => {
+          const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
+          const isMe = s.id === myId;
+          const borderC = i === 0 ? 'rgba(234,179,8,0.4)' : i === 1 ? 'rgba(200,200,200,0.4)' : 'rgba(251,146,60,0.4)';
+          const bgC = isMe ? 'rgba(59,130,246,0.1)' : 'var(--surface)';
+          const badge = isMe ? '<div style="position:absolute;top:-6px;right:-6px;background:var(--blue);color:#fff;font-size:9px;padding:2px 6px;border-radius:20px;font-weight:700;box-shadow:0 2px 6px var(--blue-glow)">You</div>' : '';
+          const avatarBg = s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)';
+          return `<div class="glass" style="padding:16px;border-radius:12px;text-align:center;border:1px solid ${borderC};background:${bgC};position:relative">
+            ${badge}
+            <div style="font-size:24px;margin-bottom:8px">${medal}</div>
+            <div class="avatar" style="width:40px;height:40px;margin:0 auto 10px;font-size:14px;background:${avatarBg}">${s.name.charAt(0)}</div>
+            <div style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.name}</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px">${s.total} Marks</div>
+          </div>`;
+        }).join('')}
+      </div>`;
     }
     function showStudentMarkDetail(sid, examType) {
       const s = DB.users.find(u => u.id === sid); if (!s) return;
