@@ -2656,7 +2656,10 @@ let DB = {
     document.addEventListener('DOMContentLoaded', function () {
       const btn = document.getElementById('themeToggle');
       if (btn) btn.addEventListener('click', toggleTheme);
-      
+    });
+
+    // AUTO LOGIN CHECK
+    function checkAutoLogin() {
       const savedUid = localStorage.getItem('madrasa_uid');
       if (savedUid) {
         const loginBtn = document.querySelector('.login-card .btn-primary');
@@ -2677,7 +2680,9 @@ let DB = {
           if (loginBtn) { loginBtn.disabled = false; loginBtn.innerHTML = 'Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>'; }
         });
       }
-    });
+    }
+    // Run the check slightly delayed to ensure Firebase is ready, or hook it to window.onload
+    window.addEventListener('load', checkAutoLogin);
 
     // LOGIN
     document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
