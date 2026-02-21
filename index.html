@@ -2340,15 +2340,7 @@
           <input type="password" class="form-input" id="loginPass" placeholder="Enter password">
           <div class="form-error" id="loginError"></div>
         </div>
-        <div class="info-strip" style="margin-bottom:20px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="8" x2="12" y2="12" />
-            <line x1="12" y1="16" x2="12.01" y2="16" />
-          </svg>
-          Demo: admin/demo123 &middot; ustha1/demo123 &middot; student1/demo123
-        </div>
-        <button class="btn btn-primary" id="loginSubmitBtn" style="width:100%;justify-content:center;padding:14px;margin-bottom:10px" onclick="doLogin()">
+        <button class="btn btn-primary" id="loginSubmitBtn" style="width:100%;justify-content:center;padding:14px;margin-bottom:10px;margin-top:20px;" onclick="doLogin()">
           Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
             <line x1="5" y1="12" x2="19" y2="12" />
@@ -2689,10 +2681,12 @@ let DB = {
       const dk = document.getElementById('toggleKnob'); if (dk) dk.style.transform = isDark ? '' : 'translateX(24px)';
       const li = document.getElementById('themeIconLanding'); if (li) li.innerHTML = iconHtml;
       const lk = document.getElementById('toggleKnobLanding'); if (lk) lk.style.transform = isDark ? '' : 'translateX(24px)';
+      localStorage.setItem('madrasa_theme', isDark ? 'dark' : 'light');
     }
     document.addEventListener('DOMContentLoaded', function () {
       const btn = document.getElementById('themeToggle');
       if (btn) btn.addEventListener('click', toggleTheme);
+      if (localStorage.getItem('madrasa_theme') === 'light') toggleTheme();
     });
 
     // AUTO LOGIN CHECK
@@ -2793,8 +2787,7 @@ let DB = {
             window.firebaseUnlisteners.push(db.collection('users').onSnapshot(snap => {
               DB.users = snap.docs.map(d => d.data());
               if (initialLoadComplete) { 
-                renderOverview(); 
-                if (u.role === 'admin') { renderUsers(); renderMembersList(); renderControlCenter(); } 
+                renderActiveSectionGently(); 
               }
               resolve();
             }));
@@ -2805,7 +2798,7 @@ let DB = {
               snap.docs.forEach(d => DB.attendance[d.id] = d.data());
               if (initialLoadComplete) {
                 if (!DB.attendance[u.id] && u.role === 'student') DB.attendance[u.id] = { days: [] };
-                renderOverview(); renderAttendance();
+                renderActiveSectionGently();
               }
               resolve();
             }));
@@ -2816,7 +2809,7 @@ let DB = {
               snap.docs.forEach(d => DB.results[d.id] = d.data());
               if (initialLoadComplete) {
                 if (!DB.results[u.id] && u.role === 'student') DB.results[u.id] = { quarterly: [], halfYearly: [], final: [], model: [], public: [] };
-                renderOverview(); renderResults();
+                renderActiveSectionGently();
               }
               resolve();
             }));
@@ -2824,14 +2817,14 @@ let DB = {
           new Promise(resolve => {
             window.firebaseUnlisteners.push(db.collection('quizzes').onSnapshot(snap => {
               DB.quizzes = snap.docs.map(d => d.data());
-              if (initialLoadComplete) { renderOverview(); renderQuiz(); }
+              if (initialLoadComplete) { renderActiveSectionGently(); }
               resolve();
             }));
           }),
           new Promise(resolve => {
             window.firebaseUnlisteners.push(db.collection('announcements').onSnapshot(snap => {
               DB.announcements = snap.docs.map(d => d.data());
-              if (initialLoadComplete) { renderOverview(); renderAnnouncements(); }
+              if (initialLoadComplete) { renderActiveSectionGently(); }
               resolve();
             }));
           })
