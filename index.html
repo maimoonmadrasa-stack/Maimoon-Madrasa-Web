@@ -1407,6 +1407,18 @@
       .user-actions {
         gap: 6px;
       }
+      
+      /* Form Actions (Modals) */
+      .form-actions {
+        flex-direction: column-reverse;
+        gap: 8px;
+        margin-top: 20px;
+      }
+      
+      .form-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
 
       /* Sidebar */
       .sidebar {
@@ -3024,13 +3036,11 @@ let DB = {
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">${ac.map(cls => `<button class="btn btn-ghost" onclick="loadAttendanceClass(${cls},0)" style="justify-content:center;padding:16px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Class ${cls}</button>`).join('')}</div></div>
     </div>
     <div id="attOverviewSection" style="display:none">${renderTeacherYearOverview(ac)}</div>`;
-      } else {
         el.innerHTML = `<div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Click a class to view its attendance records.</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttClass(${cls})" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttClass(${cls}, 0)" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
     <div id="adminAttClassContent"></div>`;
       }
     }
-    let _attCls = null;
     function switchAttMode(mode, btn) {
       document.querySelectorAll('#attModeTabs .tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
@@ -3072,6 +3082,7 @@ let DB = {
     }
     function loadAttendanceClass(cls, dateOffset) {
       _attCls = cls;
+      _attClsOffset = dateOffset || 0;
       const today = new Date();
       const offset = dateOffset || 0;
       today.setDate(today.getDate() + offset);
@@ -3149,13 +3160,17 @@ let DB = {
           st.className = 'badge ' + (status === 'P' ? 'badge-green' : status === 'A' ? 'badge-red' : 'badge-yellow');
           st.textContent = status === 'P' ? 'Present' : status === 'A' ? 'Absent' : 'Not Marked';
         }
-        renderOverview();
+        
+        // Re-render other components if needed, but don't reset the full overview 
+        // because it closes the current attendance panel
       } catch (e) {
         console.error("Error updating attendance:", e);
         alert("Failed to save attendance to the database.");
       }
     }
     function loadAdminAttClass(cls, dateOffset) {
+      _adminAttCls = cls;
+      _adminAttOffset = dateOffset || 0;
       const students = DB.users.filter(s => s.role === 'student' && s.standard === cls);
       const el = document.getElementById('adminAttClassContent');
       if (!students.length) { el.innerHTML = `<div class="info-strip">No students in Class ${cls}.</div>`; return; }
@@ -3249,6 +3264,7 @@ let DB = {
     }
 
     function loadAdminResultClass(cls) {
+      resultSelectedCls = cls;
       const students = [...DB.users.filter(s => s.role === 'student' && s.standard === cls && s.gender === 'male'), ...DB.users.filter(s => s.role === 'student' && s.standard === cls && s.gender === 'female')];
       const etabs = [{ key: 'quarterly', label: '1st Term' }, { key: 'halfYearly', label: '2nd Term' }, isPublicClass(cls) ? { key: 'public', label: 'Public Exam' } : { key: 'final', label: 'Final Exam' }];
       if (!etabs.find(t => t.key === teacherResultTab)) teacherResultTab = 'quarterly';
