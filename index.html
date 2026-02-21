@@ -1993,7 +1993,7 @@
 
 <body>
   <!-- AUTO LOGIN SPINNER -->
-  <div id="global-loader" style="display: none; position: fixed; inset: 0; background: #090e1a; z-index: 99999; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-family: sans-serif; transition: opacity 0.5s ease;">
+  <div id="global-loader" style="display: none; position: fixed; inset: 0; background: var(--bg, #090e1a); z-index: 99999; flex-direction: column; align-items: center; justify-content: center; color: var(--text, #fff); font-family: sans-serif; transition: opacity 0.5s ease;">
     <style>
       .gl-spinner { width: 42px; height: 42px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: #3b82f6; border-radius: 50%; animation: gl-spin 1s linear infinite; margin-bottom: 24px; }
       @keyframes gl-spin { to { transform: rotate(360deg); } }
@@ -2001,9 +2001,12 @@
     </style>
     <div class="gl-spinner"></div>
     <div style="font-weight:700;font-size:20px;letter-spacing:1px;font-family:'Cinzel', serif;">MAIMOON MADRASA</div>
-    <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:8px;">Connecting securely...</div>
+    <div style="font-size:13px;color:rgba(150,150,150,0.8);margin-top:8px;">Connecting securely...</div>
   </div>
   <script>
+    if (localStorage.getItem('madrasa_theme') === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
     if (localStorage.getItem('madrasa_uid')) {
       document.body.classList.add('auto-logging-in');
       document.getElementById('global-loader').style.display = 'flex';
@@ -3219,6 +3222,15 @@ let DB = {
     let currentResultTab = 'quarterly';
     let teacherResultTab = 'quarterly';
     let resultSelectedCls = null;
+    let teacherEditMode = false;
+    
+    function toggleTeacherEditMode(isChecked) {
+      teacherEditMode = isChecked;
+      if (resultSelectedCls) {
+        const students = [...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'male'), ...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'female')];
+        renderTeacherResultList(teacherResultTab, students, resultSelectedCls, 'teacher');
+      }
+    }
 
     function renderResults() {
       const u = DB.currentUser;
@@ -3434,8 +3446,12 @@ let DB = {
       // Check if this exam type is open for editing (Control Center)
       const isOpen = DB.examSessions && DB.examSessions[examType] !== false;
       if (!fs.length) { el.innerHTML = `<div class="info-strip">No students eligible for ${label} in Class ${cls}.</div>`; return; }
-      el.innerHTML = `<div class="panel glass"><div class="panel-header"><div class="panel-title">Class ${cls} — ${label}</div>
-    ${!isOpen ? '<span class="badge badge-red">Editing Closed</span>' : '<span class="badge badge-green">Editing Open</span>'}
+      el.innerHTML = `<div class="panel glass"><div class="panel-header" style="align-items:center;">
+      <div><div class="panel-title">Class ${cls} — ${label}</div>
+    ${!isOpen ? '<span class="badge badge-red">Editing Closed</span>' : '<span class="badge badge-green">Editing Open</span>'}</div>
+    ${isOpen ? `<label style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;cursor:pointer;background:var(--surface);padding:6px 14px;border-radius:20px;border:1px solid ${teacherEditMode ? 'var(--blue)' : 'var(--border)'}">
+      <input type="checkbox" onchange="toggleTeacherEditMode(this.checked)" ${teacherEditMode ? 'checked' : ''}> Edit Mode
+    </label>` : ''}
   </div>
   <div style="position:relative;margin-bottom:14px">
     <input type="text" class="form-input" id="marksSearch" placeholder="Search student..." oninput="filterMarksSearch()" style="padding-left:38px;font-size:12px">
@@ -3453,10 +3469,14 @@ let DB = {
     </div>
     <div class="user-actions">
       <span class="badge ${hasM ? 'badge-green' : 'badge-yellow'}">${hasM ? 'Entered' : 'Pending'}</span>
-      <button class="btn ${isOpen ? 'btn-ghost' : 'btn-danger'}" onclick="if(${isOpen ? 'true' : 'false'})openEditMarks(${s.id},'${examType}')" style="padding:6px 14px;font-size:11px;${!isOpen ? 'opacity:0.45;cursor:not-allowed;' : ''}" ${!isOpen ? 'disabled' : ''}>
+      ${teacherEditMode && isOpen ? `
+      <button class="btn btn-ghost" onclick="openEditMarks(${s.id},'${examType}')" style="padding:6px 14px;font-size:11px;">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        ${isOpen ? 'Edit Marks' : 'Closed'}
-      </button>
+        Edit Marks
+      </button>` : `
+      <button class="icon-btn" onclick="showStudentMarkDetail(${s.id}, '${examType}')" title="View Marks">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>`}
     </div></div>`;
       }).join('')}
   </div></div>`;
