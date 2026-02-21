@@ -2,6 +2,12 @@
 <html lang="en" data-theme="dark">
 
 <head>
+  <script>
+    if (localStorage.getItem('madrasa_uid')) {
+      document.documentElement.style.display = 'none';
+      window.madrasa_auto_logging_in = true;
+    }
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maimoon Madrasa — Academic Portal</title>
@@ -2673,10 +2679,12 @@ let DB = {
             afterLogin();
           } else {
             localStorage.removeItem('madrasa_uid');
+            document.documentElement.style.display = '';
             if (loginBtn) { loginBtn.disabled = false; loginBtn.innerHTML = 'Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>'; }
           }
         }).catch(e => {
           console.error('Session restore error:', e);
+          document.documentElement.style.display = '';
           if (loginBtn) { loginBtn.disabled = false; loginBtn.innerHTML = 'Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>'; }
         });
       }
@@ -2777,6 +2785,7 @@ let DB = {
         console.error("Error fetching data:", e);
         alert('Failed to load application data. Check console.');
       } finally {
+        document.documentElement.style.display = '';
         btn.disabled = false;
         btn.innerHTML = 'Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>';
       }
