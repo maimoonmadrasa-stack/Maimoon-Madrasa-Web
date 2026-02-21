@@ -2656,6 +2656,27 @@ let DB = {
     document.addEventListener('DOMContentLoaded', function () {
       const btn = document.getElementById('themeToggle');
       if (btn) btn.addEventListener('click', toggleTheme);
+      
+      const savedUid = localStorage.getItem('madrasa_uid');
+      if (savedUid) {
+        const loginBtn = document.querySelector('.login-card .btn-primary');
+        if (loginBtn) {
+          loginBtn.disabled = true;
+          loginBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Resuming...';
+        }
+        db.collection('users').doc(savedUid).get().then(doc => {
+          if (doc.exists) {
+            DB.currentUser = doc.data();
+            afterLogin();
+          } else {
+            localStorage.removeItem('madrasa_uid');
+            if (loginBtn) { loginBtn.disabled = false; loginBtn.innerHTML = 'Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>'; }
+          }
+        }).catch(e => {
+          console.error('Session restore error:', e);
+          if (loginBtn) { loginBtn.disabled = false; loginBtn.innerHTML = 'Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>'; }
+        });
+      }
     });
 
     // LOGIN
@@ -2684,6 +2705,7 @@ let DB = {
         
         const userData = snapshot.docs[0].data();
         DB.currentUser = userData; 
+        localStorage.setItem('madrasa_uid', snapshot.docs[0].id);
         errEl.style.display = 'none';
         
         await afterLogin();
@@ -2756,9 +2778,12 @@ let DB = {
     }
 
     function doLogout() {
+      localStorage.removeItem('madrasa_uid');
       closeSidebar();
       DB.currentUser = null; showPage('landingPage');
       document.getElementById('loginUser').value = ''; document.getElementById('loginPass').value = ''; document.getElementById('loginError').style.display = 'none';
+      const btn = document.querySelector('.login-card .btn-primary');
+      if (btn) { btn.disabled = false; btn.innerHTML = 'Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>'; }
       document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
       document.querySelector('.sidebar-item').classList.add('active');
       document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
