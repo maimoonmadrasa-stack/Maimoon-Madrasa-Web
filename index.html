@@ -3303,6 +3303,14 @@ let DB = {
         const hasM = res.length > 0;
         const total = res.filter(r => !r.absent).reduce((a, b) => a + (b.marks || 0), 0);
         const max = res.reduce((a, b) => a + (b.max || 100), 0);
+        let passed = true;
+        const subs = DB.subjects[s.standard] || [];
+        if (hasM) {
+          for (let r of res) {
+            const si = subs.find(sb => sb.name === r.sub) || { pass: 40 };
+            if (r.absent || r.marks < si.pass) { passed = false; break; }
+          }
+        }
         return `<div class="user-row">
           <div class="user-meta">
             <div class="avatar" style="width:34px;height:34px;font-size:12px;background:${s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)'}">${s.name.charAt(0)}</div>
@@ -3312,7 +3320,7 @@ let DB = {
             </div>
           </div>
           <div class="user-actions">
-            <span class="badge ${hasM ? 'badge-green' : 'badge-yellow'}">${hasM ? 'Entered' : 'Pending'}</span>
+            ${hasM ? `<span class="badge ${passed ? 'badge-green' : 'badge-red'}">${passed ? 'Pass' : 'Fail'}</span>` : `<span class="badge badge-yellow">Pending</span>`}
             <button class="icon-btn" onclick="showStudentMarkDetail(${s.id}, '${examType}')" title="View Marks">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
@@ -3341,26 +3349,31 @@ let DB = {
         const res = (DB.results[s.id] || {})[examType] || [];
         const total = res.filter(r => !r.absent).reduce((a, b) => a + (b.marks || 0), 0);
         const max = res.reduce((a, b) => a + (b.max || 100), 0);
-        return { ...s, total, max, hasMarks: res.length > 0 };
+        let passed = true;
+        const subs = DB.subjects[std] || [];
+        for (let r of res) {
+          const si = subs.find(sb => sb.name === r.sub) || { pass: 40 };
+          if (r.absent || r.marks < si.pass) { passed = false; break; }
+        }
+        return { ...s, total, max, hasMarks: res.length > 0, passed };
       }).filter(s => s.hasMarks).sort((a, b) => b.total - a.total);
       if (!ranked.length) return '<div style="text-align:center;padding:20px;color:var(--text-dim);font-size:12px">No class results published for this exam yet.</div>';
       const label = examType === 'halfYearly' ? '2nd Term' : examType === 'final' ? 'Final Exam' : examType === 'public' ? 'Public Exam' : '1st Term';
       return `<div class="panel-header"><div class="panel-title">Class ${std} Rankings — ${label}</div><span class="badge badge-blue">${ranked.length} students</span></div>
   <div class="table-wrap"><table>
-    <thead><tr><th>Rank</th><th>Student</th><th>Score</th><th>%</th><th>Details</th></tr></thead>
+    <thead><tr><th style="padding:10px 6px">Rank</th><th style="padding:10px 6px">Student</th><th style="padding:10px 6px">Score</th><th style="padding:10px 6px">Status</th><th style="padding:10px 6px">Details</th></tr></thead>
     <tbody>${ranked.map((s, i) => {
-        const pct = s.max ? Math.round(s.total / s.max * 100) : 0;
         const isMe = s.id === myId;
         const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
         return `<tr style="${isMe ? 'background:rgba(59,130,246,0.12);font-weight:700;' : ''}">
-        <td><span style="font-weight:700;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-dim)'}">${medal}</span></td>
-        <td><div style="display:flex;align-items:center;gap:8px">
-          <div class="avatar" style="width:26px;height:26px;font-size:10px;background:${s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)'}">${s.name.charAt(0)}</div>
-          <span style="font-size:13px">${s.name}${isMe ? ' <span class="badge badge-blue" style="font-size:9px;margin-left:4px">You</span>' : ''}</span>
+        <td style="padding:10px 6px"><span style="font-weight:700;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-dim)'}">${medal}</span></td>
+        <td style="padding:10px 6px"><div style="display:flex;align-items:center;gap:6px">
+          <div class="avatar" style="width:24px;height:24px;font-size:9px;background:${s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)'}">${s.name.charAt(0)}</div>
+          <span style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px">${s.name}${isMe ? ' <span class="badge badge-blue" style="font-size:9px;margin-left:2px;padding:2px 4px">You</span>' : ''}</span>
         </div></td>
-        <td><strong style="color:var(--blue)">${s.total}/${s.max}</strong></td>
-        <td><span class="badge ${pct >= 60 ? 'badge-green' : 'badge-red'}">${pct}%</span></td>
-        <td><button class="icon-btn" onclick="showStudentMarkDetail(${s.id},'${examType}')" title="View details" style="width:26px;height:26px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+        <td style="font-size:12px;padding:10px 6px"><strong style="color:var(--blue)">${s.total}/${s.max}</strong></td>
+        <td style="padding:10px 6px"><span class="badge ${s.passed ? 'badge-green' : 'badge-red'}" style="font-size:10px;padding:4px 6px">${s.passed ? 'Pass' : 'Fail'}</span></td>
+        <td style="padding:10px 6px"><button class="icon-btn" onclick="showStudentMarkDetail(${s.id},'${examType}')" title="View details" style="width:24px;height:24px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
       </tr>`;
       }).join('')}</tbody>
   </table></div>`;
@@ -3463,17 +3476,26 @@ let DB = {
         const hasM = res.length > 0;
         const total = res.filter(r => !r.absent).reduce((a, b) => a + (b.marks || 0), 0);
         const max = res.reduce((a, b) => a + (b.max || 100), 0);
+        let passed = true;
+        const subs = DB.subjects[s.standard] || [];
+        if (hasM) {
+          for (let r of res) {
+            const si = subs.find(sb => sb.name === r.sub) || { pass: 40 };
+            if (r.absent || r.marks < si.pass) { passed = false; break; }
+          }
+        }
         return `<div class="user-row" data-name="${s.name.toLowerCase()}"><div class="user-meta">
       <div class="avatar" style="width:34px;height:34px;font-size:12px;background:${s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)'}">${s.name.charAt(0)}</div>
       <div><div style="font-size:13px;font-weight:600">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">${s.class}${hasM ? " · " + total + "/" + max + " marks" : ""}</div></div>
     </div>
     <div class="user-actions">
-      <span class="badge ${hasM ? 'badge-green' : 'badge-yellow'}">${hasM ? 'Entered' : 'Pending'}</span>
       ${teacherEditMode && isOpen ? `
+      <span class="badge ${hasM ? 'badge-green' : 'badge-yellow'}">${hasM ? 'Entered' : 'Pending'}</span>
       <button class="btn btn-ghost" onclick="openEditMarks(${s.id},'${examType}')" style="padding:6px 14px;font-size:11px;">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         Edit Marks
       </button>` : `
+      ${hasM ? `<span class="badge ${passed ? 'badge-green' : 'badge-red'}">${passed ? 'Pass' : 'Fail'}</span>` : `<span class="badge badge-yellow">Pending</span>`}
       <button class="icon-btn" onclick="showStudentMarkDetail(${s.id}, '${examType}')" title="View Marks">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       </button>`}
