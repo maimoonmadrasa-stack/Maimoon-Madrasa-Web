@@ -2826,8 +2826,7 @@ let DB = {
           new Promise(resolve => {
             window.firebaseUnlisteners.push(db.collection('announcements').onSnapshot(snap => {
               DB.announcements = snap.docs.map(d => d.data());
-              // Auto-render unless we are currently looking at announcements to avoid sudden jump/duplication
-              if (initialLoadComplete && document.querySelector('.sidebar-item[onclick*="announcements"]')?.classList.contains('active') === false) { 
+              if (initialLoadComplete) { 
                 renderActiveSectionGently(); 
               }
               resolve();
@@ -2910,6 +2909,46 @@ let DB = {
     }
 
     // OVERVIEW
+    function renderActiveSectionGently() {
+      if (!DB.currentUser) return;
+      const u = DB.currentUser;
+      const activeSec = document.querySelector('.dash-section.active');
+      if (!activeSec) return;
+      const sid = activeSec.id;
+      
+      if (sid === 'section-overview') renderOverview();
+      else if (sid === 'section-quizzes') {
+        if (u.role !== 'admin' || (!document.getElementById('quizTitle')?.value && !document.getElementById('quizSubject')?.value)) renderQuiz();
+      }
+      else if (sid === 'section-announcements') {
+        if (u.role !== 'admin' && u.role !== 'teacher') renderAnnouncements();
+        else if (!document.getElementById('annTitle')?.value && !document.getElementById('annText')?.value) renderAnnouncements();
+      }
+      else if (sid === 'section-users') {
+        if (!document.getElementById('nuName')?.value && !document.getElementById('usersSearch')?.value) renderUsers();
+      }
+      else if (sid === 'section-subjects') renderSubjects();
+      else if (sid === 'section-analytics') renderAnalytics();
+      else if (sid === 'section-members') renderMembersList();
+      else if (sid === 'section-control') renderControlCenter();
+      else if (sid === 'section-attendance') {
+        if (u.role === 'student') renderAttendance();
+      }
+      else if (sid === 'section-results') {
+        if (!document.getElementById('editMarksModal')?.classList.contains('open')) {
+          if (u.role === 'admin' && resultSelectedCls) {
+            const students = [...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'male'), ...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'female')];
+            renderAdminResultList(teacherResultTab, students, resultSelectedCls);
+          } else if (u.role === 'teacher' && resultSelectedCls) {
+            const students = [...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'male'), ...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'female')];
+            renderTeacherResultList(teacherResultTab, students, resultSelectedCls, 'teacher');
+          } else {
+            renderResults();
+          }
+        }
+      }
+    }
+
     function renderOverview() {
       const u = DB.currentUser;
       document.getElementById('overviewTitle').textContent = 'Welcome, ' + u.name.split(' ')[0] + '!';
@@ -3878,7 +3917,6 @@ let DB = {
       
       try {
         await db.collection('announcements').doc(annId.toString()).update({ title: t, text: x });
-        a.title = t; a.text = x;
         document.querySelector('[style*="position:fixed"][style*="z-index:3000"]')?.remove();
         renderAnnouncements();
       } catch(e) { console.error(e); alert("Failed to update announcement"); }
@@ -3889,7 +3927,6 @@ let DB = {
       if (idx > -1) {
         try {
           await db.collection('announcements').doc(annId.toString()).delete();
-          DB.announcements.splice(idx, 1);
           renderAnnouncements();
         } catch(e) { console.error(e); alert("Failed to delete announcement"); }
       }
@@ -3904,7 +3941,6 @@ let DB = {
       try {
         await db.collection('announcements').doc(newAnn.id.toString()).set(newAnn);
         await db.collection('system').doc('settings').update({ nextAnnouncementId: DB.nextAnnouncementId });
-        DB.announcements.unshift(newAnn);
         
         annImg = ''; document.getElementById('annTitle').value = ''; document.getElementById('annText').value = '';
         document.getElementById('annImgName').textContent = 'No image selected'; document.getElementById('annImgPreview').style.display = 'none';
