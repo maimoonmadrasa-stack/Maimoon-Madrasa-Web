@@ -2826,7 +2826,10 @@ let DB = {
           new Promise(resolve => {
             window.firebaseUnlisteners.push(db.collection('announcements').onSnapshot(snap => {
               DB.announcements = snap.docs.map(d => d.data());
-              if (initialLoadComplete) { renderActiveSectionGently(); }
+              // Auto-render unless we are currently looking at announcements to avoid sudden jump/duplication
+              if (initialLoadComplete && document.querySelector('.sidebar-item[onclick*="announcements"]')?.classList.contains('active') === false) { 
+                renderActiveSectionGently(); 
+              }
               resolve();
             }));
           })
@@ -3868,20 +3871,28 @@ let DB = {
       modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
     }
     async function saveEditAnn(annId) {
+      const a = DB.announcements.find(a => a.id === annId); if (!a) return;
       const t = document.getElementById('editAnnTitle')?.value.trim();
       const x = document.getElementById('editAnnText')?.value.trim();
       if (!t || !x) { alert('Fill all fields.'); return; }
       
       try {
         await db.collection('announcements').doc(annId.toString()).update({ title: t, text: x });
+        a.title = t; a.text = x;
         document.querySelector('[style*="position:fixed"][style*="z-index:3000"]')?.remove();
+        renderAnnouncements();
       } catch(e) { console.error(e); alert("Failed to update announcement"); }
     }
     async function deleteAnn(annId) {
       if (!confirm('Delete this announcement?')) return;
-      try {
-        await db.collection('announcements').doc(annId.toString()).delete();
-      } catch(e) { console.error(e); alert("Failed to delete announcement"); }
+      const idx = DB.announcements.findIndex(a => a.id === annId);
+      if (idx > -1) {
+        try {
+          await db.collection('announcements').doc(annId.toString()).delete();
+          DB.announcements.splice(idx, 1);
+          renderAnnouncements();
+        } catch(e) { console.error(e); alert("Failed to delete announcement"); }
+      }
     }
     async function postAnn() {
       const title = document.getElementById('annTitle').value.trim();
@@ -3893,10 +3904,12 @@ let DB = {
       try {
         await db.collection('announcements').doc(newAnn.id.toString()).set(newAnn);
         await db.collection('system').doc('settings').update({ nextAnnouncementId: DB.nextAnnouncementId });
+        DB.announcements.unshift(newAnn);
         
         annImg = ''; document.getElementById('annTitle').value = ''; document.getElementById('annText').value = '';
         document.getElementById('annImgName').textContent = 'No image selected'; document.getElementById('annImgPreview').style.display = 'none';
         if (document.getElementById('annImgInput')) document.getElementById('annImgInput').value = '';
+        renderAnnouncements();
       } catch(e) {
         console.error("Error posting announcement:", e);
         alert("Failed to post announcement");
