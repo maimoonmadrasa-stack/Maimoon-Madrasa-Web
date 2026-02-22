@@ -2819,7 +2819,7 @@ let DB = {
           new Promise(resolve => {
             window.firebaseUnlisteners.push(db.collection('quizzes').onSnapshot(snap => {
               DB.quizzes = snap.docs.map(d => d.data());
-              if (initialLoadComplete) { renderActiveSectionGently(); }
+              if (!window.isQuizLocalEdit && initialLoadComplete) { renderActiveSectionGently(); }
               resolve();
             }));
           }),
@@ -3633,6 +3633,22 @@ let DB = {
     // QUIZ
     let quizBuilderQuestions = [];
     let quizState = {};
+    
+    function getQuizHtml(q) {
+      return `<div class="user-row" id="quiz-row-${q.id}" style="transition: all 0.3s ease;">
+        <div class="user-meta">
+          <div class="avatar" id="quiz-icon-${q.id}" style="background:${q.active ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#6b7280,#4b5563)'}">Q</div>
+          <div><div style="font-size:13px;font-weight:600">${q.title}</div><div style="font-size:11px;color:var(--text-muted)">${q.questions.length} questions · ${q.subject}</div></div>
+        </div>
+        <div class="user-actions">
+          <span class="badge ${q.active ? 'badge-green' : 'badge-yellow'}" id="quiz-status-${q.id}">${q.active ? 'Active' : 'Inactive'}</span>
+          <button class="icon-btn" id="quiz-togglebtn-${q.id}" onclick="toggleQuiz(${q.id})" title="${q.active ? 'Deactivate' : 'Activate'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${q.active ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>' : '<polygon points="5 3 19 12 5 21 5 3"/>'}</svg></button>
+          <button class="icon-btn" onclick="viewQuizScores(${q.id})" title="View Scores"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button>
+          <button class="icon-btn" onclick="viewQuizQs(${q.id})" title="View Questions"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          <button class="icon-btn danger" onclick="deleteQuiz(${q.id})" title="Delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+        </div>
+      </div>`;
+    }
 
     function renderQuiz() {
       const u = DB.currentUser;
@@ -3648,7 +3664,9 @@ let DB = {
       } else if (u.role === 'teacher') {
         el.innerHTML = `<div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Only admin can create quizzes. You can view all quizzes and student scores here.</div>
     <div class="panel glass"><div class="panel-header"><div class="panel-title">All Quizzes</div></div>
-    ${DB.quizzes.length ? DB.quizzes.map(q => `<div class="user-row"><div class="user-meta"><div class="avatar" style="background:${q.active ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#6b7280,#4b5563)'}">Q</div><div><div style="font-size:13px;font-weight:600">${q.title}</div><div style="font-size:11px;color:var(--text-muted)">${q.questions.length} questions · ${q.subject}</div></div></div><div class="user-actions"><span class="badge ${q.active ? 'badge-green' : 'badge-yellow'}">${q.active ? 'Active' : 'Inactive'}</span><button class="icon-btn" onclick="viewQuizScores(${q.id})" title="Scores"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button><button class="icon-btn" onclick="viewQuizQs(${q.id})" title="View Questions"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>`).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)">No quizzes yet.</div>'}</div>`;
+    <div id="quizList">
+    ${DB.quizzes.length ? DB.quizzes.map(q => getQuizHtml(q)).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)" id="noQuizMsg">No quizzes yet.</div>'}
+    </div></div>`;
       } else {
         el.innerHTML = `<div class="panel glass" style="margin-bottom:20px"><div class="panel-header"><div class="panel-title">Create New Quiz</div></div>
       <div class="form-row" style="margin-bottom:14px">
@@ -3660,7 +3678,9 @@ let DB = {
       <button class="btn btn-primary" onclick="createQuiz()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Save Quiz</button>
     </div>
     <div class="panel glass"><div class="panel-header"><div class="panel-title">All Quizzes</div></div>
-    ${DB.quizzes.length ? DB.quizzes.map(q => `<div class="user-row"><div class="user-meta"><div class="avatar" style="background:${q.active ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#6b7280,#4b5563)'}">Q</div><div><div style="font-size:13px;font-weight:600">${q.title}</div><div style="font-size:11px;color:var(--text-muted)">${q.questions.length} questions · ${q.subject}</div></div></div><div class="user-actions"><span class="badge ${q.active ? 'badge-green' : 'badge-yellow'}">${q.active ? 'Active' : 'Inactive'}</span><button class="icon-btn" onclick="toggleQuiz(${q.id})" title="${q.active ? 'Deactivate' : 'Activate'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${q.active ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>' : '<polygon points="5 3 19 12 5 21 5 3"/>'}</svg></button><button class="icon-btn" onclick="viewQuizScores(${q.id})" title="View Scores"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button><button class="icon-btn" onclick="viewQuizQs(${q.id})" title="View Questions"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="icon-btn danger" onclick="deleteQuiz(${q.id})" title="Delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div></div>`).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)">No quizzes yet. Create your first quiz above!</div>'}</div>`;
+    <div id="quizList">
+    ${DB.quizzes.length ? DB.quizzes.map(q => getQuizHtml(q)).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)" id="noQuizMsg">No quizzes yet. Create your first quiz above!</div>'}
+    </div></div>`;
         renderBuilderQs();
       }
     }
@@ -3741,11 +3761,26 @@ let DB = {
       const nid = DB.quizzes.length ? Math.max(...DB.quizzes.map(q => q.id)) + 1 : 1;
       const newQuiz = { id: nid, title, subject, active: false, questions: quizBuilderQuestions.map(q => ({ q: q.q, opts: [...q.opts], ans: q.ans })) };
       
+      window.isQuizLocalEdit = true;
+      setTimeout(() => window.isQuizLocalEdit = false, 1000);
+      
       try {
         await db.collection('quizzes').doc(nid.toString()).set(newQuiz);
         DB.quizzes.push(newQuiz);
         quizBuilderQuestions = []; 
-        renderQuiz(); 
+        
+        ['quizTitle', 'quizSubject'].forEach(id => { const d = document.getElementById(id); if (d) d.value = ''; });
+        renderBuilderQs();
+        
+        const lst = document.getElementById('quizList');
+        const noMsg = document.getElementById('noQuizMsg');
+        if (noMsg) noMsg.remove();
+        if (lst) {
+          lst.insertAdjacentHTML('beforeend', getQuizHtml(newQuiz));
+          const el = document.getElementById(`quiz-row-${nid}`);
+          if (el) el.style.animation = 'scaleIn 0.3s ease';
+        }
+        
         alert(`Quiz "${title}" created! Activate it to make it available.`);
       } catch(e) {
         console.error("Error saving quiz:", e);
@@ -3822,10 +3857,27 @@ let DB = {
     async function toggleQuiz(qid) { 
       const q = DB.quizzes.find(q => q.id === qid); 
       if (q) { 
+        window.isQuizLocalEdit = true;
+        setTimeout(() => window.isQuizLocalEdit = false, 1000);
+        
         try {
-          await db.collection('quizzes').doc(qid.toString()).update({ active: !q.active });
-          q.active = !q.active; 
-          renderQuiz(); 
+          const newActive = !q.active;
+          await db.collection('quizzes').doc(qid.toString()).update({ active: newActive });
+          q.active = newActive; 
+          
+          const iconEl = document.getElementById(`quiz-icon-${qid}`);
+          const statusEl = document.getElementById(`quiz-status-${qid}`);
+          const btnEl = document.getElementById(`quiz-togglebtn-${qid}`);
+          
+          if (iconEl) iconEl.style.background = newActive ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#6b7280,#4b5563)';
+          if (statusEl) {
+            statusEl.className = newActive ? 'badge badge-green' : 'badge badge-yellow';
+            statusEl.textContent = newActive ? 'Active' : 'Inactive';
+          }
+          if (btnEl) {
+            btnEl.title = newActive ? 'Deactivate' : 'Activate';
+            btnEl.innerHTML = newActive ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+          }
         } catch(e) { console.error(e); alert('Failed to update quiz'); }
       } 
     }
@@ -3833,10 +3885,18 @@ let DB = {
       if (!confirm('Delete this quiz?')) return; 
       const idx = DB.quizzes.findIndex(q => q.id === qid); 
       if (idx > -1) {
+        window.isQuizLocalEdit = true;
+        setTimeout(() => window.isQuizLocalEdit = false, 1000);
         try {
           await db.collection('quizzes').doc(qid.toString()).delete();
-          DB.quizzes.splice(idx, 1); 
-          renderQuiz(); 
+          
+          const el = document.getElementById(`quiz-row-${qid}`);
+          if (el) {
+            el.style.opacity = '0';
+            el.style.transform = 'scale(0.95)';
+            el.style.pointerEvents = 'none';
+            setTimeout(() => el.remove(), 300);
+          }
         } catch(e) { console.error(e); alert('Error deleting quiz'); }
       } 
     }
