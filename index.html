@@ -2826,7 +2826,7 @@ let DB = {
           new Promise(resolve => {
             window.firebaseUnlisteners.push(db.collection('announcements').onSnapshot(snap => {
               DB.announcements = snap.docs.map(d => d.data());
-              if (initialLoadComplete) { 
+              if (!window.isAnnLocalEdit && initialLoadComplete) { 
                 renderActiveSectionGently(); 
               }
               resolve();
@@ -3843,8 +3843,24 @@ let DB = {
 
     // ANNOUNCEMENTS
     let annImg = '';
+    
+    function getAnnHtml(a) {
+      const u = DB.currentUser;
+      const canPost = u.role === 'admin' || u.role === 'teacher';
+      const canEdit = canPost && (u.role === 'admin' || a.author === u.name);
+      return `<div class="announcement glass" style="position:relative; transition: all 0.3s ease" id="ann-${a.id}">
+      <div class="announcement-meta">${a.date} · <strong>${a.author}</strong> · <span class="badge badge-blue" style="font-size:9px">${a.role}</span></div>
+      <div style="font-weight:600;margin-bottom:6px;font-size:14px" id="ann-title-${a.id}">${a.title}</div>
+      <div class="announcement-text" id="ann-text-${a.id}">${a.text}</div>
+      ${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;">` : ''}
+      ${canEdit ? `<div style="display:flex;gap:6px;margin-top:10px">
+        <button class="icon-btn" onclick="openEditAnn(${a.id})" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+        <button class="icon-btn danger" onclick="deleteAnn(${a.id})" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+      </div>`: ''}
+    </div>`;
+    }
+
     function renderAnnouncements() {
-      // ... previous implementation ...
       const u = DB.currentUser; const el = document.getElementById('announcementsContent');
       const canPost = u.role === 'admin' || u.role === 'teacher';
       el.innerHTML = `${canPost ? `<div class="panel glass" style="margin-bottom:20px"><div class="panel-header"><div class="panel-title">Post Announcement</div></div>
@@ -3861,19 +3877,9 @@ let DB = {
     <button class="btn btn-primary" onclick="postAnn()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Post</button>
   </div>`: ''}
   <div class="panel glass"><div class="panel-header"><div class="panel-title">All Announcements</div><span class="badge badge-blue">${DB.announcements.length}</span></div>
-  ${DB.announcements.length ? DB.announcements.sort((a,b)=>b.id-a.id).map(a => {
-        const canEdit = canPost && (u.role === 'admin' || a.author === u.name);
-        return `<div class="announcement glass" style="position:relative">
-      <div class="announcement-meta">${a.date} · <strong>${a.author}</strong> · <span class="badge badge-blue" style="font-size:9px">${a.role}</span></div>
-      <div style="font-weight:600;margin-bottom:6px;font-size:14px">${a.title}</div>
-      <div class="announcement-text">${a.text}</div>
-      ${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;">` : ''}
-      ${canEdit ? `<div style="display:flex;gap:6px;margin-top:10px">
-        <button class="icon-btn" onclick="openEditAnn(${a.id})" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-        <button class="icon-btn danger" onclick="deleteAnn(${a.id})" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
-      </div>`: ''}
-    </div>`;
-      }).join('') : '<div style="text-align:center;padding:30px;color:var(--text-dim);font-size:13px">No announcements yet.</div>'}
+  <div id="annList">
+  ${DB.announcements.length ? DB.announcements.sort((a,b)=>b.id-a.id).map(a => getAnnHtml(a)).join('') : '<div style="text-align:center;padding:30px;color:var(--text-dim);font-size:13px" id="noAnnMsg">No announcements yet.</div>'}
+  </div>
   </div>`;
     }
     function previewAnnImg(input) {
@@ -3893,6 +3899,7 @@ let DB = {
     function openEditAnn(annId) {
       const a = DB.announcements.find(a => a.id === annId); if (!a) return;
       const modal = document.createElement('div');
+      modal.id = 'editAnnModal';
       modal.style.cssText = 'position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);';
       modal.innerHTML = `<div style="background:var(--glass-strong);border:1px solid var(--border-bright);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;margin:20px;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:scaleIn .25s ease;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
@@ -3915,19 +3922,42 @@ let DB = {
       const x = document.getElementById('editAnnText')?.value.trim();
       if (!t || !x) { alert('Fill all fields.'); return; }
       
+      window.isAnnLocalEdit = true;
+      setTimeout(() => window.isAnnLocalEdit = false, 1000);
+      
       try {
         await db.collection('announcements').doc(annId.toString()).update({ title: t, text: x });
-        document.querySelector('[style*="position:fixed"][style*="z-index:3000"]')?.remove();
-        renderAnnouncements();
+        document.getElementById('editAnnModal')?.remove();
+        
+        // Targeted DOM update
+        const titleEl = document.getElementById(`ann-title-${annId}`);
+        const textEl = document.getElementById(`ann-text-${annId}`);
+        if(titleEl) { titleEl.textContent = t; titleEl.style.animation = 'scaleIn 0.3s ease'; }
+        if(textEl) textEl.textContent = x;
+        // Reset animation so it can play again if edited again
+        setTimeout(() => { if(titleEl) titleEl.style.animation = ''; }, 350);
+        
       } catch(e) { console.error(e); alert("Failed to update announcement"); }
     }
     async function deleteAnn(annId) {
       if (!confirm('Delete this announcement?')) return;
+      
+      window.isAnnLocalEdit = true;
+      setTimeout(() => window.isAnnLocalEdit = false, 1000);
+      
       const idx = DB.announcements.findIndex(a => a.id === annId);
       if (idx > -1) {
         try {
           await db.collection('announcements').doc(annId.toString()).delete();
-          renderAnnouncements();
+          
+          // Targeted DOM update
+          const el = document.getElementById(`ann-${annId}`);
+          if (el) {
+            el.style.opacity = '0';
+            el.style.transform = 'scale(0.95)';
+            el.style.pointerEvents = 'none';
+            setTimeout(() => el.remove(), 300);
+          }
         } catch(e) { console.error(e); alert("Failed to delete announcement"); }
       }
     }
@@ -3938,6 +3968,9 @@ let DB = {
       
       const newAnn = { id: DB.nextAnnouncementId++, title, text, date: new Date().toISOString().split('T')[0], author: DB.currentUser.name, role: DB.currentUser.role, image: annImg };
       
+      window.isAnnLocalEdit = true;
+      setTimeout(() => window.isAnnLocalEdit = false, 1000);
+      
       try {
         await db.collection('announcements').doc(newAnn.id.toString()).set(newAnn);
         await db.collection('system').doc('settings').update({ nextAnnouncementId: DB.nextAnnouncementId });
@@ -3945,7 +3978,16 @@ let DB = {
         annImg = ''; document.getElementById('annTitle').value = ''; document.getElementById('annText').value = '';
         document.getElementById('annImgName').textContent = 'No image selected'; document.getElementById('annImgPreview').style.display = 'none';
         if (document.getElementById('annImgInput')) document.getElementById('annImgInput').value = '';
-        renderAnnouncements();
+        
+        // Targeted DOM update
+        const list = document.getElementById('annList');
+        const noMsg = document.getElementById('noAnnMsg');
+        if (noMsg) noMsg.remove();
+        if (list) {
+          list.insertAdjacentHTML('afterbegin', getAnnHtml(newAnn));
+          const newEl = document.getElementById(`ann-${newAnn.id}`);
+          if (newEl) newEl.style.animation = 'scaleIn 0.3s ease';
+        }
       } catch(e) {
         console.error("Error posting announcement:", e);
         alert("Failed to post announcement");
