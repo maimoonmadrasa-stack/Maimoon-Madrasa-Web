@@ -2831,6 +2831,14 @@ let DB = {
             }));
           }),
           new Promise(resolve => {
+            window.firebaseUnlisteners.push(db.collection('quizScores').onSnapshot(snap => {
+              DB.quizScores = {};
+              snap.docs.forEach(d => DB.quizScores[d.id] = d.data().score);
+              if (initialLoadComplete) { renderActiveSectionGently(); }
+              resolve();
+            }));
+          }),
+          new Promise(resolve => {
             window.firebaseUnlisteners.push(db.collection('announcements').onSnapshot(snap => {
               DB.announcements = snap.docs.map(d => d.data());
               if (!window.isAnnLocalEdit && initialLoadComplete) { 
@@ -2925,7 +2933,12 @@ let DB = {
       
       if (sid === 'overview') renderOverview();
       else if (sid === 'quizzes') {
-        if (u.role !== 'admin' || (!document.getElementById('quizTitle')?.value && !document.getElementById('quizSubject')?.value)) renderQuiz();
+        const listEl = document.getElementById('quizList');
+        if (listEl && (u.role === 'admin' || u.role === 'teacher')) {
+          listEl.innerHTML = DB.quizzes.length ? DB.quizzes.map(q => getQuizHtml(q, u.role)).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)" id="noQuizMsg">No quizzes yet.</div>';
+        } else {
+          if (u.role !== 'admin' || (!document.getElementById('quizTitle')?.value && !document.getElementById('quizSubject')?.value)) renderQuiz();
+        }
       }
       else if (sid === 'announcements') {
         if (u.role !== 'admin' && u.role !== 'teacher') renderAnnouncements();
@@ -3824,7 +3837,7 @@ let DB = {
         const noMsg = document.getElementById('noQuizMsg');
         if (noMsg) noMsg.remove();
         if (lst) {
-          lst.insertAdjacentHTML('beforeend', getQuizHtml(newQuiz));
+          lst.insertAdjacentHTML('beforeend', getQuizHtml(newQuiz, DB.currentUser.role));
           const el = document.getElementById(`quiz-row-${nid}`);
           if (el) el.style.animation = 'scaleIn 0.3s ease';
         }
@@ -3845,10 +3858,9 @@ let DB = {
       if (qi >= quiz.questions.length) {
         const scoreKey = DB.currentUser.id + '_' + quiz.id;
         try {
-          // In a real app we'd save quiz scores to a dedicated collection.
-          // For simplicity here we'll just save it to memory for now, but 
-          // a complete app would structure a 'scores' collection.
+          // Live save quiz scores to Firestore
           DB.quizScores[scoreKey] = quizState.score;
+          await db.collection('quizScores').doc(scoreKey).set({ score: quizState.score });
         } catch(e) {
              console.error("Error saving score", e);
         }
