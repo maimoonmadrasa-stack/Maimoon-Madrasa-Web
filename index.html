@@ -2940,10 +2940,17 @@ let DB = {
         } else if (window.currentQuizView === 'taking') {
           // Do absolutely nothing; never interrupt a student's active exam
         } else {
+          // Admin & Teacher View List Re-render
           const listEl = document.getElementById('quizList');
           if (listEl && (u.role === 'admin' || u.role === 'teacher')) {
             listEl.innerHTML = DB.quizzes.length ? DB.quizzes.map(q => getQuizHtml(q, u.role)).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)" id="noQuizMsg">No quizzes yet.</div>';
-          } else {
+          } 
+          // Student View Re-render
+          else if (u.role === 'student') {
+            renderQuiz(); 
+          }
+          // Admin "Create" View Form Preservation Check
+          else {
             if (u.role !== 'admin' || (!document.getElementById('quizTitle')?.value && !document.getElementById('quizSubject')?.value)) renderQuiz();
           }
         }
@@ -4250,15 +4257,18 @@ let DB = {
       const ec = document.getElementById('editUserClass'); const ecc = document.getElementById('editUserClasses');
       if (ec) ec.innerHTML = clsOpts; if (ecc) ecc.innerHTML = clsOpts;
       if (u.role === 'student') {
-        document.getElementById('editStudentFields').style.display = 'block';
-        document.getElementById('editTeacherFields').style.display = 'none';
-        if (ec) ec.value = u.standard;
-        document.getElementById('editUserGender').value = u.gender;
-      } else {
-        document.getElementById('editStudentFields').style.display = 'none';
-        document.getElementById('editTeacherFields').style.display = 'block';
-        if (ecc) Array.from(ecc.options).forEach(opt => { opt.selected = (u.assignedClasses || []).includes(parseInt(opt.value)); });
-      }
+    document.getElementById('editStudentFields').style.display = 'block';
+    document.getElementById('editTeacherFields').style.display = 'none';
+    if (ec) ec.value = u.standard;
+    document.getElementById('editUserGender').value = u.gender;
+  } else if (u.role === 'teacher') {
+    document.getElementById('editStudentFields').style.display = 'none';
+    document.getElementById('editTeacherFields').style.display = 'block';
+    if (ecc) Array.from(ecc.options).forEach(opt => { opt.selected = (u.assignedClasses || []).includes(parseInt(opt.value)); });
+  } else {
+    document.getElementById('editStudentFields').style.display = 'none';
+    document.getElementById('editTeacherFields').style.display = 'none';
+  }
       document.getElementById('editUserModal').classList.add('open');
     }
     function closeEditUser() { document.getElementById('editUserModal').classList.remove('open'); }
