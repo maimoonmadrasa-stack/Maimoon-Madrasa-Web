@@ -2933,11 +2933,19 @@ let DB = {
       
       if (sid === 'overview') renderOverview();
       else if (sid === 'quizzes') {
-        const listEl = document.getElementById('quizList');
-        if (listEl && (u.role === 'admin' || u.role === 'teacher')) {
-          listEl.innerHTML = DB.quizzes.length ? DB.quizzes.map(q => getQuizHtml(q, u.role)).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)" id="noQuizMsg">No quizzes yet.</div>';
+        if (window.currentQuizView === 'scores') {
+          viewQuizScores(window.currentQuizId);
+        } else if (window.currentQuizView === 'qs') {
+          viewQuizQs(window.currentQuizId);
+        } else if (window.currentQuizView === 'taking') {
+          // Do absolutely nothing; never interrupt a student's active exam
         } else {
-          if (u.role !== 'admin' || (!document.getElementById('quizTitle')?.value && !document.getElementById('quizSubject')?.value)) renderQuiz();
+          const listEl = document.getElementById('quizList');
+          if (listEl && (u.role === 'admin' || u.role === 'teacher')) {
+            listEl.innerHTML = DB.quizzes.length ? DB.quizzes.map(q => getQuizHtml(q, u.role)).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)" id="noQuizMsg">No quizzes yet.</div>';
+          } else {
+            if (u.role !== 'admin' || (!document.getElementById('quizTitle')?.value && !document.getElementById('quizSubject')?.value)) renderQuiz();
+          }
         }
       }
       else if (sid === 'announcements') {
@@ -3713,6 +3721,7 @@ let DB = {
     </div></div>`;
         renderBuilderQs();
       }
+      window.currentQuizView = 'list';
     }
     function openEditAnn(annId) {
       const a = DB.announcements.find(a => a.id === annId); if (!a) return;
@@ -3799,7 +3808,10 @@ let DB = {
     function addBuilderQ() { quizBuilderQuestions.push({ q: '', opts: ['', '', '', ''], ans: 0 }); renderBuilderQs(); }
     function removeBuilderQ(idx) { quizBuilderQuestions.splice(idx, 1); renderBuilderQs(); }
     function viewQuizQs(qid) {
-      const quiz = DB.quizzes.find(q => q.id === qid); if (!quiz) return;
+      window.currentQuizView = 'qs';
+      window.currentQuizId = qid;
+      const quiz = DB.quizzes.find(q => q.id === qid); 
+      if (!quiz) { renderQuiz(); return; }
       document.getElementById('quizContent').innerHTML = `<button class="btn btn-ghost" onclick="renderQuiz()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
   <div class="panel glass"><div class="panel-header"><div class="panel-title">${quiz.title}</div><span class="badge ${quiz.active ? 'badge-green' : 'badge-yellow'}">${quiz.active ? 'Active' : 'Inactive'}</span></div>
   <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">${quiz.questions.length} questions · ${quiz.subject}</div>
@@ -3849,6 +3861,7 @@ let DB = {
       }
     }
     function startQuiz(qid) {
+      window.currentQuizView = 'taking';
       const quiz = DB.quizzes.find(q => q.id === qid); if (!quiz) return;
       quizState = { qid, current: 0, score: 0 }; showQuizQ(quiz);
     }
@@ -3899,7 +3912,10 @@ let DB = {
     }
     function nextQ() { const quiz = DB.quizzes.find(q => q.id === quizState.qid); quizState.current++; showQuizQ(quiz); }
     function viewQuizScores(qid) {
-      const quiz = DB.quizzes.find(q => q.id === qid); if (!quiz) return;
+      window.currentQuizView = 'scores';
+      window.currentQuizId = qid;
+      const quiz = DB.quizzes.find(q => q.id === qid); 
+      if (!quiz) { renderQuiz(); return; }
       const students = DB.users.filter(u => u.role === 'student');
       const scores = students.map(s => {
         const sk = s.id + '_' + qid;
