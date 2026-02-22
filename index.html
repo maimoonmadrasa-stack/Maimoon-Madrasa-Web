@@ -2788,7 +2788,7 @@ let DB = {
           new Promise(resolve => {
             window.firebaseUnlisteners.push(db.collection('users').onSnapshot(snap => {
               DB.users = snap.docs.map(d => d.data());
-              if (initialLoadComplete) { 
+              if (!window.isUserLocalEdit && initialLoadComplete) { 
                 renderActiveSectionGently(); 
               }
               resolve();
@@ -3995,6 +3995,27 @@ let DB = {
     }
 
     // USERS
+    function getUserHtml(u) {
+      const avatarBg = u.role === 'admin' ? 'linear-gradient(135deg,#f59e0b,#d97706)' : u.role === 'teacher' ? 'linear-gradient(135deg,#8b5cf6,#6d28d9)' : u.gender === 'female' ? 'linear-gradient(135deg,#ec4899,#be185d)' : 'linear-gradient(135deg,#3b82f6,#1d4ed8)';
+      const roleBadge = u.role === 'admin' ? 'badge-orange' : u.role === 'teacher' ? 'badge-purple' : 'badge-blue';
+      const roleLabel = u.role === 'admin' ? 'Admin' : u.role === 'teacher' ? 'Ustha' : 'Student';
+      const subtext = u.role === 'admin' ? 'Administrator' : (u.role === 'teacher' ? 'Classes: ' + (u.assignedClasses || []).map(c => 'C' + c).join(', ') : (u.class || '') + (u.gender ? ' · ' + u.gender : ''));
+      return `<div class="user-row" id="user-row-${u.id}" style="transition: all 0.3s ease;">
+    <div class="user-meta">
+      <div class="avatar" style="background:${avatarBg}">${u.name.charAt(0)}</div>
+      <div>
+        <div style="font-size:13px;font-weight:600" id="user-name-${u.id}">${u.name}</div>
+        <div style="font-size:11px;color:var(--text-muted)" id="user-subtext-${u.id}">@${u.username} · ${subtext}</div>
+      </div>
+    </div>
+    <div class="user-actions">
+      <span class="badge ${roleBadge}" id="user-role-${u.id}">${roleLabel}</span>
+      <button class="icon-btn success" onclick="openEditUser(${u.id})" title="Edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="icon-btn danger" onclick="deleteUser(${u.id})" title="Delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+    </div>
+  </div>`;
+    }
+
     function renderUsers(searchQ) {
       const el = document.getElementById('usersContent');
       const q = (searchQ || document.getElementById('usersSearch')?.value || '').toLowerCase().trim();
@@ -4022,23 +4043,9 @@ let DB = {
     <input type="text" class="form-input" id="usersSearch" placeholder="Search by name, username or role..." value="${q}" oninput="renderUsers()" style="padding-left:40px;">
     <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   </div>
-  ${nonAdmin.map(u => {
-        const avatarBg = u.role === 'admin' ? 'linear-gradient(135deg,#f59e0b,#d97706)' : u.role === 'teacher' ? 'linear-gradient(135deg,#8b5cf6,#6d28d9)' : u.gender === 'female' ? 'linear-gradient(135deg,#ec4899,#be185d)' : 'linear-gradient(135deg,#3b82f6,#1d4ed8)';
-        const roleBadge = u.role === 'admin' ? 'badge-orange' : u.role === 'teacher' ? 'badge-purple' : 'badge-blue';
-        const roleLabel = u.role === 'admin' ? 'Admin' : u.role === 'teacher' ? 'Ustha' : 'Student';
-        const subtext = u.role === 'admin' ? 'Administrator' : (u.role === 'teacher' ? 'Classes: ' + (u.assignedClasses || []).map(c => 'C' + c).join(', ') : (u.class || '') + (u.gender ? ' · ' + u.gender : ''));
-        return `<div class="user-row">
-    <div class="user-meta">
-      <div class="avatar" style="background:${avatarBg}">${u.name.charAt(0)}</div>
-      <div><div style="font-size:13px;font-weight:600">${u.name}</div><div style="font-size:11px;color:var(--text-muted)">@${u.username} · ${subtext}</div></div>
-    </div>
-    <div class="user-actions">
-      <span class="badge ${roleBadge}">${roleLabel}</span>
-      <button class="icon-btn success" onclick="openEditUser(${u.id})" title="Edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-      <button class="icon-btn danger" onclick="deleteUser(${u.id})" title="Delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
-    </div>
-  </div>`;
-      }).join('')}</div>`;
+  <div id="usersList">
+  ${nonAdmin.map(u => getUserHtml(u)).join('')}
+  </div></div>`;
       // Populate edit modal class options
       const ec = document.getElementById('editUserClass'); const ecc = document.getElementById('editUserClasses');
       if (ec) { ec.innerHTML = clsOpts; } if (ecc) { ecc.innerHTML = clsOpts; }
@@ -4079,14 +4086,18 @@ let DB = {
         await db.collection('users').doc(nid.toString()).set(nu);
         await db.collection('system').doc('settings').update({ nextUserId: DB.nextUserId });
         
-        DB.users.push(nu);
-        if (role === 'student') {
-           DB.attendance[nu.id] = { days: [] }; 
-           DB.results[nu.id] = { quarterly: [], halfYearly: [], final: [], model: [], public: [] };
-        }
+        window.isUserLocalEdit = true;
+        setTimeout(() => window.isUserLocalEdit = false, 1000);
         
+        // Targeted Update instead of rendering all lists
         ['nuName', 'nuUser'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
-        renderUsers(); renderOverview(); renderMembersList();
+        const lst = document.getElementById('usersList');
+        if (lst) {
+          lst.insertAdjacentHTML('beforeend', getUserHtml(nu));
+          const el = document.getElementById(`user-row-${nu.id}`);
+          if(el) el.style.animation = 'scaleIn 0.3s ease';
+        }
+        renderMembersList();
       } catch(e) {
         console.error("Error adding user:", e);
         alert("Failed to add user.");
@@ -4134,26 +4145,47 @@ let DB = {
         updates.assignedClasses = Array.from(sel.selectedOptions).map(o => parseInt(o.value));
       }
       
+      window.isUserLocalEdit = true;
+      setTimeout(() => window.isUserLocalEdit = false, 1000);
+      
       try {
         await db.collection('users').doc(uid.toString()).update(updates);
         Object.assign(u, updates);
-        closeEditUser(); renderUsers(); renderOverview(); renderMembersList();
+        closeEditUser(); 
+        
+        const nameEl = document.getElementById(`user-name-${uid}`);
+        const subtextEl = document.getElementById(`user-subtext-${uid}`);
+        if(nameEl) { nameEl.textContent = newName; nameEl.style.animation = 'scaleIn 0.3s ease'; }
+        if(subtextEl) {
+          const subtxt = u.role === 'admin' ? 'Administrator' : (u.role === 'teacher' ? 'Classes: ' + (u.assignedClasses || []).map(c => 'C' + c).join(', ') : (u.class || '') + (u.gender ? ' · ' + u.gender : ''));
+          subtextEl.textContent = `@${newUsername} · ${subtxt}`;
+        }
+        setTimeout(() => { if(nameEl) nameEl.style.animation = ''; }, 350);
+        
+        renderMembersList();
       } catch(e) { console.error(e); alert("Failed to update user"); }
     }
     async function deleteUser(uid) {
       if (!confirm('Delete this user?')) return;
       const idx = DB.users.findIndex(u => u.id === uid);
       if (idx > -1) { 
+        window.isUserLocalEdit = true;
+        setTimeout(() => window.isUserLocalEdit = false, 1000);
+        
         try {
           // Ideally you'd also delete attendance and results in a batch, 
           // but for now deleting the central user document is most important
           await db.collection('users').doc(uid.toString()).delete();
           // Optionally also clean up linked collections here...
           
-          DB.users.splice(idx, 1); 
-          delete DB.attendance[uid]; 
-          delete DB.results[uid]; 
-          renderUsers(); renderOverview(); renderMembersList();
+          const el = document.getElementById(`user-row-${uid}`);
+          if (el) {
+            el.style.opacity = '0';
+            el.style.transform = 'scale(0.95)';
+            el.style.pointerEvents = 'none';
+            setTimeout(() => el.remove(), 300);
+          }
+          renderMembersList();
         } catch(e) { console.error(e); alert("Failed to delete user"); }
       }
     }
