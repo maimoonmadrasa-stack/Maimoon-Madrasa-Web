@@ -2889,9 +2889,11 @@ let DB = {
 
     function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0, 0); }
     function showSection(id, el) {
+      window.currentActiveSection = id;
       document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
       document.getElementById('section-' + id).classList.add('active');
       document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+      document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.remove('active'));
       if (el) el.classList.add('active');
       closeSidebar();
     }
@@ -2912,29 +2914,29 @@ let DB = {
     function renderActiveSectionGently() {
       if (!DB.currentUser) return;
       const u = DB.currentUser;
-      const activeSec = document.querySelector('.dash-section.active');
-      if (!activeSec) return;
-      const sid = activeSec.id;
+      const sid = window.currentActiveSection || 'overview';
       
-      if (sid === 'section-overview') renderOverview();
-      else if (sid === 'section-quizzes') {
+      if (sid === 'overview') renderOverview();
+      else if (sid === 'quizzes') {
         if (u.role !== 'admin' || (!document.getElementById('quizTitle')?.value && !document.getElementById('quizSubject')?.value)) renderQuiz();
       }
-      else if (sid === 'section-announcements') {
+      else if (sid === 'announcements') {
         if (u.role !== 'admin' && u.role !== 'teacher') renderAnnouncements();
         else if (!document.getElementById('annTitle')?.value && !document.getElementById('annText')?.value) renderAnnouncements();
       }
-      else if (sid === 'section-users') {
+      else if (sid === 'users') {
         if (!document.getElementById('nuName')?.value && !document.getElementById('usersSearch')?.value) renderUsers();
       }
-      else if (sid === 'section-subjects') renderSubjects();
-      else if (sid === 'section-analytics') renderAnalytics();
-      else if (sid === 'section-members') renderMembersList();
-      else if (sid === 'section-control') renderControlCenter();
-      else if (sid === 'section-attendance') {
+      else if (sid === 'subjects') renderSubjects();
+      else if (sid === 'analytics') renderAnalytics();
+      else if (sid === 'members') renderMembersList();
+      else if (sid === 'controlcenter') renderControlCenter();
+      else if (sid === 'attendance') {
         if (u.role === 'student') renderAttendance();
+        else if (u.role === 'admin' && attendanceSelectedCls) loadAdminAttendanceClass(attendanceSelectedCls);
+        // Only teachers actively click checkboxes without a modal, so we'll skip live-rendering their class view to avoid losing unsaved clicks
       }
-      else if (sid === 'section-results') {
+      else if (sid === 'results') {
         if (!document.getElementById('editMarksModal')?.classList.contains('open')) {
           if (u.role === 'admin' && resultSelectedCls) {
             const students = [...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'male'), ...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'female')];
