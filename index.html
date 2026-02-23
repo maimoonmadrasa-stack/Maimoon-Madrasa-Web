@@ -3109,11 +3109,15 @@ let DB = {
       <div class="panel glass"><div class="panel-header"><div class="panel-title">Select Class</div><div style="font-size:12px;color:var(--text-muted)">${new Date().toDateString()}</div></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">${ac.map(cls => `<button class="btn btn-ghost" onclick="loadAttendanceClass(${cls},0)" style="justify-content:center;padding:16px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Class ${cls}</button>`).join('')}</div></div>
     </div>
-    <div id="attOverviewSection" style="display:none">${renderTeacherYearOverview(ac)}</div>`;
+    <div id="attOverviewSection" style="display:none">${renderTeacherYearOverview(ac)}</div>
+    <div id="attChartSection" style="display:none">${renderTeacherMonthChart(ac)}</div>`;
       } else {
         el.innerHTML = `<div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Click a class to view its attendance records.</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttClass(${cls}, 0)" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
-    <div id="adminAttClassContent"></div>`;
+    <div id="adminAttClassContent"></div>
+    <div class="panel glass" style="margin-top:24px"><div class="panel-header"><div class="panel-title">View All Attendances (Detailed Chart)</div></div>
+      ${renderTeacherMonthChart([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])}
+    </div>`;
       }
     }
     function switchAttMode(mode, btn) {
@@ -3121,6 +3125,8 @@ let DB = {
       btn.classList.add('active');
       document.getElementById('attMarkSection').style.display = mode === 'mark' ? '' : 'none';
       document.getElementById('attOverviewSection').style.display = mode === 'overview' ? '' : 'none';
+      const chartSec = document.getElementById('attChartSection');
+      if (chartSec) chartSec.style.display = mode === 'chart' ? '' : 'none';
     }
     function renderTeacherYearOverview(assignedClasses) {
       if (!assignedClasses || !assignedClasses.length) return '<div class="info-strip">No classes assigned.</div>';
@@ -3154,6 +3160,98 @@ let DB = {
     </table></div></div>`;
       }
       return html || '<div class="info-strip">No attendance data recorded yet.</div>';
+    }
+    
+    // EXPOSED GLOBAL For month switching
+    window.currentAttChartMonth = window.currentAttChartMonth || new Date().toISOString().substring(0, 7);
+    
+    function renderTeacherMonthChart(assignedClasses) {
+      if (!assignedClasses || !assignedClasses.length) return '<div class="info-strip">No classes assigned.</div>';
+      
+      // Determine all possible months with data across all assigned students to build dropdown
+      const allDates = new Set();
+      const allStudents = [];
+      for (const cls of assignedClasses) {
+        const classStudents = DB.users.filter(s => s.role === 'student' && s.standard === cls);
+        allStudents.push(...classStudents);
+        classStudents.forEach(s => { 
+          (DB.attendance[s.id] || { days: [] }).days.forEach(d => allDates.add(d.date.substring(0, 7))); 
+        });
+      }
+      
+      const months = [...allDates].sort().reverse();
+      if (!months.length) {
+        return '<div class="info-strip">No attendance data recorded yet.</div>';
+      }
+      
+      // If selected month has no data (e.g. just opened), default to the most recent month with data
+      if (!months.includes(window.currentAttChartMonth)) {
+        window.currentAttChartMonth = months[0];
+      }
+      const selMonth = window.currentAttChartMonth;
+      const [selYear, selMo] = selMonth.split('-');
+      
+      // Days in the selected month
+      const daysInMonth = new Date(selYear, selMo, 0).getDate();
+      const daysArray = Array.from({length: daysInMonth}, (_, i) => i + 1);
+      
+      let html = `<div style="margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+        <label style="font-size:12px;font-weight:600;color:var(--text-muted)">Select Month:</label>
+        <select class="form-select" style="width:auto;min-width:150px;" onchange="window.currentAttChartMonth=this.value; renderAttendance();">
+          ${months.map(m => {
+            const [y, mo] = m.split('-');
+            const name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][parseInt(mo) - 1] + ' ' + y;
+            return `<option value="${m}" ${m === selMonth ? 'selected' : ''}>${name}</option>`;
+          }).join('')}
+        </select>
+      </div>`;
+
+      for (const cls of assignedClasses) {
+        const students = DB.users.filter(s => s.role === 'student' && s.standard === cls);
+        if (!students.length) continue;
+        
+        // Check if there are any records for this specific class in this month before rendering an empty table
+        const hasRecords = students.some(s => (DB.attendance[s.id] || {days:[]}).days.some(d => d.date.startsWith(selMonth)));
+        if (!hasRecords) continue;
+        
+        html += `<div class="panel glass" style="margin-bottom:24px"><div class="panel-header" style="border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:12px;"><div class="panel-title">Class ${cls}</div><span class="badge badge-blue">${students.length} students</span></div>
+        <div class="table-wrap" style="overflow-x:auto;">
+          <table style="min-width: max-content; font-size: 11px; border-collapse: separate; border-spacing: 0;">
+            <thead>
+              <tr>
+                <th style="position:sticky;left:0;background:var(--surface);z-index:2;min-width:140px;text-align:left;border-bottom:1px solid var(--border);border-right:1px solid var(--border);">Student</th>
+                ${daysArray.map(d => `<th style="text-align:center;padding:6px;width:24px;border-bottom:1px solid var(--border);color:var(--text-muted);">${d}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${[...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')].map(s => {
+                const days = (DB.attendance[s.id] || { days: [] }).days;
+                const recordMap = {};
+                days.forEach(d => { if (d.date.startsWith(selMonth)) recordMap[d.date] = d.status; });
+                
+                const cells = daysArray.map(d => {
+                  const dateStr = `${selMonth}-${String(d).padStart(2, '0')}`;
+                  const st = recordMap[dateStr];
+                  let cellContent = `<td style="text-align:center;padding:4px;border-bottom:1px solid var(--border);border-left:1px dashed var(--border-light);color:var(--border);">·</td>`;
+                  if (st === 'P') cellContent = `<td style="text-align:center;padding:4px;border-bottom:1px solid var(--border);border-left:1px dashed var(--border-light);"><div style="width:18px;height:18px;border-radius:4px;background:#22c55e;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;margin:0 auto;">P</div></td>`;
+                  if (st === 'A') cellContent = `<td style="text-align:center;padding:4px;border-bottom:1px solid var(--border);border-left:1px dashed var(--border-light);"><div style="width:18px;height:18px;border-radius:4px;background:#ef4444;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;margin:0 auto;">A</div></td>`;
+                  return cellContent;
+                }).join('');
+                
+                return `<tr>
+                  <td style="position:sticky;left:0;background:var(--surface);z-index:1;border-bottom:1px solid var(--border);border-right:1px solid var(--border);padding:8px 10px;">
+                    <div style="font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;" title="${s.name}">${s.name}</div>
+                  </td>
+                  ${cells}
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+        </div>`;
+      }
+      
+      return html;
     }
     function loadAttendanceClass(cls, dateOffset) {
       _attCls = cls;
