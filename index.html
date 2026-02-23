@@ -2877,6 +2877,7 @@ let DB = {
         showSection('overview', document.querySelector('.sidebar-item'));
         renderOverview(); renderAttendance(); renderResults(); renderQuiz(); renderAnnouncements();
         if (u.role === 'admin') { renderUsers(); renderSubjects(); renderAnalytics(); renderMembersList(); renderControlCenter(); }
+        if (u.role === 'admin' || u.role === 'teacher') renderArchives();
         
       } catch (e) {
         console.error("Error fetching data:", e);
@@ -5042,6 +5043,7 @@ let DB = {
         for (const a of DB.announcements) { batch.set(db.collection('archives').doc(yearId).collection('announcements').doc(a.id.toString()), a); count++; if(count >= 400) await commitBatch(); }
         
         await commitBatch();
+        renderArchives();
         alert(`Success! "${yearLabel}" has been securely backed up. You can view it from the "Previous Years" tab.\\n\\nYou can now safely Upgrade students using the 'Upgrade Students Class' button. When you are ready for a clean slate, click 'Start Academic Year'.`);
       } catch(e) {
         console.error("Archive Error:", e); alert("An error occurred while creating the archive.");
