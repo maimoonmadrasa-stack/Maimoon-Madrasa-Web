@@ -3111,7 +3111,14 @@ let DB = {
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">${ac.map(cls => `<button class="btn btn-ghost" onclick="loadAttendanceClass(${cls},0)" style="justify-content:center;padding:16px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Class ${cls}</button>`).join('')}</div></div>
     </div>
     <div id="attOverviewSection" style="display:none">${renderTeacherYearOverview(ac)}</div>
-    <div id="attChartSection" style="display:none">${renderTeacherMonthChart(ac)}</div>`;
+    <div id="attChartSection" style="display:none">
+      <div id="teacherAttChartSelector">
+        <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Monthly Status chart.</div>
+        <div class="panel glass"><div class="panel-header"><div class="panel-title">Select Class</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">${ac.map(cls => `<button class="btn btn-ghost" onclick="loadTeacherAttChartClass(${cls})" style="justify-content:center;padding:16px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Class ${cls}</button>`).join('')}</div></div>
+      </div>
+      <div id="teacherAttChartContent"></div>
+    </div>`;
       } else {
         el.innerHTML = `
 <div class="tab-bar" id="attModeTabs" style="margin-bottom:16px;">
@@ -3134,7 +3141,8 @@ let DB = {
       document.querySelectorAll('#attModeTabs .tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('attMarkSection').style.display = mode === 'mark' ? '' : 'none';
-      document.getElementById('attOverviewSection').style.display = mode === 'overview' ? '' : 'none';
+      const overviewSec = document.getElementById('attOverviewSection');
+      if (overviewSec) overviewSec.style.display = mode === 'overview' ? '' : 'none';
       const chartSec = document.getElementById('attChartSection');
       if (chartSec) chartSec.style.display = mode === 'chart' ? '' : 'none';
     }
@@ -3207,7 +3215,7 @@ let DB = {
       
       let html = `<div style="margin-bottom:14px;display:flex;align-items:center;gap:10px;">
         <label style="font-size:12px;font-weight:600;color:var(--text-muted)">Select Month:</label>
-        <select class="form-select" style="width:auto;min-width:150px;" onchange="window.currentAttChartMonth=this.value; renderAttendance();">
+        <select class="form-select" style="width:auto;min-width:150px;" onchange="window.currentAttChartMonth=this.value; refreshAttChart();">
           ${months.map(m => {
             const [y, mo] = m.split('-');
             const name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][parseInt(mo) - 1] + ' ' + y;
@@ -3417,17 +3425,56 @@ let DB = {
     }
 
     function loadAdminAttChartClass(cls) {
+      window.currentAttChartViewport = 'admin';
+      window.currentAttChartClass = cls;
       const el = document.getElementById('adminAttChartContent');
       if (!el) return;
       el.innerHTML = `
-        <button class="btn btn-ghost" onclick="renderAttendance()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back to classes</button>
+        <button class="btn btn-ghost" onclick="resetAttChartSection()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back to classes</button>
         ${renderTeacherMonthChart([cls])}
       `;
-      // Default to hiding the class selector grid so it looks like a clean navigation
       const grid = el.parentElement.querySelector('div[style*="display:grid"]');
       const info = el.parentElement.querySelector('.info-strip');
       if (grid) grid.style.display = 'none';
       if (info) info.style.display = 'none';
+    }
+
+    function loadTeacherAttChartClass(cls) {
+      window.currentAttChartViewport = 'teacher';
+      window.currentAttChartClass = cls;
+      const el = document.getElementById('teacherAttChartContent');
+      if (!el) return;
+      el.innerHTML = `
+        <button class="btn btn-ghost" onclick="resetAttChartSection()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back to classes</button>
+        ${renderTeacherMonthChart([cls])}
+      `;
+      const sel = document.getElementById('teacherAttChartSelector');
+      if (sel) sel.style.display = 'none';
+    }
+
+    function refreshAttChart() {
+      if (window.currentAttChartViewport === 'admin') {
+         loadAdminAttChartClass(window.currentAttChartClass);
+      } else {
+         loadTeacherAttChartClass(window.currentAttChartClass);
+      }
+    }
+
+    function resetAttChartSection() {
+      const aEl = document.getElementById('adminAttChartContent');
+      if (aEl) {
+         aEl.innerHTML = '';
+         const grid = aEl.parentElement.querySelector('div[style*="display:grid"]');
+         const info = aEl.parentElement.querySelector('.info-strip');
+         if (grid) grid.style.display = '';
+         if (info) info.style.display = '';
+      }
+      const tEl = document.getElementById('teacherAttChartContent');
+      if (tEl) {
+         tEl.innerHTML = '';
+         const sel = document.getElementById('teacherAttChartSelector');
+         if (sel) sel.style.display = '';
+      }
     }
 
     // RESULTS
