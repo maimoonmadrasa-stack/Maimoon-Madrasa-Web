@@ -4575,6 +4575,18 @@ let DB = {
       </div>`).join('') : '<div style="text-align:center;padding:14px;color:var(--text-dim);font-size:12px;border:1px solid var(--border);border-radius:var(--radius-sm);">No teachers registered.</div>'}
     </div>`;
       }
+      
+      if (DB.currentUser.role === 'admin' && !q) {
+        html += `<div style="margin-top:24px;border-top:1px solid var(--border);padding-top:20px;">
+          <h3 style="font-size:14px;font-weight:700;margin-bottom:12px;">Academic Year Operations</h3>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="upgradeStudents(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>Update Students Class (Upgrade)</button>
+            <button class="btn btn-ghost" onclick="degradeStudents(this)" style="color:var(--text-muted)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>Degrade Students Class</button>
+          </div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:8px;">Warning: This modifies every student in the database simultaneously.</div>
+        </div>`;
+      }
+
       el.innerHTML = html;
       // re-focus search if user was typing
       if (q) { const si = document.getElementById('membersSearch'); if (si) { si.focus(); si.setSelectionRange(si.value.length, si.value.length); } }
@@ -4606,6 +4618,76 @@ let DB = {
       if (content) { content.classList.toggle('open'); btn.classList.toggle('open'); }
     }
 
+    async function upgradeStudents(btnEl) {
+      if (!confirm('WARNING: Are you sure you want to UPGRADE all students to the next class?')) return;
+      const p = prompt('Type "UPGRADE" to confirm upgrading all students by 1 class:');
+      if (p !== 'UPGRADE') { alert('Aborted.'); return; }
+      
+      const students = DB.users.filter(u => u.role === 'student' && u.standard != null);
+      if (!students.length) return;
+      
+      window.isUserLocalEdit = true;
+      const origText = btnEl.innerHTML;
+      btnEl.innerHTML = 'Upgrading...';
+      btnEl.disabled = true;
+      
+      try {
+        const batch = db.batch();
+        students.forEach(s => {
+          const newStd = s.standard + 1;
+          const ref = db.collection('users').doc(s.id.toString());
+          batch.update(ref, { standard: newStd, class: `Standard ${newStd}` });
+          s.standard = newStd;
+          s.class = `Standard ${newStd}`;
+        });
+        await batch.commit();
+        alert('Successfully upgraded all students by 1 class.');
+        renderMembersList();
+      } catch(e) {
+        console.error(e);
+        alert('Error upgrading students.');
+      } finally {
+        setTimeout(() => window.isUserLocalEdit = false, 500);
+        btnEl.innerHTML = origText;
+        btnEl.disabled = false;
+      }
+    }
+
+    async function degradeStudents(btnEl) {
+      if (!confirm('WARNING: Are you sure you want to DEGRADE all students to the previous class?')) return;
+      const p = prompt('Type "DEGRADE" to confirm degrading all students by 1 class:');
+      if (p !== 'DEGRADE') { alert('Aborted.'); return; }
+      
+      const students = DB.users.filter(u => u.role === 'student' && u.standard != null);
+      if (!students.length) return;
+      
+      window.isUserLocalEdit = true;
+      const origText = btnEl.innerHTML;
+      btnEl.innerHTML = 'Degrading...';
+      btnEl.disabled = true;
+      
+      try {
+        const batch = db.batch();
+        students.forEach(s => {
+          let newStd = s.standard - 1;
+          if (newStd < 1) newStd = 1; // Prevent going below 1
+          const ref = db.collection('users').doc(s.id.toString());
+          batch.update(ref, { standard: newStd, class: `Standard ${newStd}` });
+          s.standard = newStd;
+          s.class = `Standard ${newStd}`;
+        });
+        await batch.commit();
+        alert('Successfully degraded all students by 1 class.');
+        renderMembersList();
+      } catch(e) {
+        console.error(e);
+        alert('Error degrading students.');
+      } finally {
+        setTimeout(() => window.isUserLocalEdit = false, 500);
+        btnEl.innerHTML = origText;
+        btnEl.disabled = false;
+      }
+    }
 
     // ── REVEAL ON SCROLL (landing page) ──
     (function () {
