@@ -2990,8 +2990,15 @@ let DB = {
 
     function renderOverview() {
       const u = DB.currentUser;
-      document.getElementById('overviewTitle').textContent = 'Welcome, ' + u.name.split(' ')[0] + '!';
-      let cards = '', panel = '';
+      const titleEl = document.getElementById('overviewTitle');
+      if (titleEl) titleEl.textContent = 'Welcome, ' + u.name.split(' ')[0] + '!';
+      
+      const cardsEl = document.getElementById('overviewCards');
+      const panelEl = document.getElementById('overviewPanel');
+      if (!cardsEl || !panelEl) return;
+      
+      const needsFullRender = !cardsEl.children.length;
+
       if (u.role === 'student') {
         const { present, absent, total } = getAttStats(u.id);
         const pct = total ? Math.round(present / total * 100) : 0;
@@ -2999,30 +3006,71 @@ let DB = {
         const qAvg = (res.quarterly || []).length ? Math.round((res.quarterly || []).reduce((a, b) => a + b.marks, 0) / (res.quarterly || []).length) : 0;
         const quizCount = Object.keys(DB.quizScores).filter(k => k.startsWith(u.id + '_')).length;
         document.getElementById('overviewSub').textContent = u.class;
-        cards = `<div class="stat-card glass blue"><div class="stat-card-label">Attendance</div><div class="stat-card-value">${pct}%</div><div class="progress-bar" style="margin-top:10px"><div class="progress-fill" style="width:${pct}%"></div></div><svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-    <div class="stat-card glass"><div class="stat-card-label">Quarterly Avg</div><div class="stat-card-value" style="color:${qAvg >= 60 ? '#22c55e' : '#ef4444'}">${qAvg || '—'}${qAvg ? '%' : ''}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Quizzes Done</div><div class="stat-card-value">${quizCount}</div></div>`;
-        panel = `<div class="panel-header"><div class="panel-title">Recent Announcements</div></div>${[...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 2).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} · ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div>${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;margin-top:8px">` : ''}</div>`).join('')}`;
-        panel += renderTop3Rankers(u.standard, currentResultTab, u.id);
+        
+        if (needsFullRender) {
+          cardsEl.innerHTML = `<div class="stat-card glass blue"><div class="stat-card-label">Attendance</div><div class="stat-card-value" id="ovCardAtt">${pct}%</div><div class="progress-bar" style="margin-top:10px"><div class="progress-fill" id="ovCardAttBar" style="width:${pct}%"></div></div><svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+    <div class="stat-card glass"><div class="stat-card-label">Quarterly Avg</div><div class="stat-card-value" id="ovCardQAvg" style="color:${qAvg >= 60 ? '#22c55e' : '#ef4444'}">${qAvg || '—'}${qAvg ? '%' : ''}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Quizzes Done</div><div class="stat-card-value" id="ovCardQz">${quizCount}</div></div>`;
+          panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">Recent Announcements</div></div><div id="ovAnnList"></div><div id="ovRankList"></div>`;
+        } else {
+          try {
+            document.getElementById('ovCardAtt').textContent = pct + '%';
+            document.getElementById('ovCardAttBar').style.width = pct + '%';
+            const qaEl = document.getElementById('ovCardQAvg');
+            qaEl.textContent = qAvg ? qAvg + '%' : '—';
+            qaEl.style.color = qAvg >= 60 ? '#22c55e' : '#ef4444';
+            document.getElementById('ovCardQz').textContent = quizCount;
+          } catch(e){}
+        }
+        
+        const annHtml = [...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 2).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} · ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div>${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;margin-top:8px">` : ''}</div>`).join('');
+        if (document.getElementById('ovAnnList') && document.getElementById('ovAnnList').innerHTML !== annHtml) document.getElementById('ovAnnList').innerHTML = annHtml;
+        
+        const rankHtml = renderTop3Rankers(u.standard, currentResultTab, u.id);
+        if (document.getElementById('ovRankList') && document.getElementById('ovRankList').innerHTML !== rankHtml) document.getElementById('ovRankList').innerHTML = rankHtml;
+        
       } else if (u.role === 'teacher') {
         document.getElementById('overviewSub').textContent = 'Assigned: ' + u.assignedClasses.map(c => 'Class ' + c).join(', ');
         const myS = DB.users.filter(s => s.role === 'student' && u.assignedClasses.includes(s.standard));
-        cards = `<div class="stat-card glass blue"><div class="stat-card-label">My Students</div><div class="stat-card-value">${myS.length}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Active Quizzes</div><div class="stat-card-value">${DB.quizzes.filter(q => q.active).length}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Announcements</div><div class="stat-card-value">${DB.announcements.length}</div></div>`;
-        panel = `<div class="panel-header"><div class="panel-title">My Students</div></div>${renderStudentTable(myS)}`;
+        const activeQz = DB.quizzes.filter(q => q.active).length;
+        
+        if (needsFullRender) {
+          cardsEl.innerHTML = `<div class="stat-card glass blue"><div class="stat-card-label">My Students</div><div class="stat-card-value" id="ovTchStu">${myS.length}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Active Quizzes</div><div class="stat-card-value" id="ovTchQz">${activeQz}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Announcements</div><div class="stat-card-value" id="ovTchAnn">${DB.announcements.length}</div></div>`;
+          panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">My Students</div></div><div id="ovTchTable"></div>`;
+        } else {
+          try {
+            document.getElementById('ovTchStu').textContent = myS.length;
+            document.getElementById('ovTchQz').textContent = activeQz;
+            document.getElementById('ovTchAnn').textContent = DB.announcements.length;
+          } catch(e){}
+        }
+        const tblHtml = renderStudentTable(myS);
+        if (document.getElementById('ovTchTable') && document.getElementById('ovTchTable').innerHTML !== tblHtml) document.getElementById('ovTchTable').innerHTML = tblHtml;
+        
       } else {
         document.getElementById('overviewSub').textContent = 'Full system control';
         const students = DB.users.filter(s => s.role === 'student');
         const teachers = DB.users.filter(s => s.role === 'teacher');
-        cards = `<div class="stat-card glass blue"><div class="stat-card-label">Total Students</div><div class="stat-card-value">${students.length}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Usthas</div><div class="stat-card-value">${teachers.length}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Active Quizzes</div><div class="stat-card-value">${DB.quizzes.filter(q => q.active).length}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Classes</div><div class="stat-card-value">10</div></div>`;
-        panel = `<div class="panel-header"><div class="panel-title">Student Overview</div></div>${renderStudentTable(students)}`;
+        const activeQz = DB.quizzes.filter(q => q.active).length;
+        
+        if (needsFullRender) {
+          cardsEl.innerHTML = `<div class="stat-card glass blue"><div class="stat-card-label">Total Students</div><div class="stat-card-value" id="ovAdmStu">${students.length}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Usthas</div><div class="stat-card-value" id="ovAdmTch">${teachers.length}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Active Quizzes</div><div class="stat-card-value" id="ovAdmQz">${activeQz}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Classes</div><div class="stat-card-value" id="ovAdmCls">10</div></div>`;
+          panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">Student Overview</div></div><div id="ovAdmTable"></div>`;
+        } else {
+          try {
+            document.getElementById('ovAdmStu').textContent = students.length;
+            document.getElementById('ovAdmTch').textContent = teachers.length;
+            document.getElementById('ovAdmQz').textContent = activeQz;
+          } catch(e){}
+        }
+        const tblHtml = renderStudentTable(students);
+        if (document.getElementById('ovAdmTable') && document.getElementById('ovAdmTable').innerHTML !== tblHtml) document.getElementById('ovAdmTable').innerHTML = tblHtml;
       }
-      document.getElementById('overviewCards').innerHTML = cards;
-      document.getElementById('overviewPanel').innerHTML = panel;
     }
     function renderStudentTable(students) {
       if (!students.length) return '<div style="text-align:center;padding:20px;color:var(--text-dim);font-size:13px">No students.</div>';
