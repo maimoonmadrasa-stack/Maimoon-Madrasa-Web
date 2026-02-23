@@ -3112,7 +3112,14 @@ let DB = {
       <div class="panel glass"><div class="panel-header"><div class="panel-title">Select Class</div><div style="font-size:12px;color:var(--text-muted)">${new Date().toDateString()}</div></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">${ac.map(cls => `<button class="btn btn-ghost" onclick="loadAttendanceClass(${cls},0)" style="justify-content:center;padding:16px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Class ${cls}</button>`).join('')}</div></div>
     </div>
-    <div id="attOverviewSection" style="display:none">${renderTeacherOverallSummary(ac)}</div>
+    <div id="attOverviewSection" style="display:none">
+      <div id="teacherAttOverviewSelector">
+        <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Overall Summary.</div>
+        <div class="panel glass"><div class="panel-header"><div class="panel-title">Select Class</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">${ac.map(cls => `<button class="btn btn-ghost" onclick="loadTeacherAttOverviewClass(${cls})" style="justify-content:center;padding:16px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Class ${cls}</button>`).join('')}</div></div>
+      </div>
+      <div id="teacherAttOverviewContent"></div>
+    </div>
     <div id="attChartSection" style="display:none">
       <div id="teacherAttChartSelector">
         <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Monthly Status chart.</div>
@@ -3133,7 +3140,11 @@ let DB = {
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttClass(${cls}, 0)" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
   <div id="adminAttClassContent"></div>
 </div>
-<div id="attOverviewSection" style="display:none">${renderTeacherOverallSummary([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])}</div>
+<div id="attOverviewSection" style="display:none">
+  <div class="info-strip" id="adminAttOverviewInfo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Overall Summary.</div>
+  <div id="adminAttOverviewGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttOverviewClass(${cls})" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
+  <div id="adminAttOverviewContent"></div>
+</div>
 <div id="attChartSection" style="display:none">
   <div class="info-strip" id="adminAttChartInfo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Monthly Status chart.</div>
   <div id="adminAttChartGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttChartClass(${cls})" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
@@ -3150,7 +3161,7 @@ let DB = {
       const chartSec = document.getElementById('attChartSection');
       if (chartSec) chartSec.style.display = mode === 'chart' ? '' : 'none';
     }
-    function renderTeacherOverallSummary(assignedClasses) {
+    function renderTeacherOverallSummaryClass(assignedClasses) {
       if (!assignedClasses || !assignedClasses.length) return '<div class="info-strip">No classes assigned.</div>';
       let html = '';
       for (const cls of assignedClasses) {
@@ -3450,6 +3461,47 @@ let DB = {
       }
     }
 
+    function loadAdminAttOverviewClass(cls) {
+      const el = document.getElementById('adminAttOverviewContent');
+      if (!el) return;
+      el.innerHTML = `
+        <button class="btn btn-ghost" onclick="resetAttOverviewSection()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back to classes</button>
+        ${renderTeacherOverallSummaryClass([cls])}
+      `;
+      const grid = document.getElementById('adminAttOverviewGrid');
+      const info = document.getElementById('adminAttOverviewInfo');
+      if (grid) grid.style.display = 'none';
+      if (info) info.style.display = 'none';
+    }
+
+    function loadTeacherAttOverviewClass(cls) {
+      const el = document.getElementById('teacherAttOverviewContent');
+      if (!el) return;
+      el.innerHTML = `
+        <button class="btn btn-ghost" onclick="resetAttOverviewSection()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back to classes</button>
+        ${renderTeacherOverallSummaryClass([cls])}
+      `;
+      const sel = document.getElementById('teacherAttOverviewSelector');
+      if (sel) sel.style.display = 'none';
+    }
+
+    function resetAttOverviewSection() {
+      const aEl = document.getElementById('adminAttOverviewContent');
+      if (aEl) {
+         aEl.innerHTML = '';
+         const grid = document.getElementById('adminAttOverviewGrid');
+         const info = document.getElementById('adminAttOverviewInfo');
+         if (grid) grid.style.display = 'grid';
+         if (info) info.style.display = '';
+      }
+      const tEl = document.getElementById('teacherAttOverviewContent');
+      if (tEl) {
+         tEl.innerHTML = '';
+         const sel = document.getElementById('teacherAttOverviewSelector');
+         if (sel) sel.style.display = '';
+      }
+    }
+
     // RESULTS
     let currentResultTab = 'quarterly';
     let teacherResultTab = 'quarterly';
@@ -3556,9 +3608,32 @@ let DB = {
             <button class="icon-btn" onclick="showStudentMarkDetail(${s.id}, '${examType}')" title="View Marks">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
-          </div>
         </div>`;
-      }).join('')}</div>`;
+      }).join('')}</div>
+  <div class="panel glass" style="margin-top:16px"><div class="panel-header" style="align-items:center;">
+    <div class="panel-title">Class ${cls} — ${label} Ranked</div></div>
+    <div class="table-wrap"><table><thead><tr><th>Rank</th><th>Student</th><th>Gender</th><th>%</th><th>Status</th></tr></thead>
+    <tbody>${fs.map(s => {
+        const res = (DB.results[s.id] || {})[examType] || [];
+        const absent = res.some(r => r.absent);
+        const total = res.reduce((a, b) => a + (!b.absent ? (b.marks || 0) : 0), 0);
+        const max = res.reduce((a, b) => a + (b.max || 100), 0);
+        const pct = max ? Math.round(total / max * 100) : 0;
+        let passed = res.length > 0;
+        const subs = DB.subjects[s.standard] || [];
+        if (passed) {
+          for (let r of res) {
+            const si = subs.find(sb => sb.name === r.sub) || { pass: 40 };
+            if (r.absent || r.marks < si.pass) { passed = false; break; }
+          }
+        }
+        return { ...s, _resPct: absent ? 0 : pct, _passed: passed, _hasRes: res.length > 0 };
+      }).sort((a,b) => {
+        if (!a._hasRes && b._hasRes) return 1;
+        if (a._hasRes && !b._hasRes) return -1;
+        return b._resPct - a._resPct;
+      }).map((s, i) => `<tr><td><span style="font-weight:600;color:var(--text-muted)">#${i + 1}</span></td><td><strong>${s.name}</strong></td><td style="color:var(--text-muted);text-transform:capitalize">${s.gender}</td><td><span style="font-weight:600;color:${s._passed ? '#22c55e' : (s._hasRes ? '#ef4444' : 'var(--text-dim)')}">${s._hasRes ? s._resPct + '%' : '—'}</span></td><td><span class="badge ${s._passed ? 'badge-green' : (s._hasRes ? 'badge-red' : 'badge-yellow')}">${s._passed ? 'Pass' : (s._hasRes ? 'Fail' : 'Pending')}</span></td></tr>`).join('')}</tbody></table></div>
+  </div>`;
     }
 
     function renderExamData(data, std) {
