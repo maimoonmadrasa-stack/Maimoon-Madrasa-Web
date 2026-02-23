@@ -3237,7 +3237,7 @@ let DB = {
           <table style="min-width: max-content; font-size: 11px; border-collapse: separate; border-spacing: 0;">
             <thead>
               <tr>
-                <th style="position:sticky;left:0;background:var(--surface);z-index:10;min-width:140px;text-align:left;border-bottom:1px solid var(--border);border-right:1px solid var(--border);box-shadow: 2px 0 4px rgba(0,0,0,0.05);">Student</th>
+                <th style="position:sticky;left:0;background:var(--bg);z-index:10;min-width:140px;text-align:left;border-bottom:1px solid var(--border);border-right:1px solid var(--border);box-shadow: 2px 0 4px rgba(0,0,0,0.05);">Student</th>
                 ${daysArray.map(d => `<th style="text-align:center;padding:6px;width:24px;border-bottom:1px solid var(--border);color:var(--text-muted);">${d}</th>`).join('')}
               </tr>
             </thead>
@@ -3257,7 +3257,7 @@ let DB = {
                 }).join('');
                 
                 return `<tr>
-                  <td style="position:sticky;left:0;background:var(--surface);z-index:10;border-bottom:1px solid var(--border);border-right:1px solid var(--border);padding:8px 10px;box-shadow: 2px 0 4px rgba(0,0,0,0.05);">
+                  <td style="position:sticky;left:0;background:var(--bg);z-index:10;border-bottom:1px solid var(--border);border-right:1px solid var(--border);padding:8px 10px;box-shadow: 2px 0 4px rgba(0,0,0,0.05);">
                     <div style="font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;" title="${s.name}">${s.name}</div>
                   </td>
                   ${cells}
@@ -3466,7 +3466,7 @@ let DB = {
          aEl.innerHTML = '';
          const grid = document.getElementById('adminAttChartGrid');
          const info = document.getElementById('adminAttChartInfo');
-         if (grid) grid.style.display = '';
+         if (grid) grid.style.display = 'grid';
          if (info) info.style.display = '';
       }
       const tEl = document.getElementById('teacherAttChartContent');
