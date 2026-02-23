@@ -3633,7 +3633,10 @@ let DB = {
         if (!a._hasRes && b._hasRes) return 1;
         if (a._hasRes && !b._hasRes) return -1;
         return b._resPct - a._resPct;
-      }).map((s, i) => `<tr><td><span style="font-weight:600;color:var(--text-muted)">#${i + 1}</span></td><td><strong>${s.name}</strong></td><td style="color:var(--text-muted);text-transform:capitalize">${s.gender}</td><td><span style="font-weight:600;color:${s._passed ? '#22c55e' : (s._hasRes ? '#ef4444' : 'var(--text-dim)')}">${s._hasRes ? s._resPct + '%' : '—'}</span></td><td><span class="badge ${s._passed ? 'badge-green' : (s._hasRes ? 'badge-red' : 'badge-yellow')}">${s._passed ? 'Pass' : (s._hasRes ? 'Fail' : 'Pending')}</span></td></tr>`).join('')}</tbody></table></div>
+      }).map((s, i) => {
+        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
+        return `<tr><td><span style="font-weight:600;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-muted)'}">${medal}</span></td><td><strong>${s.name}</strong></td><td style="color:var(--text-muted);text-transform:capitalize">${s.gender}</td><td><span style="font-weight:600;color:${s._passed ? '#22c55e' : (s._hasRes ? '#ef4444' : 'var(--text-dim)')}">${s._hasRes ? s._resPct + '%' : '—'}</span></td><td><span class="badge ${s._passed ? 'badge-green' : (s._hasRes ? 'badge-red' : 'badge-yellow')}">${s._passed ? 'Pass' : (s._hasRes ? 'Fail' : 'Pending')}</span></td></tr>`
+      }).join('')}</tbody></table></div>
   </div>`;
     }
 
@@ -3832,7 +3835,10 @@ let DB = {
         if (!a._hasRes && b._hasRes) return 1;
         if (a._hasRes && !b._hasRes) return -1;
         return b._resPct - a._resPct;
-      }).map((s, i) => `<tr><td><span style="font-weight:600;color:var(--text-muted)">#${i + 1}</span></td><td><strong>${s.name}</strong></td><td style="color:var(--text-muted);text-transform:capitalize">${s.gender}</td><td><span style="font-weight:600;color:${s._passed ? '#22c55e' : (s._hasRes ? '#ef4444' : 'var(--text-dim)')}">${s._hasRes ? s._resPct + '%' : '—'}</span></td><td><span class="badge ${s._passed ? 'badge-green' : (s._hasRes ? 'badge-red' : 'badge-yellow')}">${s._passed ? 'Pass' : (s._hasRes ? 'Fail' : 'Pending')}</span></td></tr>`).join('')}</tbody></table></div>
+      }).map((s, i) => {
+        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
+        return `<tr><td><span style="font-weight:600;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-muted)'}">${medal}</span></td><td><strong>${s.name}</strong></td><td style="color:var(--text-muted);text-transform:capitalize">${s.gender}</td><td><span style="font-weight:600;color:${s._passed ? '#22c55e' : (s._hasRes ? '#ef4444' : 'var(--text-dim)')}">${s._hasRes ? s._resPct + '%' : '—'}</span></td><td><span class="badge ${s._passed ? 'badge-green' : (s._hasRes ? 'badge-red' : 'badge-yellow')}">${s._passed ? 'Pass' : (s._hasRes ? 'Fail' : 'Pending')}</span></td></tr>`
+        }).join('')}</tbody></table></div>
   </div>`;
     }
     function filterMarksSearch() {
