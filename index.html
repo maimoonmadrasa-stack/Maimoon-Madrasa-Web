@@ -3115,18 +3115,18 @@ let DB = {
       } else {
         el.innerHTML = `
 <div class="tab-bar" id="attModeTabs" style="margin-bottom:16px;">
-  <button class="tab-btn active" onclick="switchAttMode('mark',this)">Mark Attendance</button>
+  <button class="tab-btn active" onclick="switchAttMode('mark',this)">View Attendance</button>
   <button class="tab-btn" onclick="switchAttMode('chart',this)">Monthly Status</button>
 </div>
 <div id="attMarkSection">
-  <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Click a class to view its attendance records.</div>
+  <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its attendance records.</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttClass(${cls}, 0)" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
   <div id="adminAttClassContent"></div>
 </div>
 <div id="attChartSection" style="display:none">
-  <div class="panel glass"><div class="panel-header"><div class="panel-title">View All Attendances (Detailed Chart)</div></div>
-    ${renderTeacherMonthChart([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])}
-  </div>
+  <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Monthly Status chart.</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttChartClass(${cls})" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
+  <div id="adminAttChartContent"></div>
 </div>`;
       }
     }
@@ -3273,7 +3273,13 @@ let DB = {
       const dayLabel = offset === 0 ? 'Today' : offset === -1 ? 'Yesterday' : offset === -2 ? '2 Days Ago' : today.toDateString();
       const students = DB.users.filter(s => s.role === 'student' && s.standard === cls);
       if (!students.length) { alert('No students in Class ' + cls); return; }
-      const ordered = [...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')];
+      
+      const ordered = students.map(s => {
+        const { present, total } = getAttStats(s.id);
+        const pct = total ? Math.round(present / total * 100) : 0;
+        return { ...s, _attPct: pct };
+      }).sort((a, b) => b._attPct - a._attPct);
+      
       document.getElementById('attendanceContent').innerHTML = `
     <button class="btn btn-ghost" onclick="renderAttendance()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
     <div class="panel glass"><div class="panel-header">
@@ -3357,7 +3363,13 @@ let DB = {
       const students = DB.users.filter(s => s.role === 'student' && s.standard === cls);
       const el = document.getElementById('adminAttClassContent');
       if (!students.length) { el.innerHTML = `<div class="info-strip">No students in Class ${cls}.</div>`; return; }
-      const ordered = [...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')];
+      
+      const ordered = students.map(s => {
+        const { present, total } = getAttStats(s.id);
+        const pct = total ? Math.round(present / total * 100) : 0;
+        return { ...s, _attPct: pct };
+      }).sort((a, b) => b._attPct - a._attPct);
+      
       const offset = dateOffset || 0;
       const targetDate = new Date(); targetDate.setDate(targetDate.getDate() + offset);
       const dateStr = targetDate.toISOString().split('T')[0];
@@ -3402,6 +3414,20 @@ let DB = {
       document.querySelectorAll('#adminAttList-' + cls + ' .att-mark-row').forEach(row => {
         row.style.display = !q || row.dataset.name.includes(q) ? '' : 'none';
       });
+    }
+
+    function loadAdminAttChartClass(cls) {
+      const el = document.getElementById('adminAttChartContent');
+      if (!el) return;
+      el.innerHTML = `
+        <button class="btn btn-ghost" onclick="renderAttendance()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back to classes</button>
+        ${renderTeacherMonthChart([cls])}
+      `;
+      // Default to hiding the class selector grid so it looks like a clean navigation
+      const grid = el.parentElement.querySelector('div[style*="display:grid"]');
+      const info = el.parentElement.querySelector('.info-strip');
+      if (grid) grid.style.display = 'none';
+      if (info) info.style.display = 'none';
     }
 
     // RESULTS
