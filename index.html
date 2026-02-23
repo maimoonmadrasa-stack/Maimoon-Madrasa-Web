@@ -3104,7 +3104,7 @@ let DB = {
         el.innerHTML = `
     <div class="tab-bar" id="attModeTabs" style="margin-bottom:16px;">
       <button class="tab-btn active" onclick="switchAttMode('mark',this)">Mark Attendance</button>
-      <button class="tab-btn" onclick="switchAttMode('overview',this)">Academic Year Overview</button>
+      <button class="tab-btn" onclick="switchAttMode('overview',this)">Overall Summary</button>
       <button class="tab-btn" onclick="switchAttMode('chart',this)">Monthly Status</button>
     </div>
     <div id="attMarkSection">
@@ -3112,7 +3112,7 @@ let DB = {
       <div class="panel glass"><div class="panel-header"><div class="panel-title">Select Class</div><div style="font-size:12px;color:var(--text-muted)">${new Date().toDateString()}</div></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">${ac.map(cls => `<button class="btn btn-ghost" onclick="loadAttendanceClass(${cls},0)" style="justify-content:center;padding:16px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Class ${cls}</button>`).join('')}</div></div>
     </div>
-    <div id="attOverviewSection" style="display:none">${renderTeacherYearOverview(ac)}</div>
+    <div id="attOverviewSection" style="display:none">${renderTeacherOverallSummary(ac)}</div>
     <div id="attChartSection" style="display:none">
       <div id="teacherAttChartSelector">
         <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Monthly Status chart.</div>
@@ -3148,36 +3148,16 @@ let DB = {
       const chartSec = document.getElementById('attChartSection');
       if (chartSec) chartSec.style.display = mode === 'chart' ? '' : 'none';
     }
-    function renderTeacherYearOverview(assignedClasses) {
+    function renderTeacherOverallSummary(assignedClasses) {
       if (!assignedClasses || !assignedClasses.length) return '<div class="info-strip">No classes assigned.</div>';
       let html = '';
       for (const cls of assignedClasses) {
         const students = DB.users.filter(s => s.role === 'student' && s.standard === cls);
         if (!students.length) continue;
-        // Get all unique months from all students in this class
-        const allDates = new Set();
-        students.forEach(s => { (DB.attendance[s.id] || { days: [] }).days.forEach(d => allDates.add(d.date.substring(0, 7))); });
-        const months = [...allDates].sort();
-        if (!months.length) { html += `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls}</div><span class="badge badge-yellow">No records yet</span></div></div>`; continue; }
-        html += `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls} — Academic Overview</div><span class="badge badge-blue">${students.length} students</span></div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Student</th>${months.map(m => { const [y, mo] = m.split('-'); return '<th>' + ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][parseInt(mo) - 1] + ' ' + y + '</th>' }).join('')}<th>Total %</th></tr></thead>
-      <tbody>${[...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')].map(s => {
-          const days = (DB.attendance[s.id] || { days: [] }).days;
-          const { present: totalP, total: grandTotal } = getAttStats(s.id);
-          const overallPct = grandTotal ? Math.round(totalP / grandTotal * 100) : 0;
-          const cells = months.map(m => {
-            const mDays = days.filter(d => d.date.startsWith(m));
-            const p = mDays.filter(d => d.status === 'P').length;
-            const a = mDays.filter(d => d.status === 'A').length;
-            const t = p + a;
-            if (!t) return '<td style="color:var(--text-dim);font-size:11px">—</td>';
-            const pct = Math.round(p / t * 100);
-            return '<td><span style="font-size:12px;font-weight:600;color:' + (pct >= 75 ? '#22c55e' : pct >= 50 ? '#eab308' : '#ef4444') + '">' + pct + '%</span><div style="font-size:10px;color:var(--text-dim)">' + p + '/' + t + '</div></td>';
-          }).join('');
-          return '<tr><td><strong style="font-size:12px">' + s.name + '</strong><div style="font-size:10px;color:var(--text-muted)">' + s.gender + '</div></td>' + cells + '<td><span class="badge ' + (overallPct >= 75 ? 'badge-green' : 'badge-red') + '" style="font-size:10px">' + overallPct + '%</span></td></tr>';
-        }).join('')}</tbody>
-    </table></div></div>`;
+        
+        html += `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls} — Overall Summary</div><span class="badge badge-blue">${students.length} students</span></div>
+    <div class="table-wrap"><table><thead><tr><th>Student</th><th>Present</th><th>Absent</th><th>%</th><th>Status</th></tr></thead>
+      <tbody>${students.map(s => { const { present, absent, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return { ...s, _attPct: pct, present, absent }; }).sort((a,b) => b._attPct - a._attPct).map(s => `<tr><td><strong>${s.name}</strong></td><td style="color:#22c55e">${s.present}</td><td style="color:#ef4444">${s.absent}</td><td>${s._attPct}%</td><td><span class="badge ${s._attPct >= 75 ? 'badge-green' : 'badge-red'}">${s._attPct >= 75 ? 'Good' : 'Low'}</span></td></tr>`).join('')}</tbody></table></div></div>`;
       }
       return html || '<div class="info-strip">No attendance data recorded yet.</div>';
     }
