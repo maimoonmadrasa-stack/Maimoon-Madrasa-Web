@@ -3131,8 +3131,8 @@ let DB = {
   <div id="adminAttClassContent"></div>
 </div>
 <div id="attChartSection" style="display:none">
-  <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Monthly Status chart.</div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttChartClass(${cls})" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
+  <div class="info-strip" id="adminAttChartInfo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Monthly Status chart.</div>
+  <div id="adminAttChartGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttChartClass(${cls})" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
   <div id="adminAttChartContent"></div>
 </div>`;
       }
@@ -3237,7 +3237,7 @@ let DB = {
           <table style="min-width: max-content; font-size: 11px; border-collapse: separate; border-spacing: 0;">
             <thead>
               <tr>
-                <th style="position:sticky;left:0;background:var(--surface);z-index:2;min-width:140px;text-align:left;border-bottom:1px solid var(--border);border-right:1px solid var(--border);">Student</th>
+                <th style="position:sticky;left:0;background:var(--surface);z-index:10;min-width:140px;text-align:left;border-bottom:1px solid var(--border);border-right:1px solid var(--border);box-shadow: 2px 0 4px rgba(0,0,0,0.05);">Student</th>
                 ${daysArray.map(d => `<th style="text-align:center;padding:6px;width:24px;border-bottom:1px solid var(--border);color:var(--text-muted);">${d}</th>`).join('')}
               </tr>
             </thead>
@@ -3257,7 +3257,7 @@ let DB = {
                 }).join('');
                 
                 return `<tr>
-                  <td style="position:sticky;left:0;background:var(--surface);z-index:1;border-bottom:1px solid var(--border);border-right:1px solid var(--border);padding:8px 10px;">
+                  <td style="position:sticky;left:0;background:var(--surface);z-index:10;border-bottom:1px solid var(--border);border-right:1px solid var(--border);padding:8px 10px;box-shadow: 2px 0 4px rgba(0,0,0,0.05);">
                     <div style="font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;" title="${s.name}">${s.name}</div>
                   </td>
                   ${cells}
@@ -3433,8 +3433,8 @@ let DB = {
         <button class="btn btn-ghost" onclick="resetAttChartSection()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back to classes</button>
         ${renderTeacherMonthChart([cls])}
       `;
-      const grid = el.parentElement.querySelector('div[style*="display:grid"]');
-      const info = el.parentElement.querySelector('.info-strip');
+      const grid = document.getElementById('adminAttChartGrid');
+      const info = document.getElementById('adminAttChartInfo');
       if (grid) grid.style.display = 'none';
       if (info) info.style.display = 'none';
     }
@@ -3464,8 +3464,8 @@ let DB = {
       const aEl = document.getElementById('adminAttChartContent');
       if (aEl) {
          aEl.innerHTML = '';
-         const grid = aEl.parentElement.querySelector('div[style*="display:grid"]');
-         const info = aEl.parentElement.querySelector('.info-strip');
+         const grid = document.getElementById('adminAttChartGrid');
+         const info = document.getElementById('adminAttChartInfo');
          if (grid) grid.style.display = '';
          if (info) info.style.display = '';
       }
