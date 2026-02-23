@@ -3075,7 +3075,7 @@ let DB = {
     function renderStudentTable(students) {
       if (!students.length) return '<div style="text-align:center;padding:20px;color:var(--text-dim);font-size:13px">No students.</div>';
       const sorted = [...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')];
-      return `<div class="table-wrap"><table><thead><tr><th>Name</th><th>Class</th><th>Gender</th><th>Attendance</th><th>Status</th></tr></thead><tbody>${sorted.map(s => { const { present, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return `<tr><td><strong>${s.name}</strong></td><td>${s.class || '—'}</td><td><span class="badge ${s.gender === 'male' ? 'badge-blue' : 'badge-yellow'}">${s.gender || '—'}</span></td><td>${pct}%</td><td><span class="badge ${pct >= 75 ? 'badge-green' : 'badge-red'}">${pct >= 75 ? 'Good' : 'Low'}</span></td></tr>`; }).join('')}</tbody></table></div>`;
+      return `<div class="table-wrap"><table><thead><tr><th>Name</th><th>Class</th><th>Gender</th><th>Attendance</th><th>Status</th></tr></thead><tbody>${sorted.map(s => { const { present, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return `<tr><td><strong>${s.name}</strong></td><td>${s.class || '—'}</td><td><span class="badge ${s.gender === 'male' ? 'badge-blue' : 'badge-yellow'}">${s.gender || '—'}</span></td><td>${pct}%</td><td><span class="badge ${pct >= 60 ? 'badge-green' : 'badge-red'}">${pct >= 60 ? 'Good' : 'Low'}</span></td></tr>`; }).join('')}</tbody></table></div>`;
     }
 
     // ATTENDANCE
@@ -3218,7 +3218,7 @@ let DB = {
         
         html += `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls} — Overall Summary</div><span class="badge badge-blue">${students.length} students</span></div>
     <div class="table-wrap"><table><thead><tr><th>Student</th><th>Present</th><th>Absent</th><th>%</th><th>Status</th></tr></thead>
-      <tbody>${students.map(s => { const { present, absent, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return { ...s, _attPct: pct, present, absent }; }).sort((a,b) => b._attPct - a._attPct).map(s => `<tr><td><strong>${s.name}</strong></td><td style="color:#22c55e">${s.present}</td><td style="color:#ef4444">${s.absent}</td><td>${s._attPct}%</td><td><span class="badge ${s._attPct >= 75 ? 'badge-green' : 'badge-red'}">${s._attPct >= 75 ? 'Good' : 'Low'}</span></td></tr>`).join('')}</tbody></table></div></div>`;
+      <tbody>${students.map(s => { const { present, absent, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return { ...s, _attPct: pct, present, absent }; }).sort((a,b) => b._attPct - a._attPct).map(s => `<tr><td><strong>${s.name}</strong></td><td style="color:#22c55e">${s.present}</td><td style="color:#ef4444">${s.absent}</td><td>${s._attPct}%</td><td><span class="badge ${s._attPct >= 60 ? 'badge-green' : 'badge-red'}">${s._attPct >= 60 ? 'Good' : 'Low'}</span></td></tr>`).join('')}</tbody></table></div></div>`;
       }
       return html || '<div class="info-strip">No attendance data recorded yet.</div>';
     }
