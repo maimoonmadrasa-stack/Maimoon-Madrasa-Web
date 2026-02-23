@@ -20,7 +20,7 @@
       --blue-glow: rgba(59, 130, 246, 0.35);
       --bg: #090e1a;
       --bg2: #0d1525;
-      --solid-surface: #121b2d;
+      --solid-surface: #1a2640;
       --surface: rgba(255, 255, 255, 0.04);
       --surface-hover: rgba(255, 255, 255, 0.08);
       --border: rgba(255, 255, 255, 0.08);
@@ -3284,11 +3284,7 @@ let DB = {
       const students = DB.users.filter(s => s.role === 'student' && s.standard === cls);
       if (!students.length) { alert('No students in Class ' + cls); return; }
       
-      const ordered = students.map(s => {
-        const { present, total } = getAttStats(s.id);
-        const pct = total ? Math.round(present / total * 100) : 0;
-        return { ...s, _attPct: pct };
-      }).sort((a, b) => b._attPct - a._attPct);
+      const ordered = [...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')];
       
       document.getElementById('attendanceContent').innerHTML = `
     <button class="btn btn-ghost" onclick="renderAttendance()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
@@ -3374,11 +3370,7 @@ let DB = {
       const el = document.getElementById('adminAttClassContent');
       if (!students.length) { el.innerHTML = `<div class="info-strip">No students in Class ${cls}.</div>`; return; }
       
-      const ordered = students.map(s => {
-        const { present, total } = getAttStats(s.id);
-        const pct = total ? Math.round(present / total * 100) : 0;
-        return { ...s, _attPct: pct };
-      }).sort((a, b) => b._attPct - a._attPct);
+      const ordered = [...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')];
       
       const offset = dateOffset || 0;
       const targetDate = new Date(); targetDate.setDate(targetDate.getDate() + offset);
@@ -3415,7 +3407,7 @@ let DB = {
     <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
       <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Overall Summary</div>
       <div class="table-wrap"><table><thead><tr><th>Student</th><th>Present</th><th>Absent</th><th>%</th><th>Status</th></tr></thead>
-      <tbody>${ordered.map(s => { const { present, absent, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return `<tr><td><strong>${s.name}</strong></td><td style="color:#22c55e">${present}</td><td style="color:#ef4444">${absent}</td><td>${pct}%</td><td><span class="badge ${pct >= 75 ? 'badge-green' : 'badge-red'}">${pct >= 75 ? 'Good' : 'Low'}</span></td></tr>`; }).join('')}</tbody></table></div>
+      <tbody>${students.map(s => { const { present, absent, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return { ...s, _attPct: pct, present, absent }; }).sort((a,b) => b._attPct - a._attPct).map(s => `<tr><td><strong>${s.name}</strong></td><td style="color:#22c55e">${s.present}</td><td style="color:#ef4444">${s.absent}</td><td>${s._attPct}%</td><td><span class="badge ${s._attPct >= 75 ? 'badge-green' : 'badge-red'}">${s._attPct >= 75 ? 'Good' : 'Low'}</span></td></tr>`).join('')}</tbody></table></div>
     </div>
   </div>`;
     }
