@@ -3125,6 +3125,7 @@ let DB = {
         el.innerHTML = `
 <div class="tab-bar" id="attModeTabs" style="margin-bottom:16px;">
   <button class="tab-btn active" onclick="switchAttMode('mark',this)">View Attendance</button>
+  <button class="tab-btn" onclick="switchAttMode('overview',this)">Overall Summary</button>
   <button class="tab-btn" onclick="switchAttMode('chart',this)">Monthly Status</button>
 </div>
 <div id="attMarkSection">
@@ -3132,6 +3133,7 @@ let DB = {
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttClass(${cls}, 0)" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
   <div id="adminAttClassContent"></div>
 </div>
+<div id="attOverviewSection" style="display:none">${renderTeacherOverallSummary([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])}</div>
 <div id="attChartSection" style="display:none">
   <div class="info-strip" id="adminAttChartInfo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Monthly Status chart.</div>
   <div id="adminAttChartGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttChartClass(${cls})" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
@@ -3384,10 +3386,7 @@ let DB = {
       </div>`;
       }).join('')}
     </div>
-    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
-      <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Overall Summary</div>
-      <div class="table-wrap"><table><thead><tr><th>Student</th><th>Present</th><th>Absent</th><th>%</th><th>Status</th></tr></thead>
-      <tbody>${students.map(s => { const { present, absent, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return { ...s, _attPct: pct, present, absent }; }).sort((a,b) => b._attPct - a._attPct).map(s => `<tr><td><strong>${s.name}</strong></td><td style="color:#22c55e">${s.present}</td><td style="color:#ef4444">${s.absent}</td><td>${s._attPct}%</td><td><span class="badge ${s._attPct >= 75 ? 'badge-green' : 'badge-red'}">${s._attPct >= 75 ? 'Good' : 'Low'}</span></td></tr>`).join('')}</tbody></table></div>
+      }).join('')}
     </div>
   </div>`;
     }
@@ -3734,7 +3733,31 @@ let DB = {
       </button>`}
     </div></div>`;
       }).join('')}
-  </div></div>`;
+  </div></div>
+  <div class="panel glass" style="margin-top:16px"><div class="panel-header" style="align-items:center;">
+    <div class="panel-title">Class ${cls} — ${label} Ranked</div></div>
+    <div class="table-wrap"><table><thead><tr><th>Rank</th><th>Student</th><th>Gender</th><th>%</th><th>Status</th></tr></thead>
+    <tbody>${fs.map(s => {
+        const res = (DB.results[s.id] || {})[examType] || [];
+        const absent = res.some(r => r.absent);
+        const total = res.reduce((a, b) => a + (!b.absent ? (b.marks || 0) : 0), 0);
+        const max = res.reduce((a, b) => a + (b.max || 100), 0);
+        const pct = max ? Math.round(total / max * 100) : 0;
+        let passed = res.length > 0;
+        const subs = DB.subjects[s.standard] || [];
+        if (passed) {
+          for (let r of res) {
+            const si = subs.find(sb => sb.name === r.sub) || { pass: 40 };
+            if (r.absent || r.marks < si.pass) { passed = false; break; }
+          }
+        }
+        return { ...s, _resPct: absent ? 0 : pct, _passed: passed, _hasRes: res.length > 0 };
+      }).sort((a,b) => {
+        if (!a._hasRes && b._hasRes) return 1;
+        if (a._hasRes && !b._hasRes) return -1;
+        return b._resPct - a._resPct;
+      }).map((s, i) => `<tr><td><span style="font-weight:600;color:var(--text-muted)">#${i + 1}</span></td><td><strong>${s.name}</strong></td><td style="color:var(--text-muted);text-transform:capitalize">${s.gender}</td><td><span style="font-weight:600;color:${s._passed ? '#22c55e' : (s._hasRes ? '#ef4444' : 'var(--text-dim)')}">${s._hasRes ? s._resPct + '%' : '—'}</span></td><td><span class="badge ${s._passed ? 'badge-green' : (s._hasRes ? 'badge-red' : 'badge-yellow')}">${s._passed ? 'Pass' : (s._hasRes ? 'Fail' : 'Pending')}</span></td></tr>`).join('')}</tbody></table></div>
+  </div>`;
     }
     function filterMarksSearch() {
       const q = (document.getElementById('marksSearch')?.value || '').toLowerCase();
