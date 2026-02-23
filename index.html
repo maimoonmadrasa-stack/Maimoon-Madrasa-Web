@@ -2915,7 +2915,6 @@ let DB = {
       document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
       document.getElementById('section-overview').classList.add('active');
     }
-
     function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0, 0); }
     function showSection(id, el) {
       window.currentActiveSection = id;
@@ -3162,17 +3161,20 @@ let DB = {
     ${attData.days.length ? `<div class="panel glass"><div class="panel-header"><div class="panel-title">Monthly Attendance</div><div style="display:flex;gap:10px;font-size:11px;color:var(--text-muted)"><span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:rgba(34,197,94,.7);display:inline-block"></span>Present</span><span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:rgba(239,68,68,.7);display:inline-block"></span>Absent</span></div></div>${calHtml}</div>` : '<div class="info-strip">No attendance records yet for this academic year.</div>'}`;
       } else if (u.role === 'teacher') {
         const ac = u.assignedClasses || [];
-        el.innerHTML = `
-    <div class="tab-bar" id="attModeTabs" style="margin-bottom:16px;">
-      <button class="tab-btn active" onclick="switchAttMode('mark',this)">Mark Attendance</button>
-      <button class="tab-btn" onclick="switchAttMode('overview',this)">Overall Summary</button>
-      <button class="tab-btn" onclick="switchAttMode('chart',this)">Monthly Status</button>
-    </div>
+        const markTabHtml = !window.isArchiveMode ? `<button class="tab-btn active" onclick="switchAttMode('mark',this)">Mark Attendance</button>` : '';
+        const markSecHtml = !window.isArchiveMode ? `
     <div id="attMarkSection">
       <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to mark attendance (today, yesterday or 2 days ago).</div>
       <div class="panel glass"><div class="panel-header"><div class="panel-title">Select Class</div><div style="font-size:12px;color:var(--text-muted)">${new Date().toDateString()}</div></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">${ac.map(cls => `<button class="btn btn-ghost" onclick="loadAttendanceClass(${cls},0)" style="justify-content:center;padding:16px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Class ${cls}</button>`).join('')}</div></div>
+    </div>` : '';
+        el.innerHTML = `
+    <div class="tab-bar" id="attModeTabs" style="margin-bottom:16px;">
+      ${markTabHtml}
+      <button class="tab-btn ${window.isArchiveMode ? 'active' : ''}" onclick="switchAttMode('overview',this)">Overall Summary</button>
+      <button class="tab-btn" onclick="switchAttMode('chart',this)">Monthly Status</button>
     </div>
+    ${markSecHtml}
     <div id="attOverviewSection" style="display:none">
       <div id="teacherAttOverviewSelector">
         <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Overall Summary.</div>
@@ -3190,17 +3192,20 @@ let DB = {
       <div id="teacherAttChartContent"></div>
     </div>`;
       } else {
-        el.innerHTML = `
-<div class="tab-bar" id="attModeTabs" style="margin-bottom:16px;">
-  <button class="tab-btn active" onclick="switchAttMode('mark',this)">View Attendance</button>
-  <button class="tab-btn" onclick="switchAttMode('overview',this)">Overall Summary</button>
-  <button class="tab-btn" onclick="switchAttMode('chart',this)">Monthly Status</button>
-</div>
+        const markTabHtml = !window.isArchiveMode ? `<button class="tab-btn active" onclick="switchAttMode('mark',this)">View Attendance</button>` : '';
+        const markSecHtml = !window.isArchiveMode ? `
 <div id="attMarkSection">
   <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its attendance records.</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttClass(${cls}, 0)" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
   <div id="adminAttClassContent"></div>
+</div>` : '';
+        el.innerHTML = `
+<div class="tab-bar" id="attModeTabs" style="margin-bottom:16px;">
+  ${markTabHtml}
+  <button class="tab-btn ${window.isArchiveMode ? 'active' : ''}" onclick="switchAttMode('overview',this)">Overall Summary</button>
+  <button class="tab-btn" onclick="switchAttMode('chart',this)">Monthly Status</button>
 </div>
+${markSecHtml}
 <div id="attOverviewSection" style="display:none">
   <div class="info-strip" id="adminAttOverviewInfo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Overall Summary.</div>
   <div id="adminAttOverviewGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttOverviewClass(${cls})" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
@@ -3215,8 +3220,9 @@ let DB = {
     }
     function switchAttMode(mode, btn) {
       document.querySelectorAll('#attModeTabs .tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('attMarkSection').style.display = mode === 'mark' ? '' : 'none';
+      if (btn) btn.classList.add('active');
+      const markSec = document.getElementById('attMarkSection');
+      if (markSec) markSec.style.display = mode === 'mark' ? '' : 'none';
       const overviewSec = document.getElementById('attOverviewSection');
       if (overviewSec) overviewSec.style.display = mode === 'overview' ? '' : 'none';
       const chartSec = document.getElementById('attChartSection');
@@ -3456,8 +3462,6 @@ let DB = {
         </div>
         <span class="badge ${status === 'P' ? 'badge-green' : status === 'A' ? 'badge-red' : 'badge-yellow'}">${status === 'P' ? 'Present' : status === 'A' ? 'Absent' : 'Not Marked'}</span>
       </div>`;
-      }).join('')}
-    </div>
       }).join('')}
     </div>
   </div>`;
@@ -5178,8 +5182,17 @@ let DB = {
           document.head.appendChild(lockStyle);
         }
         
+        const adminNav = document.getElementById('adminNav'); if (adminNav) adminNav.style.display = 'none';
+        const prevYearsNav = document.getElementById('navPreviousYears'); if (prevYearsNav) prevYearsNav.style.display = 'none';
+        
         showSection('overview', document.querySelector('.sidebar-item'));
-        renderOverview(); renderAttendance(); renderResults(); renderQuiz(); renderAnnouncements(); renderMembersList();
+        renderOverview(); renderAttendance();
+        
+        // Force attendance overview to be active
+        const attOverviewSec = document.getElementById('attOverviewSection');
+        if (attOverviewSec) attOverviewSec.style.display = '';
+        
+        renderResults(); renderQuiz(); renderAnnouncements(); renderMembersList();
         
       } catch(e) {
         console.error("View Archive Error", e);
@@ -5207,8 +5220,17 @@ let DB = {
       const lockStyle = document.getElementById('archiveLockStyle');
       if (lockStyle) lockStyle.remove();
       
+      const u = DB.currentUser;
+      if (u.role === 'admin') {
+        const adminNav = document.getElementById('adminNav'); if (adminNav) adminNav.style.display = 'block';
+      }
+      if (u.role === 'admin' || u.role === 'teacher') {
+        const prevYearsNav = document.getElementById('navPreviousYears'); if (prevYearsNav) prevYearsNav.style.display = 'flex';
+      }
+      
       showSection('archives', document.getElementById('navPreviousYears'));
       renderArchives();
+      renderAttendance(); // Reset attendance rendering back to view mode
     }
 
     async function deleteArchive(arcId) {
