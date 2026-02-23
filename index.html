@@ -5090,13 +5090,14 @@ let DB = {
       el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-dim)"><div class="gl-spinner" style="margin:0 auto 16px;width:30px;height:30px;border-width:2px;display:block"></div>Fetching archives...</div>';
       
       try {
-        const snap = await db.collection('archives').orderBy('createdAt', 'desc').get();
+        const snap = await db.collection('archives').get();
         if (snap.empty) {
           el.innerHTML = '<div class="empty glass" style="border-radius:var(--radius-lg)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v4"/><path d="M14 4v4"/><path d="M6 4v4"/><path d="M18 4v4"/></svg><p>No previous academic years have been archived yet.</p></div>';
           return;
         }
         
-        const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        let docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        docs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         const u = DB.currentUser;
         
         el.innerHTML = `<div class="cards-grid">
