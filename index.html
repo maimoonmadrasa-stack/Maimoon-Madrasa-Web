@@ -3100,9 +3100,10 @@ let DB = {
       } else if (u.role === 'teacher') {
         const ac = u.assignedClasses || [];
         el.innerHTML = `
-    <div class="tab-bar" id="attModeTabs">
+    <div class="tab-bar" id="attModeTabs" style="margin-bottom:16px;">
       <button class="tab-btn active" onclick="switchAttMode('mark',this)">Mark Attendance</button>
       <button class="tab-btn" onclick="switchAttMode('overview',this)">Academic Year Overview</button>
+      <button class="tab-btn" onclick="switchAttMode('chart',this)">Monthly Status</button>
     </div>
     <div id="attMarkSection">
       <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to mark attendance (today, yesterday or 2 days ago).</div>
@@ -3112,12 +3113,21 @@ let DB = {
     <div id="attOverviewSection" style="display:none">${renderTeacherYearOverview(ac)}</div>
     <div id="attChartSection" style="display:none">${renderTeacherMonthChart(ac)}</div>`;
       } else {
-        el.innerHTML = `<div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Click a class to view its attendance records.</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttClass(${cls}, 0)" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
-    <div id="adminAttClassContent"></div>
-    <div class="panel glass" style="margin-top:24px"><div class="panel-header"><div class="panel-title">View All Attendances (Detailed Chart)</div></div>
-      ${renderTeacherMonthChart([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])}
-    </div>`;
+        el.innerHTML = `
+<div class="tab-bar" id="attModeTabs" style="margin-bottom:16px;">
+  <button class="tab-btn active" onclick="switchAttMode('mark',this)">Mark Attendance</button>
+  <button class="tab-btn" onclick="switchAttMode('chart',this)">Monthly Status</button>
+</div>
+<div id="attMarkSection">
+  <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Click a class to view its attendance records.</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttClass(${cls}, 0)" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
+  <div id="adminAttClassContent"></div>
+</div>
+<div id="attChartSection" style="display:none">
+  <div class="panel glass"><div class="panel-header"><div class="panel-title">View All Attendances (Detailed Chart)</div></div>
+    ${renderTeacherMonthChart([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])}
+  </div>
+</div>`;
       }
     }
     function switchAttMode(mode, btn) {
