@@ -38,20 +38,20 @@
     }
 
     [data-theme="light"] {
-      --bg: #eef3ff;
-      --bg2: #e4ecff;
+      --bg: #f4f7fc;
+      --bg2: #eaeff8;
       --solid-surface: #ffffff;
-      --surface: rgba(255, 255, 255, 0.75);
-      --surface-hover: rgba(255, 255, 255, 0.95);
-      --border: rgba(59, 130, 246, 0.25);
-      --border-bright: rgba(59, 130, 246, 0.6);
+      --surface: rgba(255, 255, 255, 0.85);
+      --surface-hover: #ffffff;
+      --border: rgba(255, 255, 255, 0.6);
+      --border-bright: rgba(59, 130, 246, 0.3);
       --text: #0f1f3d;
       --text-muted: rgba(15, 31, 61, 0.6);
       --text-dim: rgba(15, 31, 61, 0.4);
-      --glass: rgba(238, 243, 255, 0.8);
-      --glass-strong: rgba(238, 243, 255, 0.7);
-      --shadow: 0 8px 32px rgba(59, 130, 246, 0.14);
-      --shadow-blue: 0 0 40px rgba(59, 130, 246, 0.12);
+      --glass: rgba(255, 255, 255, 0.8);
+      --glass-strong: rgba(255, 255, 255, 0.9);
+      --shadow: 0 8px 32px rgba(15, 31, 61, 0.08);
+      --shadow-blue: 0 4px 20px rgba(59, 130, 246, 0.08);
     }
 
     * {
@@ -2923,9 +2923,12 @@ let DB = {
               if (snap.exists) {
                 const sysData = snap.data();
                 DB.subjects = sysData.subjects || {};
-                DB.examSessions = sysData.examSessions || { quarterly: true, halfYearly: true, final: false, public: false };
+                DB.examSessions = sysData.examSessions || { quarterly: true, halfYearly: true, final: false, public: false, attendance: true };
                 DB.nextAnnouncementId = sysData.nextAnnouncementId || 1;
                 DB.nextUserId = sysData.nextUserId || 1;
+                if (initialLoadComplete) {
+                  renderAttendance();
+                }
                 if (!window.isSystemLocalEdit && initialLoadComplete) {
                   renderActiveSectionGently();
                 }
