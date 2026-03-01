@@ -2713,6 +2713,7 @@
       <div class="modal-title">Edit User</div>
       <div class="modal-sub">Update user information</div>
       <input type="hidden" id="editUserId">
+      <div id="editStudentCodeIndicator" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;margin:12px 0;font-size:12px;font-weight:600"></div>
       <div style="max-height: 55vh; overflow-y: auto; margin: 0 -24px; padding: 0 24px;">
         <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input"
             id="editUserName"></div>
@@ -4668,7 +4669,9 @@ ${markSecHtml}
     <div class="user-meta">
       <div class="avatar" style="background:${avatarBg}">${u.name.charAt(0)}</div>
       <div>
-        <div style="font-size:13px;font-weight:600" id="user-name-${u.id}">${u.name}</div>
+        <div style="font-size:13px;font-weight:600" id="user-name-${u.id}">
+          ${u.name} ${u.studentCode ? `<span class="badge badge-blue" style="margin-left:6px;font-size:10px">Code: ${u.studentCode}</span>` : ''}
+        </div>
         <div style="font-size:11px;color:var(--text-muted)" id="user-subtext-${u.id}">@${u.username} · ${subtext}</div>
       </div>
     </div>
@@ -4780,6 +4783,16 @@ ${markSecHtml}
       document.getElementById('editUserName').value = u.name;
       document.getElementById('editUserUsername').value = u.username;
       document.getElementById('editUserPass').value = u.password;
+      
+      const scIndicator = document.getElementById('editStudentCodeIndicator');
+      if (scIndicator) {
+         if (u.role === 'student') {
+            scIndicator.innerHTML = `Student Code: <strong style="color:var(--blue)">${u.studentCode || 'Not Assigned'}</strong>`;
+            scIndicator.style.display = 'block';
+         } else {
+            scIndicator.style.display = 'none';
+         }
+      }
       const clsOpts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `<option value="${n}">Class ${n}</option>`).join('');
       const ec = document.getElementById('editUserClass'); const ecc = document.getElementById('editUserClasses');
       if (ec) ec.innerHTML = clsOpts; if (ecc) ecc.innerHTML = clsOpts;
