@@ -3105,32 +3105,6 @@ let DB = {
       if (u.role === 'student') {
         const { present, absent, total } = getAttStats(u.id);
         const pct = total ? Math.round(present / total * 100) : 0;
-        const res = DB.results[u.id] || {};
-        const qAvg = (res.quarterly || []).length ? Math.round((res.quarterly || []).reduce((a, b) => a + b.marks, 0) / (res.quarterly || []).length) : 0;
-        const quizCount = Object.keys(DB.quizScores).filter(k => k.startsWith(u.id + '_')).length;
-        document.getElementById('overviewSub').textContent = u.class;
-        
-        if (needsFullRender) {
-          cardsEl.innerHTML = `<div class="stat-card glass blue"><div class="stat-card-label">Attendance</div><div class="stat-card-value" id="ovCardAtt">${pct}%</div><div class="progress-bar" style="margin-top:10px"><div class="progress-fill" id="ovCardAttBar" style="width:${pct}%"></div></div><svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-    <div class="stat-card glass"><div class="stat-card-label">Quarterly Avg</div><div class="stat-card-value" id="ovCardQAvg" style="color:${qAvg >= 60 ? '#22c55e' : '#ef4444'}">${qAvg || '—'}${qAvg ? '%' : ''}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Quizzes Done</div><div class="stat-card-value" id="ovCardQz">${quizCount}</div></div>`;
-          panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">Recent Announcements</div></div><div id="ovAnnList" style="margin-bottom: 24px;"></div>
-          <div class="panel-header" style="margin-top:24px"><div class="panel-title">Top Rankers</div></div>
-          <div id="ovRankList"></div>`;
-        } else {
-          try {
-            document.getElementById('ovCardAtt').textContent = pct + '%';
-            document.getElementById('ovCardAttBar').style.width = pct + '%';
-            const qaEl = document.getElementById('ovCardQAvg');
-            qaEl.textContent = qAvg ? qAvg + '%' : '—';
-            qaEl.style.color = qAvg >= 60 ? '#22c55e' : '#ef4444';
-            document.getElementById('ovCardQz').textContent = quizCount;
-          } catch(e){}
-        }
-        
-        const annHtml = [...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 2).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} · ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div>${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;margin-top:8px">` : ''}</div>`).join('');
-        if (document.getElementById('ovAnnList') && document.getElementById('ovAnnList').innerHTML !== annHtml) document.getElementById('ovAnnList').innerHTML = annHtml;
-        
         // Auto-detect the latest exam term that has published results for the student's class
         const termOrder = ['public', 'final', 'halfYearly', 'quarterly'];
         let latestPublishedTerm = 'quarterly'; // Fallback
@@ -3145,13 +3119,37 @@ let DB = {
             }
         }
         
+        const termLabel = latestPublishedTerm === 'halfYearly' ? '2nd Term' : latestPublishedTerm === 'final' ? 'Final Exam' : latestPublishedTerm === 'public' ? 'Public Exam' : '1st Term';
+        
+        const latestExamResults = (res[latestPublishedTerm] || []);
+        const totalMarks = latestExamResults.length ? latestExamResults.filter(r => !r.absent).reduce((a, b) => a + (b.marks || 0), 0) : 0;
+        const maxMarks = latestExamResults.length ? latestExamResults.reduce((a, b) => a + (b.max || 100), 0) : 0;
+        
+        if (needsFullRender) {
+          cardsEl.innerHTML = `<div class="stat-card glass blue"><div class="stat-card-label">Attendance</div><div class="stat-card-value" id="ovCardAtt">${pct}%</div><div class="progress-bar" style="margin-top:10px"><div class="progress-fill" id="ovCardAttBar" style="width:${pct}%"></div></div><svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+    <div class="stat-card glass"><div class="stat-card-label" id="ovCardLatestTermLbl">${termLabel} Total</div><div class="stat-card-value" id="ovCardLatestTermScore" style="color:var(--text); font-size: 20px;">${latestExamResults.length ? `${totalMarks} <span style="font-size:12px;color:var(--text-muted);font-weight:600">/ ${maxMarks}</span>` : '—'}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Quizzes Done</div><div class="stat-card-value" id="ovCardQz">${quizCount}</div></div>`;
+          panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">Recent Announcements</div></div><div id="ovAnnList" style="margin-bottom: 24px;"></div>
+          <div id="ovRankList" style="margin-bottom: 40px;"></div>`;
+        } else {
+          try {
+            document.getElementById('ovCardAtt').textContent = pct + '%';
+            document.getElementById('ovCardAttBar').style.width = pct + '%';
+            document.getElementById('ovCardLatestTermLbl').textContent = termLabel + ' Total';
+            document.getElementById('ovCardLatestTermScore').innerHTML = latestExamResults.length ? `${totalMarks} <span style="font-size:12px;color:var(--text-muted);font-weight:600">/ ${maxMarks}</span>` : '—';
+            document.getElementById('ovCardQz').textContent = quizCount;
+          } catch(e){}
+        }
+        
+        const annHtml = [...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 2).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} · ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div>${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;margin-top:8px">` : ''}</div>`).join('');
+        if (document.getElementById('ovAnnList') && document.getElementById('ovAnnList').innerHTML !== annHtml) document.getElementById('ovAnnList').innerHTML = annHtml;
+        
         window.currentOverviewRankTab = latestPublishedTerm;
         const rankHtml = renderTop3Rankers(u.standard, window.currentOverviewRankTab, u.id);
         if (document.getElementById('ovRankList') && document.getElementById('ovRankList').innerHTML !== rankHtml) {
           document.getElementById('ovRankList').innerHTML = rankHtml;
           if(!rankHtml) {
-              const label = window.currentOverviewRankTab === 'halfYearly' ? '2nd Term' : window.currentOverviewRankTab === 'final' ? 'Final Exam' : window.currentOverviewRankTab === 'public' ? 'Public Exam' : '1st Term';
-              document.getElementById('ovRankList').innerHTML = `<div class="info-strip">No rank data yet for ${label}.</div>`;
+              document.getElementById('ovRankList').innerHTML = `<div class="panel-header" style="margin-top:24px"><div class="panel-title">Top Rankers</div><span class="badge badge-yellow">${termLabel}</span></div><div class="info-strip">No rank data yet for ${termLabel}.</div>`;
           }
         }
         
