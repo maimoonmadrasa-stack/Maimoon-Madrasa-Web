@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 
 <head>
@@ -8,7 +8,7 @@
   </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maimoon Madrasa — Academic Portal</title>
+  <title>Maimoon Madrasa ΓÇö Academic Portal</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Cinzel:wght@400;600;700;900&display=swap"
     rel="stylesheet">
@@ -20,7 +20,6 @@
       --blue-glow: rgba(59, 130, 246, 0.35);
       --bg: #090e1a;
       --bg2: #0d1525;
-      --solid-surface: #1a2640;
       --surface: rgba(255, 255, 255, 0.04);
       --surface-hover: rgba(255, 255, 255, 0.08);
       --border: rgba(255, 255, 255, 0.08);
@@ -40,7 +39,6 @@
     [data-theme="light"] {
       --bg: #eef3ff;
       --bg2: #e4ecff;
-      --solid-surface: #ffffff;
       --surface: rgba(255, 255, 255, 0.75);
       --surface-hover: rgba(255, 255, 255, 0.95);
       --border: rgba(59, 130, 246, 0.25);
@@ -58,13 +56,6 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      scrollbar-width: none; /* Firefox */
-      -ms-overflow-style: none; /* IE/Edge */
-    }
-
-    /* Hide Chrome/Safari/Edge scrollbar */
-    *::-webkit-scrollbar {
-      display: none;
     }
 
     body {
@@ -90,9 +81,9 @@
     .orb {
       position: absolute;
       border-radius: 50%;
-      filter: blur(100px);
-      opacity: .25;
-      animation: orbFloat 14s ease-in-out infinite alternate;
+      filter: blur(80px);
+      opacity: .18;
+      animation: orbFloat 12s ease-in-out infinite;
       will-change: transform;
       transform: translateZ(0);
     }
@@ -106,33 +97,36 @@
     }
 
     .orb2 {
-      width: 400px;
-      height: 400px;
-      background: #8b5cf6; /* Added purple hue for depth */
-      bottom: -50px;
-      left: -100px;
-      animation-delay: -4s;
+      width: 350px;
+      height: 350px;
+      background: #1d4ed8;
+      bottom: 100px;
+      left: -80px;
+      animation-delay: 4s;
     }
 
     .orb3 {
-      width: 300px;
-      height: 300px;
-      background: #06b6d4; /* Added cyan hue for dynamic lighting */
-      top: 40%;
-      left: 60%;
-      animation-delay: -8s;
+      width: 250px;
+      height: 250px;
+      background: #60a5fa;
+      top: 50%;
+      left: 50%;
+      animation-delay: 8s;
     }
 
     [data-theme="light"] .orb {
-      display: none;
+      opacity: .1;
     }
 
     @keyframes orbFloat {
-      0% {
+
+      0%,
+      100% {
         transform: translate(0, 0) scale(1);
       }
-      100% {
-        transform: translate(50px, -40px) scale(1.15);
+
+      50% {
+        transform: translate(30px, -30px) scale(1.08);
       }
     }
 
@@ -142,28 +136,24 @@
       inset: 0;
       pointer-events: none;
       z-index: 1;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
-      opacity: .35;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: .4;
       transform: translateZ(0);
       will-change: transform;
-    }
-
-    [data-theme="light"] body::before {
-      opacity: .15;
     }
 
     .glass {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
     }
 
     .glass-strong {
       background: var(--glass-strong);
       border: 1px solid var(--border);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border-radius: var(--radius-lg);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
     }
 
     .btn {
@@ -240,9 +230,6 @@
       z-index: 1000;
       box-shadow: var(--shadow), var(--shadow-blue);
       transition: all .4s;
-      background: var(--glass);
-      backdrop-filter: blur(20px) saturate(160%);
-      -webkit-backdrop-filter: blur(20px) saturate(160%);
     }
 
     .nav-brand {
@@ -352,7 +339,6 @@
       height: calc(100vh - 70px);
       overflow-y: auto;
       border-right: 1px solid var(--border);
-      border-radius: 0 !important; /* Specific user request to have no border radius on left menu */
       display: flex;
       flex-direction: column;
     }
@@ -483,14 +469,6 @@
       border-radius: var(--radius);
       position: relative;
       overflow: hidden;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      transition: all .2s;
-    }
-
-    .stat-card:hover {
-      border-color: var(--border-bright);
-      transform: translateY(-2px);
     }
 
     .stat-card-label {
@@ -730,12 +708,6 @@
       transition: all .2s;
       font-size: 13px;
     }
-    
-    [data-theme="light"] .quiz-option {
-      background: #ffffff;
-      border-color: rgba(59, 130, 246, 0.15);
-      box-shadow: 0 4px 12px rgba(15, 31, 61, 0.03);
-    }
 
     .quiz-option:hover {
       border-color: var(--blue);
@@ -901,12 +873,6 @@
       margin-bottom: 8px;
       transition: all .2s;
     }
-    
-    [data-theme="light"] .user-row {
-      background: #ffffff;
-      border-color: rgba(59, 130, 246, 0.15);
-      box-shadow: 0 4px 12px rgba(15, 31, 61, 0.03);
-    }
 
     .user-row:hover {
       border-color: var(--border-bright);
@@ -964,13 +930,6 @@
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       margin-bottom: 8px;
-      background: var(--surface);
-    }
-    
-    [data-theme="light"] .result-subject {
-      background: #ffffff;
-      border-color: rgba(59, 130, 246, 0.15);
-      box-shadow: 0 4px 12px rgba(15, 31, 61, 0.03);
     }
 
     .result-marks {
@@ -1024,12 +983,10 @@
       border-radius: var(--radius-lg);
       padding: 40px 36px;
       position: relative;
-      background: var(--glass-strong);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .5), 0 0 0 1px var(--border-bright);
+      max-height: 90vh;
+      overflow-y: auto;
       animation: scaleIn .3s ease;
-      border: 1px solid var(--border);
     }
 
     .modal-close {
@@ -1084,12 +1041,6 @@
       color: var(--text);
       text-align: left;
     }
-    
-    [data-theme="light"] .class-label-btn {
-      background: #ffffff;
-      border-color: rgba(59, 130, 246, 0.15);
-      box-shadow: 0 4px 12px rgba(15, 31, 61, 0.03);
-    }
 
     .class-label-btn:hover,
     .class-label-btn.open {
@@ -1118,18 +1069,6 @@
       margin-bottom: 8px;
       background: var(--surface);
     }
-    
-    /* RANK CARDS */
-    .rank-card {
-      background: var(--surface);
-      transition: all .2s;
-    }
-    
-    [data-theme="light"] .subject-card, [data-theme="light"] .rank-card {
-      background: #ffffff;
-      border-color: rgba(59, 130, 246, 0.15) !important;
-      box-shadow: 0 4px 12px rgba(15, 31, 61, 0.03);
-    }
 
     .subject-name {
       font-size: 13px;
@@ -1154,12 +1093,6 @@
       background: var(--surface);
       transition: all .2s;
     }
-    
-    [data-theme="light"] .att-mark-row {
-      background: #ffffff;
-      border-color: rgba(59, 130, 246, 0.15);
-      box-shadow: 0 4px 12px rgba(15, 31, 61, 0.03);
-    }
 
     .att-mark-row.present-row {
       border-color: rgba(34, 197, 94, .3);
@@ -1173,6 +1106,7 @@
 
     /* TABS */
     /* ATTENDANCE TIMELINE */
+    .att-timeline {}
 
     .att-month-row {
       padding: 14px 0;
@@ -1316,7 +1250,7 @@
       }
     }
 
-    /* ── HAMBURGER BUTTON (mobile only) ── */
+    /* ΓöÇΓöÇ HAMBURGER BUTTON (mobile only) ΓöÇΓöÇ */
     .hamburger {
       display: none;
       width: 36px;
@@ -1337,20 +1271,14 @@
       color: var(--blue);
     }
 
+    /* ΓöÇΓöÇ SIDEBAR OVERLAY (mobile) ΓöÇΓöÇ */
     .sidebar-overlay {
       display: none;
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, .55);
       z-index: 149;
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-    }
-
-    [data-theme="light"] .sidebar-overlay {
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(3px);
     }
 
     .sidebar-overlay.open {
@@ -1359,7 +1287,7 @@
 
     @media(max-width:768px) {
       nav {
-        width: calc(100% - 32px);
+        width: calc(100% - 24px);
       }
 
       .form-row {
@@ -1373,7 +1301,6 @@
       .dash-main {
         height: auto;
         overflow-y: visible;
-        padding: 20px 16px;
       }
 
       /* sidebar: off-canvas drawer on mobile */
@@ -1418,25 +1345,25 @@
 
       /* Cards grid */
       .cards-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
       }
 
       .stat-card {
-        padding: 18px;
+        padding: 14px;
       }
 
       .stat-card-value {
-        font-size: 26px;
+        font-size: 24px;
       }
 
       /* Panels */
       .panel {
-        padding: 18px;
+        padding: 14px;
       }
 
       .dash-main {
-        padding: 16px 12px;
+        padding: 14px;
       }
 
       .dash-header {
@@ -1455,11 +1382,11 @@
 
       /* Tabs */
       .tab-bar {
-        gap: 4px;
+        gap: 3px;
       }
 
       .tab-btn {
-        padding: 8px 14px;
+        padding: 6px 12px;
         font-size: 11px;
       }
 
@@ -1471,31 +1398,19 @@
 
       /* Buttons */
       .btn {
-        padding: 10px 18px;
+        padding: 9px 16px;
         font-size: 12px;
       }
 
       /* User rows */
       .user-actions {
-        gap: 6px;
-      }
-      
-      /* Form Actions (Modals) */
-      .form-actions {
-        flex-direction: column-reverse;
-        gap: 8px;
-        margin-top: 20px;
-      }
-      
-      .form-actions .btn {
-        width: 100%;
-        justify-content: center;
+        gap: 5px;
       }
 
       /* Sidebar */
       .sidebar {
-        width: 250px;
-        left: -260px;
+        width: 220px;
+        left: -230px;
       }
 
       .sidebar.mobile-open {
@@ -1606,6 +1521,16 @@
       width: 6px;
     }
 
+    .dash-main .glass {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    .dash-main .glass-strong {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
     ::-webkit-scrollbar-track {
       background: transparent;
     }
@@ -1615,7 +1540,7 @@
       border-radius: 3px;
     }
 
-    /* ── LANDING PAGE ── */
+    /* ΓöÇΓöÇ LANDING PAGE ΓöÇΓöÇ */
     #landingPage {
       overflow-y: auto;
     }
@@ -1803,25 +1728,30 @@
     }
 
     .feature-card {
-      background: var(--surface);
+      padding: 28px;
       border-radius: var(--radius-lg);
-      padding: 40px 32px;
-      text-align: center;
       transition: all 0.3s;
       position: relative;
       overflow: hidden;
-      border: 1px solid var(--border);
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, var(--blue-glow), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
     }
 
     .feature-card:hover {
+      transform: translateY(-4px);
       border-color: var(--border-bright);
-      transform: translateY(-4px);
-      box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.3);
-    }
-
-    .feature-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.3);
     }
 
     .feature-icon {
@@ -1845,7 +1775,7 @@
 
     .landing-nav {
       position: fixed;
-      top: 24px;
+      top: 16px;
       left: 50%;
       transform: translateX(-50%);
       width: calc(100% - 40px);
@@ -1856,36 +1786,8 @@
       padding: 12px 20px;
       border-radius: 50px;
       z-index: 1000;
-      /* Webild.io Glassmorphism Effect */
-      background-color: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow), var(--shadow-blue);
       transition: all 0.4s;
-    }
-
-    [data-theme="light"] .landing-nav {
-      background-color: rgba(255, 255, 255, 0.45);
-      box-shadow: 0 4px 12px rgba(234, 238, 248, 0.4);
-    }
-
-    /* The secret crisp 1px gradient mask border */
-    .landing-nav::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      padding: 1px;
-      border-radius: 50px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.05) 100%);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-
-    [data-theme="light"] .landing-nav::before {
-      background: linear-gradient(#fff 0 86%, #fff 100%);
     }
 
     .lp-footer {
@@ -2067,20 +1969,15 @@
       border-color: rgba(59, 130, 246, 0.2);
     }
 
-    /* Light Theme Modal specific overrides */
     [data-theme="light"] .modal {
-      background: var(--surface);
-      box-shadow: 0 24px 80px rgba(59, 130, 246, 0.12);
+      background: rgba(238, 243, 255, 0.98);
     }
-    
-    /* Animation classes for live updates */
-    .stat-card, .announcement, .user-row, .result-subject { animation: scaleIn 0.3s ease-out both; }
   </style>
 </head>
 
 <body>
   <!-- AUTO LOGIN SPINNER -->
-  <div id="global-loader" style="display: none; position: fixed; inset: 0; background: var(--bg, #090e1a); z-index: 99999; flex-direction: column; align-items: center; justify-content: center; color: var(--text, #fff); font-family: sans-serif; transition: opacity 0.5s ease;">
+  <div id="global-loader" style="display: none; position: fixed; inset: 0; background: #090e1a; z-index: 99999; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-family: sans-serif; transition: opacity 0.5s ease;">
     <style>
       .gl-spinner { width: 42px; height: 42px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: #3b82f6; border-radius: 50%; animation: gl-spin 1s linear infinite; margin-bottom: 24px; }
       @keyframes gl-spin { to { transform: rotate(360deg); } }
@@ -2088,12 +1985,9 @@
     </style>
     <div class="gl-spinner"></div>
     <div style="font-weight:700;font-size:20px;letter-spacing:1px;font-family:'Cinzel', serif;">MAIMOON MADRASA</div>
-    <div style="font-size:13px;color:rgba(150,150,150,0.8);margin-top:8px;">Connecting securely...</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:8px;">Connecting securely...</div>
   </div>
   <script>
-    if (localStorage.getItem('madrasa_theme') === 'light') {
-      document.documentElement.setAttribute('data-theme', 'light');
-    }
     if (localStorage.getItem('madrasa_uid')) {
       document.body.classList.add('auto-logging-in');
       document.getElementById('global-loader').style.display = 'flex';
@@ -2109,7 +2003,7 @@
   <div id="landingPage" class="page active">
 
     <!-- Landing Nav -->
-    <nav class="landing-nav">
+    <nav class="landing-nav glass-strong">
       <div
         style="display:flex;align-items:center;gap:10px;font-family:'Poppins',sans-serif;font-weight:700;font-size:17px;color:var(--text);">
         <div
@@ -2430,7 +2324,15 @@
           <input type="password" class="form-input" id="loginPass" placeholder="Enter password">
           <div class="form-error" id="loginError"></div>
         </div>
-        <button class="btn btn-primary" id="loginSubmitBtn" style="width:100%;justify-content:center;padding:14px;margin-bottom:10px;margin-top:20px;" onclick="doLogin()">
+        <div class="info-strip" style="margin-bottom:20px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          Demo: admin/demo123 &middot; ustha1/demo123 &middot; student1/demo123
+        </div>
+        <button class="btn btn-primary" id="loginSubmitBtn" style="width:100%;justify-content:center;padding:14px;margin-bottom:10px" onclick="doLogin()">
           Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
             <line x1="5" y1="12" x2="19" y2="12" />
@@ -2560,7 +2462,6 @@
               <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3z" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>Announcements</div>
-          <div class="sidebar-item" id="navPreviousYears" onclick="showSection('archives',this)" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>Previous Years</div>
         </div>
         <div class="sidebar-section" id="adminNav" style="display:none;">
           <div class="sidebar-label">Admin</div>
@@ -2677,13 +2578,6 @@
           </div>
           <div id="membersContent"></div>
         </div>
-        <div class="dash-section" id="section-archives">
-          <div class="dash-header">
-            <h2 class="dash-title">Previous Years Archive</h2>
-            <p class="dash-sub">View and explore data from past academic years in read-only mode.</p>
-          </div>
-          <div id="archivesContent"></div>
-        </div>
       </main>
     </div>
   </div>
@@ -2699,28 +2593,26 @@
       <div class="modal-title">Edit User</div>
       <div class="modal-sub">Update user information</div>
       <input type="hidden" id="editUserId">
-      <div style="max-height: 55vh; overflow-y: auto; margin: 0 -24px; padding: 0 24px;">
-        <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input"
-            id="editUserName"></div>
-        <div class="form-group"><label class="form-label">Username</label><input type="text" class="form-input"
-            id="editUserUsername"></div>
-        <div class="form-group"><label class="form-label">Password</label><input type="text" class="form-input"
-            id="editUserPass"></div>
-        <div id="editStudentFields">
-          <div class="form-row" style="margin-bottom:14px;">
-            <div class="form-group" style="margin:0;"><label class="form-label">Class</label><select class="form-select"
-                id="editUserClass"></select></div>
-            <div class="form-group" style="margin:0;"><label class="form-label">Gender</label><select class="form-select"
-                id="editUserGender">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select></div>
-          </div>
+      <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input"
+          id="editUserName"></div>
+      <div class="form-group"><label class="form-label">Username</label><input type="text" class="form-input"
+          id="editUserUsername"></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="text" class="form-input"
+          id="editUserPass"></div>
+      <div id="editStudentFields">
+        <div class="form-row" style="margin-bottom:14px;">
+          <div class="form-group" style="margin:0;"><label class="form-label">Class</label><select class="form-select"
+              id="editUserClass"></select></div>
+          <div class="form-group" style="margin:0;"><label class="form-label">Gender</label><select class="form-select"
+              id="editUserGender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select></div>
         </div>
-        <div id="editTeacherFields" style="display:none;">
-          <div class="form-group"><label class="form-label">Assigned Classes (Ctrl/Cmd for multiple)</label><select
-              class="form-select" id="editUserClasses" multiple style="height:140px;"></select></div>
-        </div>
+      </div>
+      <div id="editTeacherFields" style="display:none;">
+        <div class="form-group"><label class="form-label">Assigned Classes (Ctrl/Cmd for multiple)</label><select
+            class="form-select" id="editUserClasses" multiple style="height:140px;"></select></div>
       </div>
       <button class="btn btn-primary" onclick="saveEditUser()"
         style="width:100%;justify-content:center;margin-top:8px;">Save Changes</button>
@@ -2739,7 +2631,7 @@
       <div class="modal-sub" id="editMarksSub"></div>
       <input type="hidden" id="editMarksSid">
       <input type="hidden" id="editMarksExamType">
-      <div id="editMarksSubjectList" style="max-height: 55vh; overflow-y: auto; margin: 0 -24px; padding: 0 24px;"></div>
+      <div id="editMarksSubjectList"></div>
       <button class="btn btn-primary" onclick="saveMarks()"
         style="width:100%;justify-content:center;margin-top:8px;">Save Marks</button>
     </div>
@@ -2781,12 +2673,10 @@ let DB = {
       const dk = document.getElementById('toggleKnob'); if (dk) dk.style.transform = isDark ? '' : 'translateX(24px)';
       const li = document.getElementById('themeIconLanding'); if (li) li.innerHTML = iconHtml;
       const lk = document.getElementById('toggleKnobLanding'); if (lk) lk.style.transform = isDark ? '' : 'translateX(24px)';
-      localStorage.setItem('madrasa_theme', isDark ? 'dark' : 'light');
     }
     document.addEventListener('DOMContentLoaded', function () {
       const btn = document.getElementById('themeToggle');
       if (btn) btn.addEventListener('click', toggleTheme);
-      if (localStorage.getItem('madrasa_theme') === 'light') toggleTheme();
     });
 
     // AUTO LOGIN CHECK
@@ -2869,35 +2759,26 @@ let DB = {
       btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Fetching Data...';
       
       try {
-        // Note: system/settings is now fetched via onSnapshot inside the Promise.all below
+        // Fetch all necessary data for the session into DB memory
+        const sysDoc = await db.collection('system').doc('settings').get();
+        if (sysDoc.exists) {
+          const sysData = sysDoc.data();
+          DB.subjects = sysData.subjects || {};
+          DB.examSessions = sysData.examSessions || { quarterly: true, halfYearly: true, final: false, public: false };
+          DB.nextAnnouncementId = sysData.nextAnnouncementId || 1;
+          DB.nextUserId = sysData.nextUserId || 1;
+        }
 
         window.firebaseUnlisteners = window.firebaseUnlisteners || [];
         
         let initialLoadComplete = false;
         await Promise.all([
           new Promise(resolve => {
-            window.firebaseUnlisteners.push(db.collection('system').doc('settings').onSnapshot(snap => {
-              if (snap.exists) {
-                const sysData = snap.data();
-                DB.subjects = sysData.subjects || {};
-                DB.examSessions = sysData.examSessions || { quarterly: true, halfYearly: true, final: false, public: false, attendance: true };
-                DB.nextAnnouncementId = sysData.nextAnnouncementId || 1;
-                DB.nextUserId = sysData.nextUserId || 1;
-                if (initialLoadComplete) {
-                  renderAttendance();
-                }
-                if (!window.isSystemLocalEdit && initialLoadComplete) {
-                  renderActiveSectionGently();
-                }
-              }
-              resolve();
-            }));
-          }),
-          new Promise(resolve => {
             window.firebaseUnlisteners.push(db.collection('users').onSnapshot(snap => {
               DB.users = snap.docs.map(d => d.data());
-              if (!window.isUserLocalEdit && initialLoadComplete) { 
-                renderActiveSectionGently(); 
+              if (initialLoadComplete) { 
+                renderOverview(); 
+                if (u.role === 'admin') { renderUsers(); renderMembersList(); renderControlCenter(); } 
               }
               resolve();
             }));
@@ -2908,7 +2789,7 @@ let DB = {
               snap.docs.forEach(d => DB.attendance[d.id] = d.data());
               if (initialLoadComplete) {
                 if (!DB.attendance[u.id] && u.role === 'student') DB.attendance[u.id] = { days: [] };
-                renderActiveSectionGently();
+                renderOverview(); renderAttendance();
               }
               resolve();
             }));
@@ -2919,7 +2800,7 @@ let DB = {
               snap.docs.forEach(d => DB.results[d.id] = d.data());
               if (initialLoadComplete) {
                 if (!DB.results[u.id] && u.role === 'student') DB.results[u.id] = { quarterly: [], halfYearly: [], final: [], model: [], public: [] };
-                renderActiveSectionGently();
+                renderOverview(); renderResults();
               }
               resolve();
             }));
@@ -2927,24 +2808,14 @@ let DB = {
           new Promise(resolve => {
             window.firebaseUnlisteners.push(db.collection('quizzes').onSnapshot(snap => {
               DB.quizzes = snap.docs.map(d => d.data());
-              if (!window.isQuizLocalEdit && initialLoadComplete) { renderActiveSectionGently(); }
-              resolve();
-            }));
-          }),
-          new Promise(resolve => {
-            window.firebaseUnlisteners.push(db.collection('quizScores').onSnapshot(snap => {
-              DB.quizScores = {};
-              snap.docs.forEach(d => DB.quizScores[d.id] = d.data().score);
-              if (initialLoadComplete) { renderActiveSectionGently(); }
+              if (initialLoadComplete) { renderOverview(); renderQuiz(); }
               resolve();
             }));
           }),
           new Promise(resolve => {
             window.firebaseUnlisteners.push(db.collection('announcements').onSnapshot(snap => {
               DB.announcements = snap.docs.map(d => d.data());
-              if (!window.isAnnLocalEdit && initialLoadComplete) { 
-                renderActiveSectionGently(); 
-              }
+              if (initialLoadComplete) { renderOverview(); renderAnnouncements(); }
               resolve();
             }));
           })
@@ -2958,9 +2829,6 @@ let DB = {
         document.getElementById('sideRole').textContent = u.role === 'teacher' ? 'Ustha' : u.role.charAt(0).toUpperCase() + u.role.slice(1);
         document.getElementById('adminNav').style.display = u.role === 'admin' ? 'block' : 'none';
         
-        const prevYearsNav = document.getElementById('navPreviousYears');
-        if (prevYearsNav) prevYearsNav.style.display = (u.role === 'admin' || u.role === 'teacher') ? 'flex' : 'none';
-        
         if (!DB.attendance[u.id] && u.role === 'student') DB.attendance[u.id] = { days: [] };
         if (!DB.results[u.id] && u.role === 'student') DB.results[u.id] = { quarterly: [], halfYearly: [], final: [], model: [], public: [] };
         
@@ -2968,7 +2836,6 @@ let DB = {
         showSection('overview', document.querySelector('.sidebar-item'));
         renderOverview(); renderAttendance(); renderResults(); renderQuiz(); renderAnnouncements();
         if (u.role === 'admin') { renderUsers(); renderSubjects(); renderAnalytics(); renderMembersList(); renderControlCenter(); }
-        if (u.role === 'admin' || u.role === 'teacher') renderArchives();
         
       } catch (e) {
         console.error("Error fetching data:", e);
@@ -3006,13 +2873,12 @@ let DB = {
       document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
       document.getElementById('section-overview').classList.add('active');
     }
+
     function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0, 0); }
     function showSection(id, el) {
-      window.currentActiveSection = id;
       document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
       document.getElementById('section-' + id).classList.add('active');
       document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-      document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.remove('active'));
       if (el) el.classList.add('active');
       closeSidebar();
     }
@@ -3030,78 +2896,10 @@ let DB = {
     }
 
     // OVERVIEW
-    function renderActiveSectionGently() {
-      if (!DB.currentUser) return;
-      const u = DB.currentUser;
-      const sid = window.currentActiveSection || 'overview';
-      
-      if (sid === 'overview') renderOverview();
-      else if (sid === 'quizzes') {
-        if (window.currentQuizView === 'scores') {
-          viewQuizScores(window.currentQuizId);
-        } else if (window.currentQuizView === 'qs') {
-          viewQuizQs(window.currentQuizId);
-        } else if (window.currentQuizView === 'taking') {
-          // Do absolutely nothing; never interrupt a student's active exam
-        } else {
-          // Admin & Teacher View List Re-render
-          const listEl = document.getElementById('quizList');
-          if (listEl && (u.role === 'admin' || u.role === 'teacher')) {
-            listEl.innerHTML = DB.quizzes.length ? DB.quizzes.map(q => getQuizHtml(q, u.role)).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)" id="noQuizMsg">No quizzes yet.</div>';
-          } 
-          // Student View Re-render
-          else if (u.role === 'student') {
-            renderQuiz(); 
-          }
-          // Admin "Create" View Form Preservation Check
-          else {
-            if (u.role !== 'admin' || (!document.getElementById('quizTitle')?.value && !document.getElementById('quizSubject')?.value)) renderQuiz();
-          }
-        }
-      }
-      else if (sid === 'announcements') {
-        if (u.role !== 'admin' && u.role !== 'teacher') renderAnnouncements();
-        else if (!document.getElementById('annTitle')?.value && !document.getElementById('annText')?.value) renderAnnouncements();
-      }
-      else if (sid === 'users') {
-        if (!document.getElementById('nuName')?.value && !document.getElementById('usersSearch')?.value) renderUsers();
-      }
-      else if (sid === 'subjects') renderSubjects();
-      else if (sid === 'analytics') renderAnalytics();
-      else if (sid === 'members') renderMembersList();
-      else if (sid === 'controlcenter') renderControlCenter();
-      else if (sid === 'archives') renderArchives();
-      else if (sid === 'attendance') {
-        if (u.role === 'student') renderAttendance();
-        else if (u.role === 'admin' && attendanceSelectedCls) loadAdminAttendanceClass(attendanceSelectedCls);
-        // Only teachers actively click checkboxes without a modal, so we'll skip live-rendering their class view to avoid losing unsaved clicks
-      }
-      else if (sid === 'results') {
-        if (!document.getElementById('editMarksModal')?.classList.contains('open')) {
-          if (u.role === 'admin' && resultSelectedCls) {
-            const students = [...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'male'), ...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'female')];
-            renderAdminResultList(teacherResultTab, students, resultSelectedCls);
-          } else if (u.role === 'teacher' && resultSelectedCls) {
-            const students = [...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'male'), ...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'female')];
-            renderTeacherResultList(teacherResultTab, students, resultSelectedCls, 'teacher');
-          } else {
-            renderResults();
-          }
-        }
-      }
-    }
-
     function renderOverview() {
       const u = DB.currentUser;
-      const titleEl = document.getElementById('overviewTitle');
-      if (titleEl) titleEl.textContent = 'Welcome, ' + u.name.split(' ')[0] + '!';
-      
-      const cardsEl = document.getElementById('overviewCards');
-      const panelEl = document.getElementById('overviewPanel');
-      if (!cardsEl || !panelEl) return;
-      
-      const needsFullRender = !cardsEl.children.length;
-
+      document.getElementById('overviewTitle').textContent = 'Welcome, ' + u.name.split(' ')[0] + '!';
+      let cards = '', panel = '';
       if (u.role === 'student') {
         const { present, absent, total } = getAttStats(u.id);
         const pct = total ? Math.round(present / total * 100) : 0;
@@ -3109,101 +2907,35 @@ let DB = {
         const qAvg = (res.quarterly || []).length ? Math.round((res.quarterly || []).reduce((a, b) => a + b.marks, 0) / (res.quarterly || []).length) : 0;
         const quizCount = Object.keys(DB.quizScores).filter(k => k.startsWith(u.id + '_')).length;
         document.getElementById('overviewSub').textContent = u.class;
-        
-        if (needsFullRender) {
-          cardsEl.innerHTML = `<div class="stat-card glass blue"><div class="stat-card-label">Attendance</div><div class="stat-card-value" id="ovCardAtt">${pct}%</div><div class="progress-bar" style="margin-top:10px"><div class="progress-fill" id="ovCardAttBar" style="width:${pct}%"></div></div><svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-    <div class="stat-card glass"><div class="stat-card-label">Quarterly Avg</div><div class="stat-card-value" id="ovCardQAvg" style="color:${qAvg >= 60 ? '#22c55e' : '#ef4444'}">${qAvg || '—'}${qAvg ? '%' : ''}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Quizzes Done</div><div class="stat-card-value" id="ovCardQz">${quizCount}</div></div>`;
-          panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">Recent Announcements</div></div><div id="ovAnnList" style="margin-bottom: 24px;"></div>
-          <div class="panel-header" style="margin-top:24px"><div class="panel-title">Top Rankers</div></div>
-          <div class="tabs" id="overviewRankTabs" style="margin-bottom:16px; overflow-x: auto; white-space: nowrap;">
-            <button class="tab-btn active" onclick="switchOverviewRankTab('firstTerm', this)">1st Term</button>
-            <button class="tab-btn" onclick="switchOverviewRankTab('halfYearly', this)">2nd Term</button>
-            <button class="tab-btn" onclick="switchOverviewRankTab('final', this)">Final Exam</button>
-            <button class="tab-btn" onclick="switchOverviewRankTab('public', this)">Public Exam</button>
-          </div>
-          <div id="ovRankList"></div>`;
-        } else {
-          try {
-            document.getElementById('ovCardAtt').textContent = pct + '%';
-            document.getElementById('ovCardAttBar').style.width = pct + '%';
-            const qaEl = document.getElementById('ovCardQAvg');
-            qaEl.textContent = qAvg ? qAvg + '%' : '—';
-            qaEl.style.color = qAvg >= 60 ? '#22c55e' : '#ef4444';
-            document.getElementById('ovCardQz').textContent = quizCount;
-          } catch(e){}
-        }
-        
-        const annHtml = [...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 2).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} · ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div>${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;margin-top:8px">` : ''}</div>`).join('');
-        if (document.getElementById('ovAnnList') && document.getElementById('ovAnnList').innerHTML !== annHtml) document.getElementById('ovAnnList').innerHTML = annHtml;
-        
-        // Sync the rankers renderer with an explicit tracking variable specifically for the overview, to prevent conflicts with the actual "Results" tab
-        window.currentOverviewRankTab = window.currentOverviewRankTab || 'firstTerm';
-        const rankHtml = renderTop3Rankers(u.standard, window.currentOverviewRankTab, u.id);
-        if (document.getElementById('ovRankList') && document.getElementById('ovRankList').innerHTML !== rankHtml) {
-          document.getElementById('ovRankList').innerHTML = rankHtml;
-          // Ensure the empty state message still displays a label
-          if(!rankHtml) {
-              const label = window.currentOverviewRankTab === 'halfYearly' ? '2nd Term' : window.currentOverviewRankTab === 'final' ? 'Final Exam' : window.currentOverviewRankTab === 'public' ? 'Public Exam' : '1st Term';
-              document.getElementById('ovRankList').innerHTML = `<div class="info-strip">No rank data yet for ${label}.</div>`;
-          }
-        }
-        
+        cards = `<div class="stat-card glass blue"><div class="stat-card-label">Attendance</div><div class="stat-card-value">${pct}%</div><div class="progress-bar" style="margin-top:10px"><div class="progress-fill" style="width:${pct}%"></div></div><svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+    <div class="stat-card glass"><div class="stat-card-label">Quarterly Avg</div><div class="stat-card-value" style="color:${qAvg >= 60 ? '#22c55e' : '#ef4444'}">${qAvg || 'ΓÇö'}${qAvg ? '%' : ''}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Quizzes Done</div><div class="stat-card-value">${quizCount}</div></div>`;
+        panel = `<div class="panel-header"><div class="panel-title">Recent Announcements</div></div>${[...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 2).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} ┬╖ ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div></div>`).join('')}`;
+        panel += renderTop3Rankers(u.standard, currentResultTab, u.id);
       } else if (u.role === 'teacher') {
         document.getElementById('overviewSub').textContent = 'Assigned: ' + u.assignedClasses.map(c => 'Class ' + c).join(', ');
         const myS = DB.users.filter(s => s.role === 'student' && u.assignedClasses.includes(s.standard));
-        const activeQz = DB.quizzes.filter(q => q.active).length;
-        
-        if (needsFullRender) {
-          cardsEl.innerHTML = `<div class="stat-card glass blue"><div class="stat-card-label">My Students</div><div class="stat-card-value" id="ovTchStu">${myS.length}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Active Quizzes</div><div class="stat-card-value" id="ovTchQz">${activeQz}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Announcements</div><div class="stat-card-value" id="ovTchAnn">${DB.announcements.length}</div></div>`;
-          panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">My Students</div></div><div id="ovTchTable"></div>`;
-        } else {
-          try {
-            document.getElementById('ovTchStu').textContent = myS.length;
-            document.getElementById('ovTchQz').textContent = activeQz;
-            document.getElementById('ovTchAnn').textContent = DB.announcements.length;
-          } catch(e){}
-        }
-        const tblHtml = renderStudentTable(myS);
-        if (document.getElementById('ovTchTable') && document.getElementById('ovTchTable').innerHTML !== tblHtml) document.getElementById('ovTchTable').innerHTML = tblHtml;
-        
+        cards = `<div class="stat-card glass blue"><div class="stat-card-label">My Students</div><div class="stat-card-value">${myS.length}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Active Quizzes</div><div class="stat-card-value">${DB.quizzes.filter(q => q.active).length}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Announcements</div><div class="stat-card-value">${DB.announcements.length}</div></div>`;
+        panel = `<div class="panel-header"><div class="panel-title">My Students</div></div>${renderStudentTable(myS)}`;
       } else {
         document.getElementById('overviewSub').textContent = 'Full system control';
         const students = DB.users.filter(s => s.role === 'student');
         const teachers = DB.users.filter(s => s.role === 'teacher');
-        const activeQz = DB.quizzes.filter(q => q.active).length;
-        
-        if (needsFullRender) {
-          cardsEl.innerHTML = `<div class="stat-card glass blue"><div class="stat-card-label">Total Students</div><div class="stat-card-value" id="ovAdmStu">${students.length}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Usthas</div><div class="stat-card-value" id="ovAdmTch">${teachers.length}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Active Quizzes</div><div class="stat-card-value" id="ovAdmQz">${activeQz}</div></div>
-    <div class="stat-card glass"><div class="stat-card-label">Classes</div><div class="stat-card-value" id="ovAdmCls">10</div></div>`;
-          panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">Student Overview</div></div><div id="ovAdmTable"></div>`;
-        } else {
-          try {
-            document.getElementById('ovAdmStu').textContent = students.length;
-            document.getElementById('ovAdmTch').textContent = teachers.length;
-            document.getElementById('ovAdmQz').textContent = activeQz;
-          } catch(e){}
-        }
-        const tblHtml = renderStudentTable(students);
-        if (document.getElementById('ovAdmTable') && document.getElementById('ovAdmTable').innerHTML !== tblHtml) document.getElementById('ovAdmTable').innerHTML = tblHtml;
+        cards = `<div class="stat-card glass blue"><div class="stat-card-label">Total Students</div><div class="stat-card-value">${students.length}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Usthas</div><div class="stat-card-value">${teachers.length}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Active Quizzes</div><div class="stat-card-value">${DB.quizzes.filter(q => q.active).length}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Classes</div><div class="stat-card-value">10</div></div>`;
+        panel = `<div class="panel-header"><div class="panel-title">Student Overview</div></div>${renderStudentTable(students)}`;
       }
+      document.getElementById('overviewCards').innerHTML = cards;
+      document.getElementById('overviewPanel').innerHTML = panel;
     }
     function renderStudentTable(students) {
       if (!students.length) return '<div style="text-align:center;padding:20px;color:var(--text-dim);font-size:13px">No students.</div>';
       const sorted = [...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')];
-      return `<div class="table-wrap"><table><thead><tr><th>Name</th><th>Class</th><th>Gender</th><th>Attendance</th><th>Status</th></tr></thead><tbody>${sorted.map(s => { const { present, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return `<tr><td><strong>${s.name}</strong></td><td>${s.class || '—'}</td><td><span class="badge ${s.gender === 'male' ? 'badge-blue' : 'badge-yellow'}">${s.gender || '—'}</span></td><td>${pct}%</td><td><span class="badge ${pct >= 60 ? 'badge-green' : 'badge-red'}">${pct >= 60 ? 'Good' : 'Low'}</span></td></tr>`; }).join('')}</tbody></table></div>`;
-    }
-    
-    // OVERVIEW RANK TABS (STUDENT)
-    function switchOverviewRankTab(examType, btn) {
-      window.currentOverviewRankTab = examType;
-      document.querySelectorAll('#overviewRankTabs .tab-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      renderOverview();
+      return `<div class="table-wrap"><table><thead><tr><th>Name</th><th>Class</th><th>Gender</th><th>Attendance</th><th>Status</th></tr></thead><tbody>${sorted.map(s => { const { present, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return `<tr><td><strong>${s.name}</strong></td><td>${s.class || 'ΓÇö'}</td><td><span class="badge ${s.gender === 'male' ? 'badge-blue' : 'badge-yellow'}">${s.gender || 'ΓÇö'}</span></td><td>${pct}%</td><td><span class="badge ${pct >= 75 ? 'badge-green' : 'badge-red'}">${pct >= 75 ? 'Good' : 'Low'}</span></td></tr>`; }).join('')}</tbody></table></div>`;
     }
 
     // ATTENDANCE
@@ -3211,17 +2943,6 @@ let DB = {
       const u = DB.currentUser;
       const el = document.getElementById('attendanceContent');
       document.getElementById('attendanceSub').textContent = u.role === 'student' ? 'Your personal attendance record.' : u.role === 'teacher' ? 'Mark attendance for your classes.' : 'View attendance by class.';
-      
-      const attClosed = DB.examSessions && DB.examSessions.attendance === false;
-      if (attClosed && !window.isArchiveMode && (u.role === 'admin' || u.role === 'teacher')) {
-        el.innerHTML = `<div class="empty glass" style="border-radius:var(--radius-lg);padding:60px 20px;text-align:center;margin-top:20px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:54px;height:54px;color:var(--text-muted);margin:0 auto 16px;display:block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <div style="font-size:18px;font-weight:600;margin-bottom:8px;">Not Available Right Now</div>
-          <p style="color:var(--text-muted);font-size:13px;max-width:400px;margin:0 auto;">Attendance tracking has not yet been started or is temporarily closed.</p>
-        </div>`;
-        return;
-      }
-
       if (u.role === 'student') {
         const attData = DB.attendance[u.id] || { days: [] };
         const { present, absent, total } = getAttStats(u.id);
@@ -3281,188 +3002,72 @@ let DB = {
         <div style="display:flex;flex-direction:column;gap:14px">
           <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:2px">Present Days</div><div style="font-size:28px;font-weight:800;color:#22c55e">${present}</div></div>
           <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:2px">Absent Days</div><div style="font-size:28px;font-weight:800;color:#ef4444">${absent}</div></div>
-          <div style="font-size:12px;color:${pct >= 75 ? '#22c55e' : '#ef4444'};font-weight:600">${pct >= 75 ? '✓ Satisfactory' : '⚠ Below 75% requirement'}</div>
+          <div style="font-size:12px;color:${pct >= 75 ? '#22c55e' : '#ef4444'};font-weight:600">${pct >= 75 ? 'Γ£ô Satisfactory' : 'ΓÜá Below 75% requirement'}</div>
         </div>
       </div>
     </div>
     ${attData.days.length ? `<div class="panel glass"><div class="panel-header"><div class="panel-title">Monthly Attendance</div><div style="display:flex;gap:10px;font-size:11px;color:var(--text-muted)"><span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:rgba(34,197,94,.7);display:inline-block"></span>Present</span><span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;background:rgba(239,68,68,.7);display:inline-block"></span>Absent</span></div></div>${calHtml}</div>` : '<div class="info-strip">No attendance records yet for this academic year.</div>'}`;
       } else if (u.role === 'teacher') {
         const ac = u.assignedClasses || [];
-        const markTabHtml = !window.isArchiveMode ? `<button class="tab-btn active" onclick="switchAttMode('mark',this)">Mark Attendance</button>` : '';
-        const markSecHtml = !window.isArchiveMode ? `
+        el.innerHTML = `
+    <div class="tab-bar" id="attModeTabs">
+      <button class="tab-btn active" onclick="switchAttMode('mark',this)">Mark Attendance</button>
+      <button class="tab-btn" onclick="switchAttMode('overview',this)">Academic Year Overview</button>
+    </div>
     <div id="attMarkSection">
       <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to mark attendance (today, yesterday or 2 days ago).</div>
       <div class="panel glass"><div class="panel-header"><div class="panel-title">Select Class</div><div style="font-size:12px;color:var(--text-muted)">${new Date().toDateString()}</div></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">${ac.map(cls => `<button class="btn btn-ghost" onclick="loadAttendanceClass(${cls},0)" style="justify-content:center;padding:16px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Class ${cls}</button>`).join('')}</div></div>
-    </div>` : '';
-        el.innerHTML = `
-    <div class="tab-bar" id="attModeTabs" style="margin-bottom:16px;">
-      ${markTabHtml}
-      <button class="tab-btn ${window.isArchiveMode ? 'active' : ''}" onclick="switchAttMode('overview',this)">Overall Summary</button>
-      <button class="tab-btn" onclick="switchAttMode('chart',this)">Monthly Status</button>
     </div>
-    ${markSecHtml}
-    <div id="attOverviewSection" style="display:none">
-      <div id="teacherAttOverviewSelector">
-        <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Overall Summary.</div>
-        <div class="panel glass"><div class="panel-header"><div class="panel-title">Select Class</div></div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">${ac.map(cls => `<button class="btn btn-ghost" onclick="loadTeacherAttOverviewClass(${cls})" style="justify-content:center;padding:16px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Class ${cls}</button>`).join('')}</div></div>
-      </div>
-      <div id="teacherAttOverviewContent"></div>
-    </div>
-    <div id="attChartSection" style="display:none">
-      <div id="teacherAttChartSelector">
-        <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Monthly Status chart.</div>
-        <div class="panel glass"><div class="panel-header"><div class="panel-title">Select Class</div></div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">${ac.map(cls => `<button class="btn btn-ghost" onclick="loadTeacherAttChartClass(${cls})" style="justify-content:center;padding:16px;font-size:14px;font-weight:600;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Class ${cls}</button>`).join('')}</div></div>
-      </div>
-      <div id="teacherAttChartContent"></div>
-    </div>`;
+    <div id="attOverviewSection" style="display:none">${renderTeacherYearOverview(ac)}</div>`;
       } else {
-        const markTabHtml = !window.isArchiveMode ? `<button class="tab-btn active" onclick="switchAttMode('mark',this)">View Attendance</button>` : '';
-        const markSecHtml = !window.isArchiveMode ? `
-<div id="attMarkSection">
-  <div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its attendance records.</div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttClass(${cls}, 0)" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
-  <div id="adminAttClassContent"></div>
-</div>` : '';
-        el.innerHTML = `
-<div class="tab-bar" id="attModeTabs" style="margin-bottom:16px;">
-  ${markTabHtml}
-  <button class="tab-btn ${window.isArchiveMode ? 'active' : ''}" onclick="switchAttMode('overview',this)">Overall Summary</button>
-  <button class="tab-btn" onclick="switchAttMode('chart',this)">Monthly Status</button>
-</div>
-${markSecHtml}
-<div id="attOverviewSection" style="display:none">
-  <div class="info-strip" id="adminAttOverviewInfo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Overall Summary.</div>
-  <div id="adminAttOverviewGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttOverviewClass(${cls})" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
-  <div id="adminAttOverviewContent"></div>
-</div>
-<div id="attChartSection" style="display:none">
-  <div class="info-strip" id="adminAttChartInfo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Select a class to view its Monthly Status chart.</div>
-  <div id="adminAttChartGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttChartClass(${cls})" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
-  <div id="adminAttChartContent"></div>
-</div>`;
+        el.innerHTML = `<div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Click a class to view its attendance records.</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin-bottom:20px">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(cls => `<button class="btn btn-ghost" onclick="loadAdminAttClass(${cls})" style="justify-content:center;padding:14px;font-size:13px;font-weight:600;">Class ${cls}</button>`).join('')}</div>
+    <div id="adminAttClassContent"></div>`;
       }
     }
+    let _attCls = null;
     function switchAttMode(mode, btn) {
       document.querySelectorAll('#attModeTabs .tab-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      const markSec = document.getElementById('attMarkSection');
-      if (markSec) markSec.style.display = mode === 'mark' ? '' : 'none';
-      const overviewSec = document.getElementById('attOverviewSection');
-      if (overviewSec) overviewSec.style.display = mode === 'overview' ? '' : 'none';
-      const chartSec = document.getElementById('attChartSection');
-      if (chartSec) chartSec.style.display = mode === 'chart' ? '' : 'none';
+      btn.classList.add('active');
+      document.getElementById('attMarkSection').style.display = mode === 'mark' ? '' : 'none';
+      document.getElementById('attOverviewSection').style.display = mode === 'overview' ? '' : 'none';
     }
-    function renderTeacherOverallSummaryClass(assignedClasses) {
+    function renderTeacherYearOverview(assignedClasses) {
       if (!assignedClasses || !assignedClasses.length) return '<div class="info-strip">No classes assigned.</div>';
       let html = '';
       for (const cls of assignedClasses) {
         const students = DB.users.filter(s => s.role === 'student' && s.standard === cls);
         if (!students.length) continue;
-        
-        html += `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls} — Overall Summary</div><span class="badge badge-blue">${students.length} students</span></div>
-    <div class="table-wrap"><table><thead><tr><th>Student</th><th>Present</th><th>Absent</th><th>%</th><th>Status</th></tr></thead>
-      <tbody>${students.map(s => { const { present, absent, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return { ...s, _attPct: pct, present, absent }; }).sort((a,b) => b._attPct - a._attPct).map(s => `<tr><td><strong>${s.name}</strong></td><td style="color:#22c55e">${s.present}</td><td style="color:#ef4444">${s.absent}</td><td>${s._attPct}%</td><td><span class="badge ${s._attPct >= 60 ? 'badge-green' : 'badge-red'}">${s._attPct >= 60 ? 'Good' : 'Low'}</span></td></tr>`).join('')}</tbody></table></div></div>`;
+        // Get all unique months from all students in this class
+        const allDates = new Set();
+        students.forEach(s => { (DB.attendance[s.id] || { days: [] }).days.forEach(d => allDates.add(d.date.substring(0, 7))); });
+        const months = [...allDates].sort();
+        if (!months.length) { html += `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls}</div><span class="badge badge-yellow">No records yet</span></div></div>`; continue; }
+        html += `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls} ΓÇö Academic Overview</div><span class="badge badge-blue">${students.length} students</span></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Student</th>${months.map(m => { const [y, mo] = m.split('-'); return '<th>' + ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][parseInt(mo) - 1] + ' ' + y + '</th>' }).join('')}<th>Total %</th></tr></thead>
+      <tbody>${[...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')].map(s => {
+          const days = (DB.attendance[s.id] || { days: [] }).days;
+          const { present: totalP, total: grandTotal } = getAttStats(s.id);
+          const overallPct = grandTotal ? Math.round(totalP / grandTotal * 100) : 0;
+          const cells = months.map(m => {
+            const mDays = days.filter(d => d.date.startsWith(m));
+            const p = mDays.filter(d => d.status === 'P').length;
+            const a = mDays.filter(d => d.status === 'A').length;
+            const t = p + a;
+            if (!t) return '<td style="color:var(--text-dim);font-size:11px">ΓÇö</td>';
+            const pct = Math.round(p / t * 100);
+            return '<td><span style="font-size:12px;font-weight:600;color:' + (pct >= 75 ? '#22c55e' : pct >= 50 ? '#eab308' : '#ef4444') + '">' + pct + '%</span><div style="font-size:10px;color:var(--text-dim)">' + p + '/' + t + '</div></td>';
+          }).join('');
+          return '<tr><td><strong style="font-size:12px">' + s.name + '</strong><div style="font-size:10px;color:var(--text-muted)">' + s.gender + '</div></td>' + cells + '<td><span class="badge ' + (overallPct >= 75 ? 'badge-green' : 'badge-red') + '" style="font-size:10px">' + overallPct + '%</span></td></tr>';
+        }).join('')}</tbody>
+    </table></div></div>`;
       }
       return html || '<div class="info-strip">No attendance data recorded yet.</div>';
     }
-    
-    // EXPOSED GLOBAL For month switching
-    window.currentAttChartMonth = window.currentAttChartMonth || new Date().toISOString().substring(0, 7);
-    
-    function renderTeacherMonthChart(assignedClasses) {
-      if (!assignedClasses || !assignedClasses.length) return '<div class="info-strip">No classes assigned.</div>';
-      
-      // Determine all possible months with data across all assigned students to build dropdown
-      const allDates = new Set();
-      const allStudents = [];
-      for (const cls of assignedClasses) {
-        const classStudents = DB.users.filter(s => s.role === 'student' && s.standard === cls);
-        allStudents.push(...classStudents);
-        classStudents.forEach(s => { 
-          (DB.attendance[s.id] || { days: [] }).days.forEach(d => allDates.add(d.date.substring(0, 7))); 
-        });
-      }
-      
-      const months = [...allDates].sort().reverse();
-      if (!months.length) {
-        return '<div class="info-strip">No attendance data recorded yet.</div>';
-      }
-      
-      // If selected month has no data (e.g. just opened), default to the most recent month with data
-      if (!months.includes(window.currentAttChartMonth)) {
-        window.currentAttChartMonth = months[0];
-      }
-      const selMonth = window.currentAttChartMonth;
-      const [selYear, selMo] = selMonth.split('-');
-      
-      // Days in the selected month
-      const daysInMonth = new Date(selYear, selMo, 0).getDate();
-      const daysArray = Array.from({length: daysInMonth}, (_, i) => i + 1);
-      
-      let html = `<div style="margin-bottom:14px;display:flex;align-items:center;gap:10px;">
-        <label style="font-size:12px;font-weight:600;color:var(--text-muted)">Select Month:</label>
-        <select class="form-select" style="width:auto;min-width:150px;" onchange="window.currentAttChartMonth=this.value; refreshAttChart();">
-          ${months.map(m => {
-            const [y, mo] = m.split('-');
-            const name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][parseInt(mo) - 1] + ' ' + y;
-            return `<option value="${m}" ${m === selMonth ? 'selected' : ''}>${name}</option>`;
-          }).join('')}
-        </select>
-      </div>`;
-
-      for (const cls of assignedClasses) {
-        const students = DB.users.filter(s => s.role === 'student' && s.standard === cls);
-        if (!students.length) continue;
-        
-        // Check if there are any records for this specific class in this month before rendering an empty table
-        const hasRecords = students.some(s => (DB.attendance[s.id] || {days:[]}).days.some(d => d.date.startsWith(selMonth)));
-        if (!hasRecords) continue;
-        
-        html += `<div class="panel glass" style="margin-bottom:24px"><div class="panel-header" style="border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:12px;"><div class="panel-title">Class ${cls}</div><span class="badge badge-blue">${students.length} students</span></div>
-        <div class="table-wrap" style="overflow-x:auto;">
-          <table style="min-width: max-content; font-size: 11px; border-collapse: separate; border-spacing: 0;">
-            <thead>
-              <tr>
-                <th style="position:sticky;left:0;background:var(--solid-surface);z-index:10;min-width:140px;text-align:left;border-bottom:1px solid var(--border);border-right:1px solid var(--border);box-shadow: 2px 0 4px rgba(0,0,0,0.05);">Student</th>
-                ${daysArray.map(d => `<th style="text-align:center;padding:6px;width:24px;border-bottom:1px solid var(--border);color:var(--text-muted);">${d}</th>`).join('')}
-              </tr>
-            </thead>
-            <tbody>
-              ${[...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')].map(s => {
-                const days = (DB.attendance[s.id] || { days: [] }).days;
-                const recordMap = {};
-                days.forEach(d => { if (d.date.startsWith(selMonth)) recordMap[d.date] = d.status; });
-                
-                const cells = daysArray.map(d => {
-                  const dateStr = `${selMonth}-${String(d).padStart(2, '0')}`;
-                  const st = recordMap[dateStr];
-                  let cellContent = `<td style="text-align:center;padding:4px;border-bottom:1px solid var(--border);border-left:1px dashed var(--border-light);color:var(--border);">·</td>`;
-                  if (st === 'P') cellContent = `<td style="text-align:center;padding:4px;border-bottom:1px solid var(--border);border-left:1px dashed var(--border-light);"><div style="width:18px;height:18px;border-radius:4px;background:#22c55e;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;margin:0 auto;">P</div></td>`;
-                  if (st === 'A') cellContent = `<td style="text-align:center;padding:4px;border-bottom:1px solid var(--border);border-left:1px dashed var(--border-light);"><div style="width:18px;height:18px;border-radius:4px;background:#ef4444;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;margin:0 auto;">A</div></td>`;
-                  return cellContent;
-                }).join('');
-                
-                return `<tr>
-                  <td style="position:sticky;left:0;background:var(--solid-surface);z-index:10;border-bottom:1px solid var(--border);border-right:1px solid var(--border);padding:8px 10px;box-shadow: 2px 0 4px rgba(0,0,0,0.05);">
-                    <div style="font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;" title="${s.name}">${s.name}</div>
-                  </td>
-                  ${cells}
-                </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
-        </div>`;
-      }
-      
-      return html;
-    }
     function loadAttendanceClass(cls, dateOffset) {
       _attCls = cls;
-      _attClsOffset = dateOffset || 0;
       const today = new Date();
       const offset = dateOffset || 0;
       today.setDate(today.getDate() + offset);
@@ -3470,20 +3075,18 @@ ${markSecHtml}
       const dayLabel = offset === 0 ? 'Today' : offset === -1 ? 'Yesterday' : offset === -2 ? '2 Days Ago' : today.toDateString();
       const students = DB.users.filter(s => s.role === 'student' && s.standard === cls);
       if (!students.length) { alert('No students in Class ' + cls); return; }
-      
       const ordered = [...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')];
-      
       document.getElementById('attendanceContent').innerHTML = `
     <button class="btn btn-ghost" onclick="renderAttendance()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
     <div class="panel glass"><div class="panel-header">
-      <div class="panel-title">Class ${cls} — Attendance</div>
+      <div class="panel-title">Class ${cls} ΓÇö Attendance</div>
       <div style="display:flex;gap:6px;align-items:center">
-        <button class="tab-btn ${offset === -2 ? 'active' : ''}" onclick="loadAttendanceClass(${cls},-2)" style="font-size:11px;padding:5px 12px">−2 Days</button>
+        <button class="tab-btn ${offset === -2 ? 'active' : ''}" onclick="loadAttendanceClass(${cls},-2)" style="font-size:11px;padding:5px 12px">ΓêÆ2 Days</button>
         <button class="tab-btn ${offset === -1 ? 'active' : ''}" onclick="loadAttendanceClass(${cls},-1)" style="font-size:11px;padding:5px 12px">Yesterday</button>
         <button class="tab-btn ${offset === 0 ? 'active' : ''}" onclick="loadAttendanceClass(${cls},0)" style="font-size:11px;padding:5px 12px">Today</button>
       </div>
     </div>
-    <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;padding:6px 10px;background:rgba(59,130,246,.08);border-radius:8px;display:inline-block">📅 ${dayLabel} — ${dateStr}</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;padding:6px 10px;background:rgba(59,130,246,.08);border-radius:8px;display:inline-block">≡ƒôà ${dayLabel} ΓÇö ${dateStr}</div>
     <div style="position:relative;margin-bottom:14px">
       <input type="text" class="form-input" id="attSearch-${cls}" placeholder="Search student..." oninput="filterAttSearch(${cls},${offset})" style="padding-left:38px;font-size:12px">
       <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -3502,7 +3105,7 @@ ${markSecHtml}
           <span class="badge ${status === 'P' ? 'badge-green' : status === 'A' ? 'badge-red' : 'badge-yellow'}" id="att-status-${s.id}">${status === 'P' ? 'Present' : status === 'A' ? 'Absent' : 'Not Marked'}</span>
           <button class="btn btn-success" onclick="markAtt(${s.id},'P','${dateStr}')" style="padding:5px 10px;font-size:11px">P</button>
           <button class="btn btn-danger" onclick="markAtt(${s.id},'A','${dateStr}')" style="padding:5px 10px;font-size:11px">A</button>
-          <button class="btn btn-ghost" onclick="markAtt(${s.id},null,'${dateStr}')" style="padding:5px 10px;font-size:11px;opacity:.7">—</button>
+          <button class="btn btn-ghost" onclick="markAtt(${s.id},null,'${dateStr}')" style="padding:5px 10px;font-size:11px;opacity:.7">ΓÇö</button>
         </div>
       </div>`;
       }).join('')}
@@ -3542,37 +3145,31 @@ ${markSecHtml}
           st.className = 'badge ' + (status === 'P' ? 'badge-green' : status === 'A' ? 'badge-red' : 'badge-yellow');
           st.textContent = status === 'P' ? 'Present' : status === 'A' ? 'Absent' : 'Not Marked';
         }
-        
-        // Re-render other components if needed, but don't reset the full overview 
-        // because it closes the current attendance panel
+        renderOverview();
       } catch (e) {
         console.error("Error updating attendance:", e);
         alert("Failed to save attendance to the database.");
       }
     }
     function loadAdminAttClass(cls, dateOffset) {
-      _adminAttCls = cls;
-      _adminAttOffset = dateOffset || 0;
       const students = DB.users.filter(s => s.role === 'student' && s.standard === cls);
       const el = document.getElementById('adminAttClassContent');
       if (!students.length) { el.innerHTML = `<div class="info-strip">No students in Class ${cls}.</div>`; return; }
-      
       const ordered = [...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')];
-      
       const offset = dateOffset || 0;
       const targetDate = new Date(); targetDate.setDate(targetDate.getDate() + offset);
       const dateStr = targetDate.toISOString().split('T')[0];
       const dayLabel = offset === 0 ? 'Today' : offset === -1 ? 'Yesterday' : '2 Days Ago';
       el.innerHTML = `<div class="panel glass">
     <div class="panel-header">
-      <div class="panel-title">Class ${cls} — Attendance</div>
+      <div class="panel-title">Class ${cls} ΓÇö Attendance</div>
       <div style="display:flex;gap:6px;align-items:center">
-        <button class="tab-btn ${offset === -2 ? 'active' : ''}" onclick="loadAdminAttClass(${cls},-2)" style="font-size:11px;padding:5px 12px">−2 Days</button>
+        <button class="tab-btn ${offset === -2 ? 'active' : ''}" onclick="loadAdminAttClass(${cls},-2)" style="font-size:11px;padding:5px 12px">ΓêÆ2 Days</button>
         <button class="tab-btn ${offset === -1 ? 'active' : ''}" onclick="loadAdminAttClass(${cls},-1)" style="font-size:11px;padding:5px 12px">Yesterday</button>
         <button class="tab-btn ${offset === 0 ? 'active' : ''}" onclick="loadAdminAttClass(${cls},0)" style="font-size:11px;padding:5px 12px">Today</button>
       </div>
     </div>
-    <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;padding:6px 10px;background:rgba(59,130,246,.08);border-radius:8px;display:inline-block">📅 ${dayLabel} — ${dateStr}</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;padding:6px 10px;background:rgba(59,130,246,.08);border-radius:8px;display:inline-block">≡ƒôà ${dayLabel} ΓÇö ${dateStr}</div>
     <div style="position:relative;margin-bottom:14px">
       <input type="text" class="form-input" id="adminAttSearch-${cls}" placeholder="Search student..." oninput="filterAdminAttSearch(${cls})" style="padding-left:38px;font-size:12px">
       <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -3591,6 +3188,11 @@ ${markSecHtml}
       </div>`;
       }).join('')}
     </div>
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+      <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Overall Summary</div>
+      <div class="table-wrap"><table><thead><tr><th>Student</th><th>Present</th><th>Absent</th><th>%</th><th>Status</th></tr></thead>
+      <tbody>${ordered.map(s => { const { present, absent, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return `<tr><td><strong>${s.name}</strong></td><td style="color:#22c55e">${present}</td><td style="color:#ef4444">${absent}</td><td>${pct}%</td><td><span class="badge ${pct >= 75 ? 'badge-green' : 'badge-red'}">${pct >= 75 ? 'Good' : 'Low'}</span></td></tr>`; }).join('')}</tbody></table></div>
+    </div>
   </div>`;
     }
     function filterAdminAttSearch(cls) {
@@ -3600,113 +3202,10 @@ ${markSecHtml}
       });
     }
 
-    function loadAdminAttChartClass(cls) {
-      window.currentAttChartViewport = 'admin';
-      window.currentAttChartClass = cls;
-      const el = document.getElementById('adminAttChartContent');
-      if (!el) return;
-      el.innerHTML = `
-        <button class="btn btn-ghost" onclick="resetAttChartSection()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back to classes</button>
-        ${renderTeacherMonthChart([cls])}
-      `;
-      const grid = document.getElementById('adminAttChartGrid');
-      const info = document.getElementById('adminAttChartInfo');
-      if (grid) grid.style.display = 'none';
-      if (info) info.style.display = 'none';
-    }
-
-    function loadTeacherAttChartClass(cls) {
-      window.currentAttChartViewport = 'teacher';
-      window.currentAttChartClass = cls;
-      const el = document.getElementById('teacherAttChartContent');
-      if (!el) return;
-      el.innerHTML = `
-        <button class="btn btn-ghost" onclick="resetAttChartSection()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back to classes</button>
-        ${renderTeacherMonthChart([cls])}
-      `;
-      const sel = document.getElementById('teacherAttChartSelector');
-      if (sel) sel.style.display = 'none';
-    }
-
-    function refreshAttChart() {
-      if (window.currentAttChartViewport === 'admin') {
-         loadAdminAttChartClass(window.currentAttChartClass);
-      } else {
-         loadTeacherAttChartClass(window.currentAttChartClass);
-      }
-    }
-
-    function resetAttChartSection() {
-      const aEl = document.getElementById('adminAttChartContent');
-      if (aEl) {
-         aEl.innerHTML = '';
-         const grid = document.getElementById('adminAttChartGrid');
-         const info = document.getElementById('adminAttChartInfo');
-         if (grid) grid.style.display = 'grid';
-         if (info) info.style.display = '';
-      }
-      const tEl = document.getElementById('teacherAttChartContent');
-      if (tEl) {
-         tEl.innerHTML = '';
-         const sel = document.getElementById('teacherAttChartSelector');
-         if (sel) sel.style.display = '';
-      }
-    }
-
-    function loadAdminAttOverviewClass(cls) {
-      const el = document.getElementById('adminAttOverviewContent');
-      if (!el) return;
-      el.innerHTML = `
-        <button class="btn btn-ghost" onclick="resetAttOverviewSection()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back to classes</button>
-        ${renderTeacherOverallSummaryClass([cls])}
-      `;
-      const grid = document.getElementById('adminAttOverviewGrid');
-      const info = document.getElementById('adminAttOverviewInfo');
-      if (grid) grid.style.display = 'none';
-      if (info) info.style.display = 'none';
-    }
-
-    function loadTeacherAttOverviewClass(cls) {
-      const el = document.getElementById('teacherAttOverviewContent');
-      if (!el) return;
-      el.innerHTML = `
-        <button class="btn btn-ghost" onclick="resetAttOverviewSection()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back to classes</button>
-        ${renderTeacherOverallSummaryClass([cls])}
-      `;
-      const sel = document.getElementById('teacherAttOverviewSelector');
-      if (sel) sel.style.display = 'none';
-    }
-
-    function resetAttOverviewSection() {
-      const aEl = document.getElementById('adminAttOverviewContent');
-      if (aEl) {
-         aEl.innerHTML = '';
-         const grid = document.getElementById('adminAttOverviewGrid');
-         const info = document.getElementById('adminAttOverviewInfo');
-         if (grid) grid.style.display = 'grid';
-         if (info) info.style.display = '';
-      }
-      const tEl = document.getElementById('teacherAttOverviewContent');
-      if (tEl) {
-         tEl.innerHTML = '';
-         const sel = document.getElementById('teacherAttOverviewSelector');
-         if (sel) sel.style.display = '';
-      }
-    }
-
     // RESULTS
     let currentResultTab = 'quarterly';
     let teacherResultTab = 'quarterly';
     let resultSelectedCls = null;
-    let teacherEditMode = false;
-    
-    function toggleTeacherEditMode(isChecked) {
-      teacherEditMode = isChecked;
-      if (resultSelectedCls) {
-        const students = [...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'male'), ...DB.users.filter(s => s.role === 'student' && s.standard === resultSelectedCls && s.gender === 'female')];
-        renderTeacherResultList(teacherResultTab, students, resultSelectedCls, 'teacher');
-      }
-    }
 
     function renderResults() {
       const u = DB.currentUser;
@@ -3746,7 +3245,6 @@ ${markSecHtml}
     }
 
     function loadAdminResultClass(cls) {
-      resultSelectedCls = cls;
       const students = [...DB.users.filter(s => s.role === 'student' && s.standard === cls && s.gender === 'male'), ...DB.users.filter(s => s.role === 'student' && s.standard === cls && s.gender === 'female')];
       const etabs = [{ key: 'quarterly', label: '1st Term' }, { key: 'halfYearly', label: '2nd Term' }, isPublicClass(cls) ? { key: 'public', label: 'Public Exam' } : { key: 'final', label: 'Final Exam' }];
       if (!etabs.find(t => t.key === teacherResultTab)) teacherResultTab = 'quarterly';
@@ -3773,63 +3271,23 @@ ${markSecHtml}
       if (examType === 'public') fs = students.filter(s => isPublicClass(s.standard));
       const label = examType === 'halfYearly' ? '2nd Term' : examType === 'final' ? 'Final Exam' : examType === 'public' ? 'Public Exam' : '1st Term';
       if (!fs.length) { el.innerHTML = `<div class="info-strip">No students eligible for ${label} in this class.</div>`; return; }
-      el.innerHTML = `<div class="panel glass"><div class="panel-header"><div class="panel-title">Class ${cls} — ${label} (View Only)</div></div>
+      el.innerHTML = `<div class="panel glass"><div class="panel-header"><div class="panel-title">Class ${cls} ΓÇö ${label} (View Only)</div></div>
   ${fs.map(s => {
         const res = (DB.results[s.id] || {})[examType] || [];
         const hasM = res.length > 0;
         const total = res.filter(r => !r.absent).reduce((a, b) => a + (b.marks || 0), 0);
         const max = res.reduce((a, b) => a + (b.max || 100), 0);
-        let passed = true;
-        const subs = DB.subjects[s.standard] || [];
-        if (hasM) {
-          for (let r of res) {
-            const si = subs.find(sb => sb.name === r.sub) || { pass: 40 };
-            if (r.absent || r.marks < si.pass) { passed = false; break; }
-          }
-        }
-        return `<div class="user-row">
-          <div class="user-meta">
-            <div class="avatar" style="width:34px;height:34px;font-size:12px;background:${s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)'}">${s.name.charAt(0)}</div>
-            <div>
-              <div style="font-size:13px;font-weight:600">${s.name}</div>
-              <div style="font-size:11px;color:var(--text-muted)">${hasM ? total + "/" + max + " marks" : "No marks"}</div>
-            </div>
+        return `<div class="class-label-btn" onclick="this.nextElementSibling.classList.toggle('open');this.classList.toggle('open')">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="avatar" style="width:28px;height:28px;font-size:10px;background:${s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)'}">${s.name.charAt(0)}</div>
+            <div>${s.name} <span style="font-size:11px;color:var(--text-muted);font-weight:400;margin-left:6px">${hasM ? total + "/" + max + " marks" : "No marks"}</span></div>
           </div>
-          <div class="user-actions">
-            ${hasM ? `<span class="badge ${passed ? 'badge-green' : 'badge-red'}">${passed ? 'Pass' : 'Fail'}</span>` : `<span class="badge badge-yellow">Pending</span>`}
-            <button class="icon-btn" onclick="showStudentMarkDetail(${s.id}, '${examType}')" title="View Marks">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="class-content">
+          ${hasM ? renderExamData(res, s.standard) : '<div style="text-align:center;font-size:12px;color:var(--text-muted);padding:10px">Marks not published.</div>'}
         </div>`;
-      }).join('')}</div>
-  <div class="panel glass" style="margin-top:16px"><div class="panel-header" style="align-items:center;">
-    <div class="panel-title">Class ${cls} — ${label} Ranked</div></div>
-    <div class="table-wrap"><table><thead><tr><th>Rank</th><th>Student</th><th>Gender</th><th>%</th><th>Status</th></tr></thead>
-    <tbody>${fs.map(s => {
-        const res = (DB.results[s.id] || {})[examType] || [];
-        const absent = res.some(r => r.absent);
-        const total = res.reduce((a, b) => a + (!b.absent ? (b.marks || 0) : 0), 0);
-        const max = res.reduce((a, b) => a + (b.max || 100), 0);
-        const pct = max ? Math.round(total / max * 100) : 0;
-        let passed = res.length > 0;
-        const subs = DB.subjects[s.standard] || [];
-        if (passed) {
-          for (let r of res) {
-            const si = subs.find(sb => sb.name === r.sub) || { pass: 40 };
-            if (r.absent || r.marks < si.pass) { passed = false; break; }
-          }
-        }
-        return { ...s, _resPct: absent ? 0 : pct, _passed: passed, _hasRes: res.length > 0 };
-      }).sort((a,b) => {
-        if (!a._hasRes && b._hasRes) return 1;
-        if (a._hasRes && !b._hasRes) return -1;
-        return b._resPct - a._resPct;
-      }).map((s, i) => {
-        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
-        return `<tr><td><span style="font-weight:600;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-muted)'}">${medal}</span></td><td><strong>${s.name}</strong></td><td style="color:var(--text-muted);text-transform:capitalize">${s.gender}</td><td><span style="font-weight:600;color:${s._passed ? '#22c55e' : (s._hasRes ? '#ef4444' : 'var(--text-dim)')}">${s._hasRes ? s._resPct + '%' : '—'}</span></td><td><span class="badge ${s._passed ? 'badge-green' : (s._hasRes ? 'badge-red' : 'badge-yellow')}">${s._passed ? 'Pass' : (s._hasRes ? 'Fail' : 'Pending')}</span></td></tr>`
-      }).join('')}</tbody></table></div>
-  </div>`;
+      }).join('')}</div>`;
     }
 
     function renderExamData(data, std) {
@@ -3852,31 +3310,26 @@ ${markSecHtml}
         const res = (DB.results[s.id] || {})[examType] || [];
         const total = res.filter(r => !r.absent).reduce((a, b) => a + (b.marks || 0), 0);
         const max = res.reduce((a, b) => a + (b.max || 100), 0);
-        let passed = true;
-        const subs = DB.subjects[std] || [];
-        for (let r of res) {
-          const si = subs.find(sb => sb.name === r.sub) || { pass: 40 };
-          if (r.absent || r.marks < si.pass) { passed = false; break; }
-        }
-        return { ...s, total, max, hasMarks: res.length > 0, passed };
+        return { ...s, total, max, hasMarks: res.length > 0 };
       }).filter(s => s.hasMarks).sort((a, b) => b.total - a.total);
       if (!ranked.length) return '<div style="text-align:center;padding:20px;color:var(--text-dim);font-size:12px">No class results published for this exam yet.</div>';
       const label = examType === 'halfYearly' ? '2nd Term' : examType === 'final' ? 'Final Exam' : examType === 'public' ? 'Public Exam' : '1st Term';
-      return `<div class="panel-header"><div class="panel-title">Class ${std} Rankings — ${label}</div><span class="badge badge-blue">${ranked.length} students</span></div>
+      return `<div class="panel-header"><div class="panel-title">Class ${std} Rankings ΓÇö ${label}</div><span class="badge badge-blue">${ranked.length} students</span></div>
   <div class="table-wrap"><table>
-    <thead><tr><th style="padding:10px 6px">Rank</th><th style="padding:10px 6px">Student</th><th style="padding:10px 6px">Score</th><th style="padding:10px 6px">Status</th><th style="padding:10px 6px">Details</th></tr></thead>
+    <thead><tr><th>Rank</th><th>Student</th><th>Score</th><th>%</th><th>Details</th></tr></thead>
     <tbody>${ranked.map((s, i) => {
+        const pct = s.max ? Math.round(s.total / s.max * 100) : 0;
         const isMe = s.id === myId;
-        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
+        const medal = i === 0 ? '≡ƒÑç' : i === 1 ? '≡ƒÑê' : i === 2 ? '≡ƒÑë' : '#' + (i + 1);
         return `<tr style="${isMe ? 'background:rgba(59,130,246,0.12);font-weight:700;' : ''}">
-        <td style="padding:10px 6px"><span style="font-weight:700;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-dim)'}">${medal}</span></td>
-        <td style="padding:10px 6px"><div style="display:flex;align-items:center;gap:6px">
-          <div class="avatar" style="width:24px;height:24px;font-size:9px;background:${s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)'}">${s.name.charAt(0)}</div>
-          <span style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px">${s.name}${isMe ? ' <span class="badge badge-blue" style="font-size:9px;margin-left:2px;padding:2px 4px">You</span>' : ''}</span>
+        <td><span style="font-weight:700;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-dim)'}">${medal}</span></td>
+        <td><div style="display:flex;align-items:center;gap:8px">
+          <div class="avatar" style="width:26px;height:26px;font-size:10px;background:${s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)'}">${s.name.charAt(0)}</div>
+          <span style="font-size:13px">${s.name}${isMe ? ' <span class="badge badge-blue" style="font-size:9px;margin-left:4px">You</span>' : ''}</span>
         </div></td>
-        <td style="font-size:12px;padding:10px 6px"><strong style="color:var(--blue)">${s.total}/${s.max}</strong></td>
-        <td style="padding:10px 6px"><span class="badge ${s.passed ? 'badge-green' : 'badge-red'}" style="font-size:10px;padding:4px 6px">${s.passed ? 'Pass' : 'Fail'}</span></td>
-        <td style="padding:10px 6px"><button class="icon-btn" onclick="showStudentMarkDetail(${s.id},'${examType}')" title="View details" style="width:24px;height:24px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+        <td><strong style="color:var(--blue)">${s.total}/${s.max}</strong></td>
+        <td><span class="badge ${pct >= 60 ? 'badge-green' : 'badge-red'}">${pct}%</span></td>
+        <td><button class="icon-btn" onclick="showStudentMarkDetail(${s.id},'${examType}')" title="View details" style="width:26px;height:26px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
       </tr>`;
       }).join('')}</tbody>
   </table></div>`;
@@ -3898,7 +3351,7 @@ ${markSecHtml}
       <div class="panel-header" style="margin-top:24px"><div class="panel-title">Top Rankers</div><span class="badge badge-yellow">${label}</span></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px">
         ${ranked.map((s, i) => {
-          const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
+          const medal = i === 0 ? '≡ƒÑç' : i === 1 ? '≡ƒÑê' : '≡ƒÑë';
           const isMe = s.id === myId;
           const borderC = i === 0 ? 'rgba(234,179,8,0.4)' : i === 1 ? 'rgba(200,200,200,0.4)' : 'rgba(251,146,60,0.4)';
           const bgC = isMe ? 'rgba(59,130,246,0.1)' : 'var(--surface)';
@@ -3922,8 +3375,8 @@ ${markSecHtml}
       modal.style.cssText = 'position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);';
       const body = `<div style="background:var(--glass-strong);border:1px solid var(--border-bright);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:420px;margin:20px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:scaleIn .25s ease;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div><div style="font-size:16px;font-weight:700">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">${s.class} · ${label}</div></div>
-      <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:14px;">✕</button>
+      <div><div style="font-size:16px;font-weight:700">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">${s.class} ┬╖ ${label}</div></div>
+      <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:14px;">Γ£ò</button>
     </div>
     ${res.length ? renderExamData(res, s.standard) : '<div style="text-align:center;padding:20px;color:var(--text-dim);font-size:13px">No marks recorded.</div>'}
   </div>`;
@@ -3962,12 +3415,8 @@ ${markSecHtml}
       // Check if this exam type is open for editing (Control Center)
       const isOpen = DB.examSessions && DB.examSessions[examType] !== false;
       if (!fs.length) { el.innerHTML = `<div class="info-strip">No students eligible for ${label} in Class ${cls}.</div>`; return; }
-      el.innerHTML = `<div class="panel glass"><div class="panel-header" style="align-items:center;">
-      <div><div class="panel-title">Class ${cls} — ${label}</div>
-    ${!isOpen ? '<span class="badge badge-red">Editing Closed</span>' : '<span class="badge badge-green">Editing Open</span>'}</div>
-    ${isOpen ? `<label style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;cursor:pointer;background:var(--surface);padding:6px 14px;border-radius:20px;border:1px solid ${teacherEditMode ? 'var(--blue)' : 'var(--border)'}">
-      <input type="checkbox" onchange="toggleTeacherEditMode(this.checked)" ${teacherEditMode ? 'checked' : ''}> Edit Mode
-    </label>` : ''}
+      el.innerHTML = `<div class="panel glass"><div class="panel-header"><div class="panel-title">Class ${cls} ΓÇö ${label}</div>
+    ${!isOpen ? '<span class="badge badge-red">Editing Closed</span>' : '<span class="badge badge-green">Editing Open</span>'}
   </div>
   <div style="position:relative;margin-bottom:14px">
     <input type="text" class="form-input" id="marksSearch" placeholder="Search student..." oninput="filterMarksSearch()" style="padding-left:38px;font-size:12px">
@@ -3979,59 +3428,19 @@ ${markSecHtml}
         const hasM = res.length > 0;
         const total = res.filter(r => !r.absent).reduce((a, b) => a + (b.marks || 0), 0);
         const max = res.reduce((a, b) => a + (b.max || 100), 0);
-        let passed = true;
-        const subs = DB.subjects[s.standard] || [];
-        if (hasM) {
-          for (let r of res) {
-            const si = subs.find(sb => sb.name === r.sub) || { pass: 40 };
-            if (r.absent || r.marks < si.pass) { passed = false; break; }
-          }
-        }
         return `<div class="user-row" data-name="${s.name.toLowerCase()}"><div class="user-meta">
       <div class="avatar" style="width:34px;height:34px;font-size:12px;background:${s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)'}">${s.name.charAt(0)}</div>
-      <div><div style="font-size:13px;font-weight:600">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">${s.class}${hasM ? " · " + total + "/" + max + " marks" : ""}</div></div>
+      <div><div style="font-size:13px;font-weight:600">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">${s.class}${hasM ? " ┬╖ " + total + "/" + max + " marks" : ""}</div></div>
     </div>
     <div class="user-actions">
-      ${teacherEditMode && isOpen ? `
       <span class="badge ${hasM ? 'badge-green' : 'badge-yellow'}">${hasM ? 'Entered' : 'Pending'}</span>
-      <button class="btn btn-ghost" onclick="openEditMarks(${s.id},'${examType}')" style="padding:6px 14px;font-size:11px;">
+      <button class="btn ${isOpen ? 'btn-ghost' : 'btn-danger'}" onclick="if(${isOpen ? 'true' : 'false'})openEditMarks(${s.id},'${examType}')" style="padding:6px 14px;font-size:11px;${!isOpen ? 'opacity:0.45;cursor:not-allowed;' : ''}" ${!isOpen ? 'disabled' : ''}>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Edit Marks
-      </button>` : `
-      ${hasM ? `<span class="badge ${passed ? 'badge-green' : 'badge-red'}">${passed ? 'Pass' : 'Fail'}</span>` : `<span class="badge badge-yellow">Pending</span>`}
-      <button class="icon-btn" onclick="showStudentMarkDetail(${s.id}, '${examType}')" title="View Marks">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-      </button>`}
+        ${isOpen ? 'Edit Marks' : 'Closed'}
+      </button>
     </div></div>`;
       }).join('')}
-  </div></div>
-  <div class="panel glass" style="margin-top:16px"><div class="panel-header" style="align-items:center;">
-    <div class="panel-title">Class ${cls} — ${label} Ranked</div></div>
-    <div class="table-wrap"><table><thead><tr><th>Rank</th><th>Student</th><th>Gender</th><th>%</th><th>Status</th></tr></thead>
-    <tbody>${fs.map(s => {
-        const res = (DB.results[s.id] || {})[examType] || [];
-        const absent = res.some(r => r.absent);
-        const total = res.reduce((a, b) => a + (!b.absent ? (b.marks || 0) : 0), 0);
-        const max = res.reduce((a, b) => a + (b.max || 100), 0);
-        const pct = max ? Math.round(total / max * 100) : 0;
-        let passed = res.length > 0;
-        const subs = DB.subjects[s.standard] || [];
-        if (passed) {
-          for (let r of res) {
-            const si = subs.find(sb => sb.name === r.sub) || { pass: 40 };
-            if (r.absent || r.marks < si.pass) { passed = false; break; }
-          }
-        }
-        return { ...s, _resPct: absent ? 0 : pct, _passed: passed, _hasRes: res.length > 0 };
-      }).sort((a,b) => {
-        if (!a._hasRes && b._hasRes) return 1;
-        if (a._hasRes && !b._hasRes) return -1;
-        return b._resPct - a._resPct;
-      }).map((s, i) => {
-        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
-        return `<tr><td><span style="font-weight:600;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-muted)'}">${medal}</span></td><td><strong>${s.name}</strong></td><td style="color:var(--text-muted);text-transform:capitalize">${s.gender}</td><td><span style="font-weight:600;color:${s._passed ? '#22c55e' : (s._hasRes ? '#ef4444' : 'var(--text-dim)')}">${s._hasRes ? s._resPct + '%' : '—'}</span></td><td><span class="badge ${s._passed ? 'badge-green' : (s._hasRes ? 'badge-red' : 'badge-yellow')}">${s._passed ? 'Pass' : (s._hasRes ? 'Fail' : 'Pending')}</span></td></tr>`
-        }).join('')}</tbody></table></div>
-  </div>`;
+  </div></div>`;
     }
     function filterMarksSearch() {
       const q = (document.getElementById('marksSearch')?.value || '').toLowerCase();
@@ -4048,8 +3457,8 @@ ${markSecHtml}
       document.getElementById('editMarksSid').value = sid;
       document.getElementById('editMarksExamType').value = examType;
       const lbl = examType === 'halfYearly' ? 'Half-Yearly' : examType === 'model' ? 'Model Exam' : examType === 'public' ? 'Public Exam' : examType.charAt(0).toUpperCase() + examType.slice(1);
-      document.getElementById('editMarksTitle').textContent = 'Edit Marks — ' + s.name;
-      document.getElementById('editMarksSub').textContent = s.class + ' · ' + lbl;
+      document.getElementById('editMarksTitle').textContent = 'Edit Marks ΓÇö ' + s.name;
+      document.getElementById('editMarksSub').textContent = s.class + ' ┬╖ ' + lbl;
       const sl = document.getElementById('editMarksSubjectList');
       if (!subjects.length) { sl.innerHTML = `<div class="info-strip">No subjects for Class ${s.standard}. Add them in the Subjects section first.</div>`; document.getElementById('editMarksModal').classList.add('open'); return; }
       sl.innerHTML = subjects.map(sub => {
@@ -4059,14 +3468,14 @@ ${markSecHtml}
         const cm = ex && !isAbs ? ex.marks : '';
         return `<div class="panel glass" style="padding:14px;margin-bottom:10px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div><div style="font-size:13px;font-weight:600">${sub.name}</div><div style="font-size:11px;color:var(--text-muted)">Total: ${sub.total} · Pass: ${sub.pass}</div></div>
+        <div><div style="font-size:13px;font-weight:600">${sub.name}</div><div style="font-size:11px;color:var(--text-muted)">Total: ${sub.total} ┬╖ Pass: ${sub.pass}</div></div>
         <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
           <input type="checkbox" id="abs-${sk}" ${isAbs ? 'checked' : ''} onchange="toggleAbsent('${sk}')">
           <span style="font-size:11px;color:#ef4444;font-weight:600">Mark Absent</span>
         </label>
       </div>
       <div id="mi-${sk}" ${isAbs ? 'style="display:none"' : ''}>
-        <input type="number" class="form-input" id="m-${sk}" placeholder="Marks (0–${sub.total})" value="${cm}" min="0" max="${sub.total}">
+        <input type="number" class="form-input" id="m-${sk}" placeholder="Marks (0ΓÇô${sub.total})" value="${cm}" min="0" max="${sub.total}">
       </div>
       ${isAbs ? '<div style="text-align:center;padding:8px;background:rgba(239,68,68,.1);border-radius:8px;color:#ef4444;font-size:12px;font-weight:600">Marked as Absent</div>' : ''}
     </div>`;
@@ -4104,14 +3513,7 @@ ${markSecHtml}
           { merge: true }
         );
         closeEditMarks(); 
-        // Refresh the list for the current class instead of going back to class selection
-        if (DB.currentUser.role === 'teacher' && resultSelectedCls) {
-          loadResultClass(resultSelectedCls);
-        } else if (DB.currentUser.role === 'admin' && resultSelectedCls) {
-          loadAdminResultClass(resultSelectedCls);
-        } else {
-          renderResults();
-        }
+        renderResults();
       } catch(e) {
         console.error("Error saving marks to database:", e);
         alert("Failed to save marks. Check database connection.");
@@ -4122,30 +3524,6 @@ ${markSecHtml}
     // QUIZ
     let quizBuilderQuestions = [];
     let quizState = {};
-    
-    function getQuizHtml(q, role) {
-      let actions = `<span class="badge ${q.active ? 'badge-green' : 'badge-yellow'}" id="quiz-status-${q.id}">${q.active ? 'Active' : 'Inactive'}</span>`;
-      if (role === 'admin') {
-        actions += `
-          <button class="icon-btn" id="quiz-togglebtn-${q.id}" onclick="toggleQuiz(${q.id})" title="${q.active ? 'Deactivate' : 'Activate'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${q.active ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>' : '<polygon points="5 3 19 12 5 21 5 3"/>'}</svg></button>
-          <button class="icon-btn" onclick="viewQuizScores(${q.id})" title="View Scores"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button>
-          <button class="icon-btn" onclick="viewQuizQs(${q.id})" title="View Questions"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-          <button class="icon-btn danger" onclick="deleteQuiz(${q.id})" title="Delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>`;
-      } else {
-        actions += `
-          <button class="icon-btn" onclick="viewQuizScores(${q.id})" title="View Scores"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button>
-          <button class="icon-btn" onclick="viewQuizQs(${q.id})" title="View Questions"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>`;
-      }
-      return `<div class="user-row" id="quiz-row-${q.id}" style="transition: all 0.3s ease;">
-        <div class="user-meta">
-          <div class="avatar" id="quiz-icon-${q.id}" style="background:${q.active ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#6b7280,#4b5563)'}">Q</div>
-          <div><div style="font-size:13px;font-weight:600">${q.title}</div><div style="font-size:11px;color:var(--text-muted)">${q.questions.length} questions · ${q.subject}</div></div>
-        </div>
-        <div class="user-actions">
-          ${actions}
-        </div>
-      </div>`;
-    }
 
     function renderQuiz() {
       const u = DB.currentUser;
@@ -4155,15 +3533,13 @@ ${markSecHtml}
         if (!active.length) { el.innerHTML = `<div class="empty glass" style="border-radius:var(--radius-lg)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p>No active quizzes right now.</p></div>`; return; }
         el.innerHTML = active.map(q => {
           const sk = u.id + '_' + q.id; const done = DB.quizScores[sk] !== undefined;
-          return `<div class="quiz-card glass"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div><h3 style="font-size:15px;font-weight:700">${q.title}</h3><div style="font-size:11px;color:var(--text-muted);margin-top:4px">${q.questions.length} questions · ${q.subject}</div></div>${done ? `<span class="badge badge-green">Score: ${DB.quizScores[sk]}/${q.questions.length}</span>` : `<span class="badge badge-blue">Active</span>`}</div>
+          return `<div class="quiz-card glass"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div><h3 style="font-size:15px;font-weight:700">${q.title}</h3><div style="font-size:11px;color:var(--text-muted);margin-top:4px">${q.questions.length} questions ┬╖ ${q.subject}</div></div>${done ? `<span class="badge badge-green">Score: ${DB.quizScores[sk]}/${q.questions.length}</span>` : `<span class="badge badge-blue">Active</span>`}</div>
       ${done ? `<div style="font-size:12px;color:var(--text-muted)">Completed. Score: <strong style="color:var(--blue)">${DB.quizScores[sk]}/${q.questions.length} (${Math.round(DB.quizScores[sk] / q.questions.length * 100)}%)</strong></div>` : `<button class="btn btn-primary" onclick="startQuiz(${q.id})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>Start Quiz</button>`}</div>`;
         }).join('');
       } else if (u.role === 'teacher') {
         el.innerHTML = `<div class="info-strip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Only admin can create quizzes. You can view all quizzes and student scores here.</div>
     <div class="panel glass"><div class="panel-header"><div class="panel-title">All Quizzes</div></div>
-    <div id="quizList">
-    ${DB.quizzes.length ? DB.quizzes.map(q => getQuizHtml(q, u.role)).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)" id="noQuizMsg">No quizzes yet.</div>'}
-    </div></div>`;
+    ${DB.quizzes.length ? DB.quizzes.map(q => `<div class="user-row"><div class="user-meta"><div class="avatar" style="background:${q.active ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#6b7280,#4b5563)'}">Q</div><div><div style="font-size:13px;font-weight:600">${q.title}</div><div style="font-size:11px;color:var(--text-muted)">${q.questions.length} questions ┬╖ ${q.subject}</div></div></div><div class="user-actions"><span class="badge ${q.active ? 'badge-green' : 'badge-yellow'}">${q.active ? 'Active' : 'Inactive'}</span><button class="icon-btn" onclick="viewQuizScores(${q.id})" title="Scores"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button><button class="icon-btn" onclick="viewQuizQs(${q.id})" title="View Questions"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>`).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)">No quizzes yet.</div>'}</div>`;
       } else {
         el.innerHTML = `<div class="panel glass" style="margin-bottom:20px"><div class="panel-header"><div class="panel-title">Create New Quiz</div></div>
       <div class="form-row" style="margin-bottom:14px">
@@ -4175,12 +3551,9 @@ ${markSecHtml}
       <button class="btn btn-primary" onclick="createQuiz()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Save Quiz</button>
     </div>
     <div class="panel glass"><div class="panel-header"><div class="panel-title">All Quizzes</div></div>
-    <div id="quizList">
-    ${DB.quizzes.length ? DB.quizzes.map(q => getQuizHtml(q, u.role)).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)" id="noQuizMsg">No quizzes yet. Create your first quiz above!</div>'}
-    </div></div>`;
+    ${DB.quizzes.length ? DB.quizzes.map(q => `<div class="user-row"><div class="user-meta"><div class="avatar" style="background:${q.active ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#6b7280,#4b5563)'}">Q</div><div><div style="font-size:13px;font-weight:600">${q.title}</div><div style="font-size:11px;color:var(--text-muted)">${q.questions.length} questions ┬╖ ${q.subject}</div></div></div><div class="user-actions"><span class="badge ${q.active ? 'badge-green' : 'badge-yellow'}">${q.active ? 'Active' : 'Inactive'}</span><button class="icon-btn" onclick="toggleQuiz(${q.id})" title="${q.active ? 'Deactivate' : 'Activate'}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${q.active ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>' : '<polygon points="5 3 19 12 5 21 5 3"/>'}</svg></button><button class="icon-btn" onclick="viewQuizScores(${q.id})" title="View Scores"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button><button class="icon-btn" onclick="viewQuizQs(${q.id})" title="View Questions"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="icon-btn danger" onclick="deleteQuiz(${q.id})" title="Delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div></div>`).join('') : '<div style="text-align:center;padding:20px;color:var(--text-dim)">No quizzes yet. Create your first quiz above!</div>'}</div>`;
         renderBuilderQs();
       }
-      window.currentQuizView = 'list';
     }
     function openEditAnn(annId) {
       const a = DB.announcements.find(a => a.id === annId); if (!a) return;
@@ -4189,7 +3562,7 @@ ${markSecHtml}
       modal.innerHTML = `<div style="background:var(--glass-strong);border:1px solid var(--border-bright);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;margin:20px;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:scaleIn .25s ease;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <div style="font-size:16px;font-weight:700">Edit Announcement</div>
-      <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);">✕</button>
+      <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);">Γ£ò</button>
     </div>
     <div class="form-group"><label class="form-label">Title</label><input type="text" class="form-input" id="editAnnTitle" value="${a.title.replace(/"/g, '&quot;')}"></div>
     <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="editAnnText" rows="4" style="resize:vertical;line-height:1.6">${a.text}</textarea></div>
@@ -4201,51 +3574,20 @@ ${markSecHtml}
       document.body.appendChild(modal);
       modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
     }
-    async function saveEditAnn(annId) {
+    function saveEditAnn(annId) {
       const a = DB.announcements.find(a => a.id === annId); if (!a) return;
       const t = document.getElementById('editAnnTitle')?.value.trim();
       const x = document.getElementById('editAnnText')?.value.trim();
       if (!t || !x) { alert('Fill all fields.'); return; }
-      
-      window.isAnnLocalEdit = true;
-      setTimeout(() => window.isAnnLocalEdit = false, 1000);
-      
-      try {
-        await db.collection('announcements').doc(annId.toString()).update({ title: t, text: x });
-        a.title = t; a.text = x;
-        document.querySelector('[style*="position:fixed"][style*="z-index:3000"]')?.remove();
-        
-        // Targeted DOM update
-        const titleEl = document.getElementById(`ann-title-${annId}`);
-        const textEl = document.getElementById(`ann-text-${annId}`);
-        if (titleEl) titleEl.textContent = t;
-        if (textEl) textEl.textContent = x;
-      } catch(e) {
-        console.error(e);
-        alert('Failed to update announcement');
-      }
+      a.title = t; a.text = x;
+      document.querySelector('[style*="position:fixed"][style*="z-index:3000"]')?.remove();
+      renderAnnouncements();
     }
-    async function deleteAnn(annId) {
+    function deleteAnn(annId) {
       if (!confirm('Delete this announcement?')) return;
       const idx = DB.announcements.findIndex(a => a.id === annId);
-      if (idx > -1) {
-        window.isAnnLocalEdit = true;
-        setTimeout(() => window.isAnnLocalEdit = false, 1000);
-        try {
-          await db.collection('announcements').doc(annId.toString()).delete();
-          DB.announcements.splice(idx, 1);
-          const el = document.getElementById(`ann-${annId}`);
-          if (el) {
-            el.style.opacity = '0';
-            el.style.transform = 'scale(0.95)';
-            el.style.pointerEvents = 'none';
-            setTimeout(() => el.remove(), 300);
-          }
-        } catch(e) {
-          console.error(e);
-          alert('Failed to delete announcement.');
-        }
-      }
+      if (idx > -1) DB.announcements.splice(idx, 1);
+      renderAnnouncements();
     }
     function renderBuilderQs() {
       const c = document.getElementById('quizBuilderQs'); if (!c) return;
@@ -4259,7 +3601,7 @@ ${markSecHtml}
     <div style="display:grid;gap:6px">${q.opts.map((opt, oi) => `<div style="display:flex;align-items:center;gap:8px">
       <input type="radio" name="qc${qi}" ${q.ans === oi ? 'checked' : ''} onchange="quizBuilderQuestions[${qi}].ans=${oi}" style="cursor:pointer;accent-color:var(--blue);width:16px;height:16px">
       <input type="text" class="form-input" style="flex:1;font-size:12px" placeholder="Option ${String.fromCharCode(65 + oi)}" value="${opt.replace(/"/g, '&quot;')}" oninput="quizBuilderQuestions[${qi}].opts[${oi}]=this.value">
-      <span style="font-size:10px;color:${q.ans === oi ? '#22c55e' : 'var(--text-dim)'};width:50px">${q.ans === oi ? '✓ Correct' : 'Correct?'}</span>
+      <span style="font-size:10px;color:${q.ans === oi ? '#22c55e' : 'var(--text-dim)'};width:50px">${q.ans === oi ? 'Γ£ô Correct' : 'Correct?'}</span>
     </div>`).join('')}</div>
     <div style="font-size:10px;color:var(--text-dim);margin-top:6px">Select radio button to mark correct answer</div>
   </div>`).join('');
@@ -4267,50 +3609,15 @@ ${markSecHtml}
     function addBuilderQ() { quizBuilderQuestions.push({ q: '', opts: ['', '', '', ''], ans: 0 }); renderBuilderQs(); }
     function removeBuilderQ(idx) { quizBuilderQuestions.splice(idx, 1); renderBuilderQs(); }
     function viewQuizQs(qid) {
-      window.currentQuizView = 'qs';
-      window.currentQuizId = qid;
-      const quiz = DB.quizzes.find(q => q.id === qid); 
-      if (!quiz) { renderQuiz(); return; }
+      const quiz = DB.quizzes.find(q => q.id === qid); if (!quiz) return;
       document.getElementById('quizContent').innerHTML = `<button class="btn btn-ghost" onclick="renderQuiz()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
   <div class="panel glass"><div class="panel-header"><div class="panel-title">${quiz.title}</div><span class="badge ${quiz.active ? 'badge-green' : 'badge-yellow'}">${quiz.active ? 'Active' : 'Inactive'}</span></div>
-  <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">${quiz.questions.length} questions · ${quiz.subject}</div>
+  <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">${quiz.questions.length} questions ┬╖ ${quiz.subject}</div>
   ${quiz.questions.map((q, i) => `<div class="panel glass" style="margin-bottom:10px;padding:14px"><div style="font-weight:700;margin-bottom:8px;font-size:13px">Q${i + 1}: ${q.q}</div>
     ${q.opts.map((o, oi) => `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;margin-bottom:4px;background:${oi === q.ans ? 'rgba(34,197,94,.1)' : 'var(--surface)'};border:1px solid ${oi === q.ans ? 'rgba(34,197,94,.3)' : 'var(--border)'}">
       <div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:${oi === q.ans ? '#22c55e' : 'var(--border)'};color:${oi === q.ans ? '#fff' : 'var(--text-muted)'}">${String.fromCharCode(65 + oi)}</div>
-      <span style="font-size:12px;color:${oi === q.ans ? '#22c55e' : 'var(--text-muted)'}">${o}</span>${oi === q.ans ? '<span style="font-size:10px;color:#22c55e;margin-left:auto">✓ Correct</span>' : ''}
+      <span style="font-size:12px;color:${oi === q.ans ? '#22c55e' : 'var(--text-muted)'}">${o}</span>${oi === q.ans ? '<span style="font-size:10px;color:#22c55e;margin-left:auto">Γ£ô Correct</span>' : ''}
     </div>`).join('')}</div>`).join('')}</div>`;
-    }
-    function renderTop3Rankers(std, examType, myId) {
-      const classStudents = DB.users.filter(s => s.role === 'student' && s.standard === std);
-      if (!classStudents.length) return '';
-      const ranked = classStudents.map(s => {
-        const res = (DB.results[s.id] || {})[examType] || [];
-        const total = res.filter(r => !r.absent).reduce((a, b) => a + (b.marks || 0), 0);
-        return { ...s, total, hasMarks: res.length > 0 };
-      }).filter(s => s.hasMarks).sort((a,b) => b.total - a.total).slice(0, 3);
-
-      if (!ranked.length) return '';
-      const label = examType === 'halfYearly' ? '2nd Term' : examType === 'final' ? 'Final Exam' : examType === 'public' ? 'Public Exam' : '1st Term';
-
-      return `
-      <div class="panel-header" style="margin-top:24px"><div class="panel-title">Top Rankers</div><span class="badge badge-yellow">${label}</span></div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px">
-        ${ranked.map((s, i) => {
-          const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
-          const isMe = s.id === myId;
-          const borderC = i === 0 ? 'rgba(234,179,8,0.4)' : i === 1 ? 'rgba(200,200,200,0.4)' : 'rgba(251,146,60,0.4)';
-          const bgC = isMe ? 'rgba(59,130,246,0.1)' : 'var(--surface)';
-          const badge = isMe ? '<div style="position:absolute;top:-6px;right:-6px;background:var(--blue);color:#fff;font-size:9px;padding:2px 6px;border-radius:20px;font-weight:700;box-shadow:0 2px 6px var(--blue-glow)">You</div>' : '';
-          const avatarBg = s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)';
-          return `<div class="rank-card" style="padding:16px;border-radius:12px;text-align:center;border:1px solid ${borderC};background:${bgC};position:relative">
-            ${badge}
-            <div style="font-size:24px;margin-bottom:8px">${medal}</div>
-            <div class="avatar" style="width:40px;height:40px;margin:0 auto 10px;font-size:14px;background:${avatarBg}">${s.name.charAt(0)}</div>
-            <div style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.name}</div>
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px">${s.total} Marks</div>
-          </div>`;
-        }).join('')}
-      </div>`;
     }
     async function createQuiz() {
       const title = document.getElementById('quizTitle').value.trim();
@@ -4325,26 +3632,11 @@ ${markSecHtml}
       const nid = DB.quizzes.length ? Math.max(...DB.quizzes.map(q => q.id)) + 1 : 1;
       const newQuiz = { id: nid, title, subject, active: false, questions: quizBuilderQuestions.map(q => ({ q: q.q, opts: [...q.opts], ans: q.ans })) };
       
-      window.isQuizLocalEdit = true;
-      setTimeout(() => window.isQuizLocalEdit = false, 1000);
-      
       try {
         await db.collection('quizzes').doc(nid.toString()).set(newQuiz);
         DB.quizzes.push(newQuiz);
         quizBuilderQuestions = []; 
-        
-        ['quizTitle', 'quizSubject'].forEach(id => { const d = document.getElementById(id); if (d) d.value = ''; });
-        renderBuilderQs();
-        
-        const lst = document.getElementById('quizList');
-        const noMsg = document.getElementById('noQuizMsg');
-        if (noMsg) noMsg.remove();
-        if (lst) {
-          lst.insertAdjacentHTML('beforeend', getQuizHtml(newQuiz, DB.currentUser.role));
-          const el = document.getElementById(`quiz-row-${nid}`);
-          if (el) el.style.animation = 'scaleIn 0.3s ease';
-        }
-        
+        renderQuiz(); 
         alert(`Quiz "${title}" created! Activate it to make it available.`);
       } catch(e) {
         console.error("Error saving quiz:", e);
@@ -4352,7 +3644,6 @@ ${markSecHtml}
       }
     }
     function startQuiz(qid) {
-      window.currentQuizView = 'taking';
       const quiz = DB.quizzes.find(q => q.id === qid); if (!quiz) return;
       quizState = { qid, current: 0, score: 0 }; showQuizQ(quiz);
     }
@@ -4362,9 +3653,10 @@ ${markSecHtml}
       if (qi >= quiz.questions.length) {
         const scoreKey = DB.currentUser.id + '_' + quiz.id;
         try {
-          // Live save quiz scores to Firestore
+          // In a real app we'd save quiz scores to a dedicated collection.
+          // For simplicity here we'll just save it to memory for now, but 
+          // a complete app would structure a 'scores' collection.
           DB.quizScores[scoreKey] = quizState.score;
-          await db.collection('quizScores').doc(scoreKey).set({ score: quizState.score });
         } catch(e) {
              console.error("Error saving score", e);
         }
@@ -4398,15 +3690,12 @@ ${markSecHtml}
       if (optIdx === correct) quizState.score++;
       for (let i = 0; i < q.opts.length; i++) { const e = document.getElementById('qo' + i); if (!e) continue; e.style.pointerEvents = 'none'; if (i === correct) e.classList.add('correct'); else if (i === optIdx) e.classList.add('wrong'); else e.classList.add('disabled'); }
       const fb = document.getElementById('quizFb'); fb.style.display = 'block';
-      fb.innerHTML = `<div class="info-strip" style="background:${optIdx === correct ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)'};border-color:${optIdx === correct ? 'rgba(34,197,94,.3)' : 'rgba(239,68,68,.3)'};color:${optIdx === correct ? '#22c55e' : '#ef4444'}">${optIdx === correct ? '✓ Correct!' : '✗ Incorrect. Correct answer: ' + q.opts[correct]}</div>`;
+      fb.innerHTML = `<div class="info-strip" style="background:${optIdx === correct ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)'};border-color:${optIdx === correct ? 'rgba(34,197,94,.3)' : 'rgba(239,68,68,.3)'};color:${optIdx === correct ? '#22c55e' : '#ef4444'}">${optIdx === correct ? 'Γ£ô Correct!' : 'Γ£ù Incorrect. Correct answer: ' + q.opts[correct]}</div>`;
       document.getElementById('quizNext').style.display = 'flex';
     }
     function nextQ() { const quiz = DB.quizzes.find(q => q.id === quizState.qid); quizState.current++; showQuizQ(quiz); }
     function viewQuizScores(qid) {
-      window.currentQuizView = 'scores';
-      window.currentQuizId = qid;
-      const quiz = DB.quizzes.find(q => q.id === qid); 
-      if (!quiz) { renderQuiz(); return; }
+      const quiz = DB.quizzes.find(q => q.id === qid); if (!quiz) return;
       const students = DB.users.filter(u => u.role === 'student');
       const scores = students.map(s => {
         const sk = s.id + '_' + qid;
@@ -4416,35 +3705,18 @@ ${markSecHtml}
       const el = document.getElementById('quizContent');
       el.innerHTML = `<button class="btn btn-ghost" onclick="renderQuiz()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
   <div class="panel glass">
-    <div class="panel-header"><div class="panel-title">${quiz.title} — Student Scores</div><div style="font-size:12px;color:var(--text-muted)">${scores.length} / ${students.length} students completed</div></div>
+    <div class="panel-header"><div class="panel-title">${quiz.title} ΓÇö Student Scores</div><div style="font-size:12px;color:var(--text-muted)">${scores.length} / ${students.length} students completed</div></div>
     ${scores.length ? `<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Student</th><th>Class</th><th>Score</th><th>Percentage</th></tr></thead>
-    <tbody>${scores.map((s, i) => { const pct = Math.round(s.score / quiz.questions.length * 100); return `<tr><td><strong style="color:${i === 0 ? '#eab308' : i === 1 ? 'var(--text-muted)' : i === 2 ? '#fb923c' : 'var(--text-dim)'}">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1)}</strong></td><td><strong>${s.name}</strong></td><td>${s.class || '—'}</td><td><strong style="color:var(--blue)">${s.score} / ${quiz.questions.length}</strong></td><td><span class="badge ${pct >= 60 ? 'badge-green' : 'badge-red'}">${pct}%</span></td></tr>`; }).join('')}</tbody></table></div>` : `<div style="text-align:center;padding:30px;color:var(--text-dim);font-size:13px">No students have completed this quiz yet.</div>`}
+    <tbody>${scores.map((s, i) => { const pct = Math.round(s.score / quiz.questions.length * 100); return `<tr><td><strong style="color:${i === 0 ? '#eab308' : i === 1 ? 'var(--text-muted)' : i === 2 ? '#fb923c' : 'var(--text-dim)'}">${i === 0 ? '≡ƒÑç' : i === 1 ? '≡ƒÑê' : i === 2 ? '≡ƒÑë' : '#' + (i + 1)}</strong></td><td><strong>${s.name}</strong></td><td>${s.class || 'ΓÇö'}</td><td><strong style="color:var(--blue)">${s.score} / ${quiz.questions.length}</strong></td><td><span class="badge ${pct >= 60 ? 'badge-green' : 'badge-red'}">${pct}%</span></td></tr>`; }).join('')}</tbody></table></div>` : `<div style="text-align:center;padding:30px;color:var(--text-dim);font-size:13px">No students have completed this quiz yet.</div>`}
   </div>`;
     }
     async function toggleQuiz(qid) { 
       const q = DB.quizzes.find(q => q.id === qid); 
       if (q) { 
-        window.isQuizLocalEdit = true;
-        setTimeout(() => window.isQuizLocalEdit = false, 1000);
-        
         try {
-          const newActive = !q.active;
-          await db.collection('quizzes').doc(qid.toString()).update({ active: newActive });
-          q.active = newActive; 
-          
-          const iconEl = document.getElementById(`quiz-icon-${qid}`);
-          const statusEl = document.getElementById(`quiz-status-${qid}`);
-          const btnEl = document.getElementById(`quiz-togglebtn-${qid}`);
-          
-          if (iconEl) iconEl.style.background = newActive ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#6b7280,#4b5563)';
-          if (statusEl) {
-            statusEl.className = newActive ? 'badge badge-green' : 'badge badge-yellow';
-            statusEl.textContent = newActive ? 'Active' : 'Inactive';
-          }
-          if (btnEl) {
-            btnEl.title = newActive ? 'Deactivate' : 'Activate';
-            btnEl.innerHTML = newActive ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
-          }
+          await db.collection('quizzes').doc(qid.toString()).update({ active: !q.active });
+          q.active = !q.active; 
+          renderQuiz(); 
         } catch(e) { console.error(e); alert('Failed to update quiz'); }
       } 
     }
@@ -4452,43 +3724,18 @@ ${markSecHtml}
       if (!confirm('Delete this quiz?')) return; 
       const idx = DB.quizzes.findIndex(q => q.id === qid); 
       if (idx > -1) {
-        window.isQuizLocalEdit = true;
-        setTimeout(() => window.isQuizLocalEdit = false, 1000);
         try {
           await db.collection('quizzes').doc(qid.toString()).delete();
-          DB.quizzes.splice(idx, 1);
-          
-          const el = document.getElementById(`quiz-row-${qid}`);
-          if (el) {
-            el.style.opacity = '0';
-            el.style.transform = 'scale(0.95)';
-            el.style.pointerEvents = 'none';
-            setTimeout(() => el.remove(), 300);
-          }
+          DB.quizzes.splice(idx, 1); 
+          renderQuiz(); 
         } catch(e) { console.error(e); alert('Error deleting quiz'); }
       } 
     }
 
     // ANNOUNCEMENTS
     let annImg = '';
-    
-    function getAnnHtml(a) {
-      const u = DB.currentUser;
-      const canPost = u.role === 'admin' || u.role === 'teacher';
-      const canEdit = canPost && (u.role === 'admin' || a.author === u.name);
-      return `<div class="announcement glass" style="position:relative; transition: all 0.3s ease" id="ann-${a.id}">
-      <div class="announcement-meta">${a.date} · <strong>${a.author}</strong> · <span class="badge badge-blue" style="font-size:9px">${a.role}</span></div>
-      <div style="font-weight:600;margin-bottom:6px;font-size:14px" id="ann-title-${a.id}">${a.title}</div>
-      <div class="announcement-text" id="ann-text-${a.id}">${a.text}</div>
-      ${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;">` : ''}
-      ${canEdit ? `<div style="display:flex;gap:6px;margin-top:10px">
-        <button class="icon-btn" onclick="openEditAnn(${a.id})" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-        <button class="icon-btn danger" onclick="deleteAnn(${a.id})" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
-      </div>`: ''}
-    </div>`;
-    }
-
     function renderAnnouncements() {
+      // ... previous implementation ...
       const u = DB.currentUser; const el = document.getElementById('announcementsContent');
       const canPost = u.role === 'admin' || u.role === 'teacher';
       el.innerHTML = `${canPost ? `<div class="panel glass" style="margin-bottom:20px"><div class="panel-header"><div class="panel-title">Post Announcement</div></div>
@@ -4505,9 +3752,19 @@ ${markSecHtml}
     <button class="btn btn-primary" onclick="postAnn()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Post</button>
   </div>`: ''}
   <div class="panel glass"><div class="panel-header"><div class="panel-title">All Announcements</div><span class="badge badge-blue">${DB.announcements.length}</span></div>
-  <div id="annList">
-  ${DB.announcements.length ? DB.announcements.sort((a,b)=>b.id-a.id).map(a => getAnnHtml(a)).join('') : '<div style="text-align:center;padding:30px;color:var(--text-dim);font-size:13px" id="noAnnMsg">No announcements yet.</div>'}
-  </div>
+  ${DB.announcements.length ? DB.announcements.sort((a,b)=>b.id-a.id).map(a => {
+        const canEdit = canPost && (u.role === 'admin' || a.author === u.name);
+        return `<div class="announcement glass" style="position:relative">
+      <div class="announcement-meta">${a.date} ┬╖ <strong>${a.author}</strong> ┬╖ <span class="badge badge-blue" style="font-size:9px">${a.role}</span></div>
+      <div style="font-weight:600;margin-bottom:6px;font-size:14px">${a.title}</div>
+      <div class="announcement-text">${a.text}</div>
+      ${a.image ? `<img src="${a.image}" class="announcement-img" alt="">` : ''}
+      ${canEdit ? `<div style="display:flex;gap:6px;margin-top:10px">
+        <button class="icon-btn" onclick="openEditAnn(${a.id})" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+        <button class="icon-btn danger" onclick="deleteAnn(${a.id})" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+      </div>`: ''}
+    </div>`;
+      }).join('') : '<div style="text-align:center;padding:30px;color:var(--text-dim);font-size:13px">No announcements yet.</div>'}
   </div>`;
     }
     function previewAnnImg(input) {
@@ -4515,24 +3772,15 @@ ${markSecHtml}
       document.getElementById('annImgName').textContent = file.name;
       const r = new FileReader(); r.onload = e => { annImg = e.target.result; document.getElementById('annPreviewImg').src = annImg; document.getElementById('annImgPreview').style.display = 'block'; }; r.readAsDataURL(file);
     }
-    function previewImage(src) {
-      if (!src) return;
-      const modal = document.createElement('div');
-      modal.style.cssText = 'position:fixed;inset:0;z-index:4000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);cursor:zoom-out;';
-      modal.innerHTML = `<img src="${src}" style="max-width:90%;max-height:90vh;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:scaleIn .3s cubic-bezier(0.16, 1, 0.3, 1)" alt="Preview">`;
-      document.body.appendChild(modal);
-      modal.addEventListener('click', () => modal.remove());
-    }
     
     function openEditAnn(annId) {
       const a = DB.announcements.find(a => a.id === annId); if (!a) return;
       const modal = document.createElement('div');
-      modal.id = 'editAnnModal';
       modal.style.cssText = 'position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);';
       modal.innerHTML = `<div style="background:var(--glass-strong);border:1px solid var(--border-bright);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;margin:20px;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:scaleIn .25s ease;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <div style="font-size:16px;font-weight:700">Edit Announcement</div>
-      <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);">✕</button>
+      <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);">Γ£ò</button>
     </div>
     <div class="form-group"><label class="form-label">Title</label><input type="text" class="form-input" id="editAnnTitle" value="${a.title.replace(/"/g, '&quot;')}"></div>
     <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="editAnnText" rows="4" style="resize:vertical;line-height:1.6">${a.text}</textarea></div>
@@ -4550,42 +3798,21 @@ ${markSecHtml}
       const x = document.getElementById('editAnnText')?.value.trim();
       if (!t || !x) { alert('Fill all fields.'); return; }
       
-      window.isAnnLocalEdit = true;
-      setTimeout(() => window.isAnnLocalEdit = false, 1000);
-      
       try {
         await db.collection('announcements').doc(annId.toString()).update({ title: t, text: x });
-        document.getElementById('editAnnModal')?.remove();
-        
-        // Targeted DOM update
-        const titleEl = document.getElementById(`ann-title-${annId}`);
-        const textEl = document.getElementById(`ann-text-${annId}`);
-        if(titleEl) { titleEl.textContent = t; titleEl.style.animation = 'scaleIn 0.3s ease'; }
-        if(textEl) textEl.textContent = x;
-        // Reset animation so it can play again if edited again
-        setTimeout(() => { if(titleEl) titleEl.style.animation = ''; }, 350);
-        
+        a.title = t; a.text = x;
+        document.querySelector('[style*="position:fixed"][style*="z-index:3000"]')?.remove();
+        renderAnnouncements();
       } catch(e) { console.error(e); alert("Failed to update announcement"); }
     }
     async function deleteAnn(annId) {
       if (!confirm('Delete this announcement?')) return;
-      
-      window.isAnnLocalEdit = true;
-      setTimeout(() => window.isAnnLocalEdit = false, 1000);
-      
       const idx = DB.announcements.findIndex(a => a.id === annId);
       if (idx > -1) {
         try {
           await db.collection('announcements').doc(annId.toString()).delete();
-          
-          // Targeted DOM update
-          const el = document.getElementById(`ann-${annId}`);
-          if (el) {
-            el.style.opacity = '0';
-            el.style.transform = 'scale(0.95)';
-            el.style.pointerEvents = 'none';
-            setTimeout(() => el.remove(), 300);
-          }
+          DB.announcements.splice(idx, 1);
+          renderAnnouncements();
         } catch(e) { console.error(e); alert("Failed to delete announcement"); }
       }
     }
@@ -4596,26 +3823,15 @@ ${markSecHtml}
       
       const newAnn = { id: DB.nextAnnouncementId++, title, text, date: new Date().toISOString().split('T')[0], author: DB.currentUser.name, role: DB.currentUser.role, image: annImg };
       
-      window.isAnnLocalEdit = true;
-      setTimeout(() => window.isAnnLocalEdit = false, 1000);
-      
       try {
         await db.collection('announcements').doc(newAnn.id.toString()).set(newAnn);
         await db.collection('system').doc('settings').update({ nextAnnouncementId: DB.nextAnnouncementId });
+        DB.announcements.unshift(newAnn);
         
         annImg = ''; document.getElementById('annTitle').value = ''; document.getElementById('annText').value = '';
         document.getElementById('annImgName').textContent = 'No image selected'; document.getElementById('annImgPreview').style.display = 'none';
         if (document.getElementById('annImgInput')) document.getElementById('annImgInput').value = '';
-        
-        // Targeted DOM update
-        const list = document.getElementById('annList');
-        const noMsg = document.getElementById('noAnnMsg');
-        if (noMsg) noMsg.remove();
-        if (list) {
-          list.insertAdjacentHTML('afterbegin', getAnnHtml(newAnn));
-          const newEl = document.getElementById(`ann-${newAnn.id}`);
-          if (newEl) newEl.style.animation = 'scaleIn 0.3s ease';
-        }
+        renderAnnouncements();
       } catch(e) {
         console.error("Error posting announcement:", e);
         alert("Failed to post announcement");
@@ -4623,27 +3839,6 @@ ${markSecHtml}
     }
 
     // USERS
-    function getUserHtml(u) {
-      const avatarBg = u.role === 'admin' ? 'linear-gradient(135deg,#f59e0b,#d97706)' : u.role === 'teacher' ? 'linear-gradient(135deg,#8b5cf6,#6d28d9)' : u.gender === 'female' ? 'linear-gradient(135deg,#ec4899,#be185d)' : 'linear-gradient(135deg,#3b82f6,#1d4ed8)';
-      const roleBadge = u.role === 'admin' ? 'badge-orange' : u.role === 'teacher' ? 'badge-purple' : 'badge-blue';
-      const roleLabel = u.role === 'admin' ? 'Admin' : u.role === 'teacher' ? 'Ustha' : 'Student';
-      const subtext = u.role === 'admin' ? 'Administrator' : (u.role === 'teacher' ? 'Classes: ' + (u.assignedClasses || []).map(c => 'C' + c).join(', ') : (u.class || '') + (u.gender ? ' · ' + u.gender : ''));
-      return `<div class="user-row" id="user-row-${u.id}" style="transition: all 0.3s ease;">
-    <div class="user-meta">
-      <div class="avatar" style="background:${avatarBg}">${u.name.charAt(0)}</div>
-      <div>
-        <div style="font-size:13px;font-weight:600" id="user-name-${u.id}">${u.name}</div>
-        <div style="font-size:11px;color:var(--text-muted)" id="user-subtext-${u.id}">@${u.username} · ${subtext}</div>
-      </div>
-    </div>
-    <div class="user-actions">
-      <span class="badge ${roleBadge}" id="user-role-${u.id}">${roleLabel}</span>
-      <button class="icon-btn success" onclick="openEditUser(${u.id})" title="Edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-      <button class="icon-btn danger" onclick="deleteUser(${u.id})" title="Delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
-    </div>
-  </div>`;
-    }
-
     function renderUsers(searchQ) {
       const el = document.getElementById('usersContent');
       const q = (searchQ || document.getElementById('usersSearch')?.value || '').toLowerCase().trim();
@@ -4671,9 +3866,23 @@ ${markSecHtml}
     <input type="text" class="form-input" id="usersSearch" placeholder="Search by name, username or role..." value="${q}" oninput="renderUsers()" style="padding-left:40px;">
     <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   </div>
-  <div id="usersList">
-  ${nonAdmin.map(u => getUserHtml(u)).join('')}
-  </div></div>`;
+  ${nonAdmin.map(u => {
+        const avatarBg = u.role === 'admin' ? 'linear-gradient(135deg,#f59e0b,#d97706)' : u.role === 'teacher' ? 'linear-gradient(135deg,#8b5cf6,#6d28d9)' : u.gender === 'female' ? 'linear-gradient(135deg,#ec4899,#be185d)' : 'linear-gradient(135deg,#3b82f6,#1d4ed8)';
+        const roleBadge = u.role === 'admin' ? 'badge-orange' : u.role === 'teacher' ? 'badge-purple' : 'badge-blue';
+        const roleLabel = u.role === 'admin' ? 'Admin' : u.role === 'teacher' ? 'Ustha' : 'Student';
+        const subtext = u.role === 'admin' ? 'Administrator' : (u.role === 'teacher' ? 'Classes: ' + (u.assignedClasses || []).map(c => 'C' + c).join(', ') : (u.class || '') + (u.gender ? ' ┬╖ ' + u.gender : ''));
+        return `<div class="user-row">
+    <div class="user-meta">
+      <div class="avatar" style="background:${avatarBg}">${u.name.charAt(0)}</div>
+      <div><div style="font-size:13px;font-weight:600">${u.name}</div><div style="font-size:11px;color:var(--text-muted)">@${u.username} ┬╖ ${subtext}</div></div>
+    </div>
+    <div class="user-actions">
+      <span class="badge ${roleBadge}">${roleLabel}</span>
+      <button class="icon-btn success" onclick="openEditUser(${u.id})" title="Edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="icon-btn danger" onclick="deleteUser(${u.id})" title="Delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+    </div>
+  </div>`;
+      }).join('')}</div>`;
       // Populate edit modal class options
       const ec = document.getElementById('editUserClass'); const ecc = document.getElementById('editUserClasses');
       if (ec) { ec.innerHTML = clsOpts; } if (ecc) { ecc.innerHTML = clsOpts; }
@@ -4714,18 +3923,14 @@ ${markSecHtml}
         await db.collection('users').doc(nid.toString()).set(nu);
         await db.collection('system').doc('settings').update({ nextUserId: DB.nextUserId });
         
-        window.isUserLocalEdit = true;
-        setTimeout(() => window.isUserLocalEdit = false, 1000);
-        
-        // Targeted Update instead of rendering all lists
-        ['nuName', 'nuUser'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
-        const lst = document.getElementById('usersList');
-        if (lst) {
-          lst.insertAdjacentHTML('beforeend', getUserHtml(nu));
-          const el = document.getElementById(`user-row-${nu.id}`);
-          if(el) el.style.animation = 'scaleIn 0.3s ease';
+        DB.users.push(nu);
+        if (role === 'student') {
+           DB.attendance[nu.id] = { days: [] }; 
+           DB.results[nu.id] = { quarterly: [], halfYearly: [], final: [], model: [], public: [] };
         }
-        renderMembersList();
+        
+        ['nuName', 'nuUser'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
+        renderUsers(); renderOverview(); renderMembersList();
       } catch(e) {
         console.error("Error adding user:", e);
         alert("Failed to add user.");
@@ -4741,18 +3946,15 @@ ${markSecHtml}
       const ec = document.getElementById('editUserClass'); const ecc = document.getElementById('editUserClasses');
       if (ec) ec.innerHTML = clsOpts; if (ecc) ecc.innerHTML = clsOpts;
       if (u.role === 'student') {
-    document.getElementById('editStudentFields').style.display = 'block';
-    document.getElementById('editTeacherFields').style.display = 'none';
-    if (ec) ec.value = u.standard;
-    document.getElementById('editUserGender').value = u.gender;
-  } else if (u.role === 'teacher') {
-    document.getElementById('editStudentFields').style.display = 'none';
-    document.getElementById('editTeacherFields').style.display = 'block';
-    if (ecc) Array.from(ecc.options).forEach(opt => { opt.selected = (u.assignedClasses || []).includes(parseInt(opt.value)); });
-  } else {
-    document.getElementById('editStudentFields').style.display = 'none';
-    document.getElementById('editTeacherFields').style.display = 'none';
-  }
+        document.getElementById('editStudentFields').style.display = 'block';
+        document.getElementById('editTeacherFields').style.display = 'none';
+        if (ec) ec.value = u.standard;
+        document.getElementById('editUserGender').value = u.gender;
+      } else {
+        document.getElementById('editStudentFields').style.display = 'none';
+        document.getElementById('editTeacherFields').style.display = 'block';
+        if (ecc) Array.from(ecc.options).forEach(opt => { opt.selected = (u.assignedClasses || []).includes(parseInt(opt.value)); });
+      }
       document.getElementById('editUserModal').classList.add('open');
     }
     function closeEditUser() { document.getElementById('editUserModal').classList.remove('open'); }
@@ -4776,48 +3978,26 @@ ${markSecHtml}
         updates.assignedClasses = Array.from(sel.selectedOptions).map(o => parseInt(o.value));
       }
       
-      window.isUserLocalEdit = true;
-      setTimeout(() => window.isUserLocalEdit = false, 1000);
-      
       try {
         await db.collection('users').doc(uid.toString()).update(updates);
         Object.assign(u, updates);
-        closeEditUser(); 
-        
-        const nameEl = document.getElementById(`user-name-${uid}`);
-        const subtextEl = document.getElementById(`user-subtext-${uid}`);
-        if(nameEl) { nameEl.textContent = newName; nameEl.style.animation = 'scaleIn 0.3s ease'; }
-        if(subtextEl) {
-          const subtxt = u.role === 'admin' ? 'Administrator' : (u.role === 'teacher' ? 'Classes: ' + (u.assignedClasses || []).map(c => 'C' + c).join(', ') : (u.class || '') + (u.gender ? ' · ' + u.gender : ''));
-          subtextEl.textContent = `@${newUsername} · ${subtxt}`;
-        }
-        setTimeout(() => { if(nameEl) nameEl.style.animation = ''; }, 350);
-        
-        renderMembersList();
+        closeEditUser(); renderUsers(); renderOverview(); renderMembersList();
       } catch(e) { console.error(e); alert("Failed to update user"); }
     }
     async function deleteUser(uid) {
       if (!confirm('Delete this user?')) return;
       const idx = DB.users.findIndex(u => u.id === uid);
       if (idx > -1) { 
-        window.isUserLocalEdit = true;
-        setTimeout(() => window.isUserLocalEdit = false, 1000);
-        
         try {
           // Ideally you'd also delete attendance and results in a batch, 
           // but for now deleting the central user document is most important
           await db.collection('users').doc(uid.toString()).delete();
-          DB.users.splice(idx, 1);
           // Optionally also clean up linked collections here...
           
-          const el = document.getElementById(`user-row-${uid}`);
-          if (el) {
-            el.style.opacity = '0';
-            el.style.transform = 'scale(0.95)';
-            el.style.pointerEvents = 'none';
-            setTimeout(() => el.remove(), 300);
-          }
-          renderMembersList();
+          DB.users.splice(idx, 1); 
+          delete DB.attendance[uid]; 
+          delete DB.results[uid]; 
+          renderUsers(); renderOverview(); renderMembersList();
         } catch(e) { console.error(e); alert("Failed to delete user"); }
       }
     }
@@ -4838,8 +4018,8 @@ ${markSecHtml}
       });
       const subs = DB.subjects[cls] || [];
       const el = document.getElementById('subClsContent');
-      el.innerHTML = `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls} — Subjects</div><span class="badge badge-blue">${subs.length} subjects</span></div>
-    ${subs.length ? subs.map((s, i) => `<div class="subject-card" id="subcard-${cls}-${i}"><div><div class="subject-name">${s.name}</div><div class="subject-meta">Total: ${s.total} · Pass Mark: ${s.pass}</div></div><div style="display:flex;gap:6px"><button class="icon-btn" onclick="editSubInline(${cls},${i})" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn danger" onclick="removeSub(${cls},${i})" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></div>`).join('') : `<div style="text-align:center;padding:16px;color:var(--text-dim);font-size:12px">No subjects added yet.</div>`}
+      el.innerHTML = `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls} ΓÇö Subjects</div><span class="badge badge-blue">${subs.length} subjects</span></div>
+    ${subs.length ? subs.map((s, i) => `<div class="subject-card" id="subcard-${cls}-${i}"><div><div class="subject-name">${s.name}</div><div class="subject-meta">Total: ${s.total} ┬╖ Pass Mark: ${s.pass}</div></div><div style="display:flex;gap:6px"><button class="icon-btn" onclick="editSubInline(${cls},${i})" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn danger" onclick="removeSub(${cls},${i})" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></div>`).join('') : `<div style="text-align:center;padding:16px;color:var(--text-dim);font-size:12px">No subjects added yet.</div>`}
   </div>
   <div class="panel glass"><div class="panel-header"><div class="panel-title">Add Subject to Class ${cls}</div></div>
     <div class="form-row" style="margin-bottom:12px">
@@ -4859,9 +4039,6 @@ ${markSecHtml}
       if (DB.subjects[cls].find(s => s.name === name)) { alert('Subject already exists.'); return; }
       
       DB.subjects[cls].push({ name, total, pass }); 
-      
-      window.isSystemLocalEdit = true;
-      setTimeout(() => window.isSystemLocalEdit = false, 1000);
       
       try {
         await db.collection('system').doc('settings').update({ subjects: DB.subjects });
@@ -4893,9 +4070,6 @@ ${markSecHtml}
       
       DB.subjects[cls][idx] = { name, total, pass }; 
       
-      window.isSystemLocalEdit = true;
-      setTimeout(() => window.isSystemLocalEdit = false, 1000);
-      
       try {
         await db.collection('system').doc('settings').update({ subjects: DB.subjects });
         loadSubjectCls(cls);
@@ -4908,9 +4082,6 @@ ${markSecHtml}
       if (!confirm('Remove this subject?')) return; 
       
       DB.subjects[cls].splice(idx, 1); 
-      
-      window.isSystemLocalEdit = true;
-      setTimeout(() => window.isSystemLocalEdit = false, 1000);
       
       try {
         await db.collection('system').doc('settings').update({ subjects: DB.subjects });
@@ -4938,7 +4109,7 @@ ${markSecHtml}
   <div class="panel glass">
     <div class="panel-header"><div class="panel-title">Student Performance</div></div>
     <div class="table-wrap"><table><thead><tr><th>Student</th><th>Class</th><th>Gender</th><th>Attendance</th><th>Quarterly Avg</th><th>Quizzes</th></tr></thead>
-    <tbody>${students.map(s => { const { present, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; const res = DB.results[s.id] || {}; const qAvg = (res.quarterly || []).length ? Math.round((res.quarterly || []).reduce((a, b) => a + (b.marks || 0), 0) / (res.quarterly || []).length) : 0; const qz = Object.keys(DB.quizScores).filter(k => k.startsWith(s.id + '_')).length; return `<tr><td><strong>${s.name}</strong></td><td>${s.class || '—'}</td><td><span class="badge ${s.gender === 'male' ? 'badge-blue' : 'badge-yellow'}">${s.gender}</span></td><td><span class="badge ${pct >= 75 ? 'badge-green' : 'badge-red'}">${pct}%</span></td><td>${qAvg || '—'}${qAvg ? '%' : ''}</td><td>${qz}</td></tr>`; }).join('')}</tbody></table></div>
+    <tbody>${students.map(s => { const { present, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; const res = DB.results[s.id] || {}; const qAvg = (res.quarterly || []).length ? Math.round((res.quarterly || []).reduce((a, b) => a + (b.marks || 0), 0) / (res.quarterly || []).length) : 0; const qz = Object.keys(DB.quizScores).filter(k => k.startsWith(s.id + '_')).length; return `<tr><td><strong>${s.name}</strong></td><td>${s.class || 'ΓÇö'}</td><td><span class="badge ${s.gender === 'male' ? 'badge-blue' : 'badge-yellow'}">${s.gender}</span></td><td><span class="badge ${pct >= 75 ? 'badge-green' : 'badge-red'}">${pct}%</span></td><td>${qAvg || 'ΓÇö'}${qAvg ? '%' : ''}</td><td>${qz}</td></tr>`; }).join('')}</tbody></table></div>
   </div>
   <div class="panel glass" style="margin-top:20px"><div class="panel-header"><div class="panel-title">Gender Distribution</div></div>
     <div style="display:flex;gap:20px;flex-wrap:wrap">
@@ -4951,8 +4122,8 @@ ${markSecHtml}
     // CONTROL CENTER
     function renderControlCenter() {
       const el = document.getElementById('controlCenterContent'); if (!el) return;
-      const sessions = DB.examSessions || { quarterly: true, halfYearly: true, final: false, public: false, attendance: true };
-      const exams = [{ key: 'attendance', label: 'Daily Attendance', desc: 'Enable/disable daily attendance marking system-wide' }, { key: 'quarterly', label: '1st Term (Quarterly)', desc: 'First quarterly examination' }, { key: 'halfYearly', label: '2nd Term (Half-Yearly)', desc: 'Second half-yearly examination' }, { key: 'final', label: 'Final / Yearly Exam', desc: 'End of year final examination' }, { key: 'public', label: 'Public Exam', desc: 'External public examination for eligible classes' }];
+      const sessions = DB.examSessions || { quarterly: true, halfYearly: true, final: false, public: false };
+      const exams = [{ key: 'quarterly', label: '1st Term (Quarterly)', desc: 'First quarterly examination' }, { key: 'halfYearly', label: '2nd Term (Half-Yearly)', desc: 'Second half-yearly examination' }, { key: 'final', label: 'Final / Yearly Exam', desc: 'End of year final examination' }, { key: 'public', label: 'Public Exam', desc: 'External public examination for eligible classes' }];
       el.innerHTML = `<div class="info-strip" style="margin-bottom:20px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Enable a session to allow Usthas to enter or edit marks for that exam type. Disable to lock editing.</div>
   <div class="panel glass">
     <div class="panel-header"><div class="panel-title">Exam Editing Sessions</div><div style="font-size:12px;color:var(--text-muted)">Toggle to open/close</div></div>
@@ -4976,29 +4147,11 @@ ${markSecHtml}
         </div>
       </div>`;
       }).join('')}
-  </div>
-  <div class="panel glass" style="margin-top:24px">
-    <div class="panel-header" style="margin-bottom:16px"><div class="panel-title">Academic Year Operations</div><div style="font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:4px"><span class="badge badge-red">Danger Zone</span></div></div>
-    
-    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:24px">
-      <button class="btn btn-primary" onclick="startAcademicYear(this)" style="flex:1;justify-content:center;padding:14px;font-size:14px;background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 8px 30px rgba(16, 185, 129, 0.3);border:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>Start Academic Year</button>
-      
-      <button class="btn btn-danger" onclick="endAcademicYear(this)" style="flex:1;justify-content:center;padding:14px;font-size:14px;background:linear-gradient(135deg,#f43f5e,#e11d48);box-shadow:0 8px 30px rgba(244, 63, 94, 0.3);border:none;color:#fff"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>End & Archive Current Year</button>
-    </div>
-    
-    <div style="border-top:1px solid var(--border);padding-top:20px;display:flex;gap:10px;flex-wrap:wrap">
-       <button class="btn btn-primary" onclick="upgradeStudents(this)" style="flex:1;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>Update Students Class (Upgrade)</button>
-       <button class="btn btn-ghost" onclick="degradeStudents(this)" style="color:var(--text-muted);flex:1;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>Degrade Students Class</button>
-    </div>
-    <div style="font-size:11px;color:var(--text-dim);margin-top:16px;text-align:center">Warning: These operations are destructive and affect all students simultaneously.</div>
   </div>`;
     }
     async function toggleExamSession(key) {
       if (!DB.examSessions) DB.examSessions = { quarterly: true, halfYearly: true, final: false, public: false };
       DB.examSessions[key] = !DB.examSessions[key];
-      
-      window.isSystemLocalEdit = true;
-      setTimeout(() => window.isSystemLocalEdit = false, 1000);
       
       try {
         await db.collection('system').doc('settings').update({ examSessions: DB.examSessions });
@@ -5037,7 +4190,7 @@ ${markSecHtml}
             if (m._type === 'teacher') {
               return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
             <div class="avatar" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,#8b5cf6,#6d28d9)">${m.name.charAt(0)}</div>
-            <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} · Classes: ${(m.assignedClasses || []).map(c => 'C' + c).join(', ')}</div></div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} ┬╖ Classes: ${(m.assignedClasses || []).map(c => 'C' + c).join(', ')}</div></div>
             <span class="badge badge-purple">Ustha</span>
           </div>`;
             }
@@ -5045,7 +4198,7 @@ ${markSecHtml}
             const badge = m.gender === 'male' ? 'badge-blue' : 'badge-yellow';
             return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
           <div class="avatar" style="width:30px;height:30px;font-size:12px;background:${bg}">${m.name.charAt(0)}</div>
-          <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} · ${m.class}</div></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} ┬╖ ${m.class}</div></div>
           <span class="badge ${badge}" style="font-size:10px">${m.gender === 'male' ? 'Male' : 'Female'}</span>
         </div>`;
           }).join('');
@@ -5069,13 +4222,11 @@ ${markSecHtml}
     <div class="class-content" id="mc-usthas">
       ${allTeachers.length ? allTeachers.map(t => `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
         <div class="avatar" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,#8b5cf6,#6d28d9)">${t.name.charAt(0)}</div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600">${t.name}</div><div style="font-size:11px;color:var(--text-muted)">@${t.username} · Classes: ${(t.assignedClasses || []).map(c => 'C' + c).join(', ')}</div></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600">${t.name}</div><div style="font-size:11px;color:var(--text-muted)">@${t.username} ┬╖ Classes: ${(t.assignedClasses || []).map(c => 'C' + c).join(', ')}</div></div>
         <span class="badge badge-purple">Ustha</span>
       </div>`).join('') : '<div style="text-align:center;padding:14px;color:var(--text-dim);font-size:12px;border:1px solid var(--border);border-radius:var(--radius-sm);">No teachers registered.</div>'}
     </div>`;
       }
-      
-      // Removed Academic Year Operations from Members List
       el.innerHTML = html;
       // re-focus search if user was typing
       if (q) { const si = document.getElementById('membersSearch'); if (si) { si.focus(); si.setSelectionRange(si.value.length, si.value.length); } }
@@ -5107,322 +4258,8 @@ ${markSecHtml}
       if (content) { content.classList.toggle('open'); btn.classList.toggle('open'); }
     }
 
-    async function upgradeStudents(btnEl) {
-      if (!confirm('WARNING: Are you sure you want to UPGRADE all students to the next class?')) return;
-      const p = prompt('Type "UPGRADE" to confirm upgrading all students by 1 class:');
-      if (p !== 'UPGRADE') { alert('Aborted.'); return; }
-      
-      const students = DB.users.filter(u => u.role === 'student' && u.standard != null);
-      if (!students.length) return;
-      
-      window.isUserLocalEdit = true;
-      const origText = btnEl.innerHTML;
-      btnEl.innerHTML = 'Upgrading...';
-      btnEl.disabled = true;
-      
-      try {
-        const batch = db.batch();
-        students.forEach(s => {
-          const newStd = s.standard + 1;
-          const ref = db.collection('users').doc(s.id.toString());
-          batch.update(ref, { standard: newStd, class: `Standard ${newStd}` });
-          s.standard = newStd;
-          s.class = `Standard ${newStd}`;
-        });
-        await batch.commit();
-        alert('Successfully upgraded all students by 1 class.');
-        renderMembersList();
-      } catch(e) {
-        console.error(e);
-        alert('Error upgrading students.');
-      } finally {
-        setTimeout(() => window.isUserLocalEdit = false, 500);
-        btnEl.innerHTML = origText;
-        btnEl.disabled = false;
-      }
-    }
 
-    async function degradeStudents(btnEl) {
-      if (!confirm('WARNING: Are you sure you want to DEGRADE all students to the previous class?')) return;
-      const p = prompt('Type "DEGRADE" to confirm degrading all students by 1 class:');
-      if (p !== 'DEGRADE') { alert('Aborted.'); return; }
-      
-      const students = DB.users.filter(u => u.role === 'student' && u.standard != null);
-      if (!students.length) return;
-      
-      window.isUserLocalEdit = true;
-      const origText = btnEl.innerHTML;
-      btnEl.innerHTML = 'Degrading...';
-      btnEl.disabled = true;
-      
-      try {
-        const batch = db.batch();
-        students.forEach(s => {
-          let newStd = s.standard - 1;
-          if (newStd < 1) newStd = 1; // Prevent going below 1
-          const ref = db.collection('users').doc(s.id.toString());
-          batch.update(ref, { standard: newStd, class: `Standard ${newStd}` });
-          s.standard = newStd;
-          s.class = `Standard ${newStd}`;
-        });
-        await batch.commit();
-        alert('Successfully degraded all students by 1 class.');
-        renderMembersList();
-      } catch(e) {
-        console.error(e);
-        alert('Error degrading students.');
-      } finally {
-        setTimeout(() => window.isUserLocalEdit = false, 500);
-        btnEl.innerHTML = origText;
-        btnEl.disabled = false;
-      }
-    }
-
-    async function endAcademicYear(btn) {
-      if (DB.currentUser.role !== 'admin') return;
-      
-      const yearLabel = prompt("Enter a label for this Academic Year (e.g. '2023 - 2024'):\\n\\nThis will take a complete snapshot of all Users, Attendance, Exam Results, Quizzes, and Announcements.");
-      if (!yearLabel) return;
-      
-      const confirmObj = prompt(`This will create an archive named "${yearLabel}". All current active data will remain intact until you explicitly click "Start New Academic Year".\\n\\nType "ARCHIVE" to confirm and begin the backup process.`);
-      if (confirmObj !== 'ARCHIVE') { alert('Archiving aborted.'); return; }
-      
-      btn.innerHTML = 'Archiving... Please wait';
-      btn.disabled = true;
-      window.isSystemLocalEdit = true;
-      
-      try {
-        const yearId = Date.now().toString();
-        await db.collection('archives').doc(yearId).set({ label: yearLabel, createdAt: new Date().toISOString() });
-        
-        let batch = db.batch(); let count = 0;
-        async function commitBatch() { if(count > 0) { await batch.commit(); batch = db.batch(); count = 0; } }
-        
-        for (const u of DB.users) { batch.set(db.collection('archives').doc(yearId).collection('users').doc(u.id.toString()), u); count++; if(count >= 400) await commitBatch(); }
-        for (const id in DB.attendance) { batch.set(db.collection('archives').doc(yearId).collection('attendance').doc(id), DB.attendance[id]); count++; if(count >= 400) await commitBatch(); }
-        for (const id in DB.results) { batch.set(db.collection('archives').doc(yearId).collection('results').doc(id), DB.results[id]); count++; if(count >= 400) await commitBatch(); }
-        for (const q of DB.quizzes) { batch.set(db.collection('archives').doc(yearId).collection('quizzes').doc(q.id.toString()), q); count++; if(count >= 400) await commitBatch(); }
-        for (const id in DB.quizScores) { batch.set(db.collection('archives').doc(yearId).collection('quizScores').doc(id), { score: DB.quizScores[id] }); count++; if(count >= 400) await commitBatch(); }
-        for (const a of DB.announcements) { batch.set(db.collection('archives').doc(yearId).collection('announcements').doc(a.id.toString()), a); count++; if(count >= 400) await commitBatch(); }
-        
-        await commitBatch();
-        renderArchives();
-        alert(`Success! "${yearLabel}" has been securely backed up. You can view it from the "Previous Years" tab.\\n\\nYou can now safely Upgrade students using the 'Upgrade Students Class' button. When you are ready for a clean slate, click 'Start Academic Year'.`);
-      } catch(e) {
-        console.error("Archive Error:", e); alert("An error occurred while creating the archive.");
-      } finally {
-        window.isSystemLocalEdit = false;
-        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>End & Archive Current Year`;
-        btn.disabled = false;
-      }
-    }
-
-    async function startAcademicYear(btn) {
-      if (DB.currentUser.role !== 'admin') return;
-      
-      const confirmStr = prompt(`WARNING: STARTING A NEW ACADEMIC YEAR IS DESTRUCTIVE.\\n\\nThis will PERMANENTLY DELETE all active Attendance, Exam Results, Quiz Scores, Quizzes, and Announcements from the live system.\\n\\nType "START FRESH" to permanently wipe the active slate:`);
-      if (confirmStr !== 'START FRESH') { alert("Operation aborted."); return; }
-      
-      btn.innerHTML = 'Wiping... Please wait';
-      btn.disabled = true;
-      window.isSystemLocalEdit = true;
-      
-      try {
-        let batch = db.batch(); let count = 0;
-        async function commitBatch() { if(count > 0) { await batch.commit(); batch = db.batch(); count = 0; } }
-        
-        const colsToWipe = ['attendance', 'results', 'quizScores', 'quizzes', 'announcements'];
-        for (const col of colsToWipe) {
-          const snap = await db.collection(col).get();
-          for (const doc of snap.docs) { batch.delete(doc.ref); count++; if (count >= 400) await commitBatch(); }
-        }
-        await commitBatch();
-        
-        alert("Success! A new blank slate has been created for the new Academic Year.");
-        window.location.reload();
-      } catch(e) {
-        console.error("Wipe Error:", e); alert("An error occurred while starting the new year.");
-      } finally {
-        window.isSystemLocalEdit = false;
-        btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>Start Academic Year`;
-        btn.disabled = false;
-      }
-    }
-
-    // ── ARCHIVES & MEMORY MODE ──
-    async function renderArchives() {
-      const el = document.getElementById('archivesContent'); if (!el) return;
-      el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-dim)"><div class="gl-spinner" style="margin:0 auto 16px;width:30px;height:30px;border-width:2px;display:block"></div>Fetching archives...</div>';
-      
-      try {
-        const snap = await db.collection('archives').get();
-        if (snap.empty) {
-          el.innerHTML = '<div class="empty glass" style="border-radius:var(--radius-lg)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v4"/><path d="M14 4v4"/><path d="M6 4v4"/><path d="M18 4v4"/></svg><p>No previous academic years have been archived yet.</p></div>';
-          return;
-        }
-        
-        let docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        docs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        const u = DB.currentUser;
-        
-        el.innerHTML = `<div class="cards-grid">
-          ${docs.map(arc => `
-            <div class="user-row glass" id="arc-row-${arc.id}" style="flex-direction:column;align-items:flex-start;padding:20px;border-radius:var(--radius-lg)">
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;width:100%">
-                <div style="width:42px;height:42px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 15px rgba(245,158,11,0.2)">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8"/><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M12 12v.01"/></svg>
-                </div>
-                <div style="flex:1">
-                  <div style="font-size:16px;font-weight:700">${arc.label}</div>
-                  <div style="font-size:11px;color:var(--text-muted)">Archived on: ${new Date(arc.createdAt).toLocaleDateString()}</div>
-                </div>
-              </div>
-              <div style="display:flex;gap:10px;width:100%">
-                <button class="btn btn-primary" onclick="viewArchive('${arc.id}', '${arc.label.replace(/'/g, "\\'")}')" style="flex:1;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View Memory</button>
-                ${u.role === 'admin' ? `<button class="btn btn-ghost" onclick="deleteArchive('${arc.id}')" style="color:var(--text-muted);width:40px;justify-content:center;padding:0;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>` : ''}
-              </div>
-            </div>
-          `).join('')}
-        </div>`;
-      } catch(e) {
-        console.error(e);
-        el.innerHTML = '<div style="color:#ef4444;padding:20px;">Failed to load archives.</div>';
-      }
-    }
-
-    async function viewArchive(arcId, label) {
-      document.body.classList.add('auto-logging-in');
-      document.getElementById('global-loader').style.display = 'flex';
-      const loaderText = document.querySelector('#global-loader div:nth-child(3)');
-      if (loaderText) loaderText.textContent = `Constructing Memory Map for ${label}...`;
-      
-      try {
-        const arcRef = db.collection('archives').doc(arcId);
-        const [uSnap, aSnap, rSnap, qSnap, qsSnap, annSnap] = await Promise.all([
-          arcRef.collection('users').get(),
-          arcRef.collection('attendance').get(),
-          arcRef.collection('results').get(),
-          arcRef.collection('quizzes').get(),
-          arcRef.collection('quizScores').get(),
-          arcRef.collection('announcements').get()
-        ]);
-        
-        window.liveDB = { users: DB.users, attendance: DB.attendance, results: DB.results, quizzes: DB.quizzes, quizScores: DB.quizScores, announcements: DB.announcements };
-        window.isArchiveMode = true;
-        
-        DB.users = uSnap.docs.map(d => d.data());
-        DB.attendance = {}; aSnap.docs.forEach(d => DB.attendance[d.id] = d.data());
-        DB.results = {}; rSnap.docs.forEach(d => DB.results[d.id] = d.data());
-        DB.quizzes = qSnap.docs.map(d => d.data());
-        DB.quizScores = {}; qsSnap.docs.forEach(d => DB.quizScores[d.id] = d.data().score);
-        DB.announcements = annSnap.docs.map(d => d.data());
-        
-        let banner = document.getElementById('archiveBannerTop');
-        if (!banner) {
-          banner = document.createElement('div');
-          banner.id = 'archiveBannerTop';
-          banner.style.cssText = 'position:fixed;top:0;left:0;right:0;height:44px;background:#f59e0b;color:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;letter-spacing:.05em;gap:16px;box-shadow:0 4px 20px rgba(245,158,11,0.4);animation:slideDown .3s ease;';
-          banner.innerHTML = `<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-2px;margin-right:6px"><path d="M21 8v13H3V8"/><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M12 12v.01"/></svg>VIEWING READ-ONLY MEMORY ARCHIVE: <span id="archiveBannerLabel"></span></span><button onclick="exitArchiveMode()" style="background:rgba(0,0,0,0.2);border:none;color:#fff;padding:6px 12px;border-radius:50px;font-size:11px;font-weight:700;cursor:pointer;cursor:pointer;transition:background .2s">Exit Archive Mode</button>`;
-          document.body.appendChild(banner);
-          
-          const style = document.createElement('style');
-          style.innerHTML = `@keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } } body { padding-top: 44px !important; } .landing-nav { top: 60px !important; } .sidebar { padding-top: 114px !important; }`;
-          document.head.appendChild(style);
-        }
-        document.getElementById('archiveBannerLabel').textContent = label;
-        banner.style.display = 'flex';
-        
-        // Disable editing functionalities visually by hiding control centers and injecting global CSS pointer events block on action buttons
-        let lockStyle = document.getElementById('archiveLockStyle');
-        if (!lockStyle) {
-          lockStyle = document.createElement('style');
-          lockStyle.id = 'archiveLockStyle';
-          lockStyle.innerHTML = `.icon-btn:not(.modal-close), .btn-danger, .btn-primary:not([onclick*="viewArchive"]):not([onclick*="loadAdminAttendanceClass"]):not([onclick*="generateReport"]):not([onclick*="renderOverview"]):not([onclick*="exitArchiveMode"]):not(.tab-btn) { display: none !important; } #controlCenterContent, .form-row:has(input), .form-group:has(input) { opacity: 0.5; pointer-events: none; }`;
-          document.head.appendChild(lockStyle);
-        }
-        
-        const adminNav = document.getElementById('adminNav'); if (adminNav) adminNav.style.display = 'none';
-        const prevYearsNav = document.getElementById('navPreviousYears'); if (prevYearsNav) prevYearsNav.style.display = 'none';
-        
-        showSection('overview', document.querySelector('.sidebar-item'));
-        renderOverview(); renderAttendance();
-        
-        // Force attendance overview to be active
-        const attOverviewSec = document.getElementById('attOverviewSection');
-        if (attOverviewSec) attOverviewSec.style.display = '';
-        
-        renderResults(); renderQuiz(); renderAnnouncements(); renderMembersList();
-        
-      } catch(e) {
-        console.error("View Archive Error", e);
-        alert("Failed to load aggregate memory map for this archive.");
-      } finally {
-        if (loaderText) loaderText.textContent = 'Connecting securely...';
-        document.body.classList.remove('auto-logging-in');
-        document.getElementById('global-loader').style.display = 'none';
-      }
-    }
-
-    function exitArchiveMode() {
-      if (!window.isArchiveMode) return;
-      window.isArchiveMode = false;
-      
-      DB.users = window.liveDB.users;
-      DB.attendance = window.liveDB.attendance;
-      DB.results = window.liveDB.results;
-      DB.quizzes = window.liveDB.quizzes;
-      DB.quizScores = window.liveDB.quizScores;
-      DB.announcements = window.liveDB.announcements;
-      
-      const banner = document.getElementById('archiveBannerTop');
-      if (banner) banner.style.display = 'none';
-      const lockStyle = document.getElementById('archiveLockStyle');
-      if (lockStyle) lockStyle.remove();
-      
-      const u = DB.currentUser;
-      if (u.role === 'admin') {
-        const adminNav = document.getElementById('adminNav'); if (adminNav) adminNav.style.display = 'block';
-      }
-      if (u.role === 'admin' || u.role === 'teacher') {
-        const prevYearsNav = document.getElementById('navPreviousYears'); if (prevYearsNav) prevYearsNav.style.display = 'flex';
-      }
-      
-      showSection('archives', document.getElementById('navPreviousYears'));
-      renderArchives();
-      renderAttendance(); // Reset attendance rendering back to view mode
-    }
-
-    async function deleteArchive(arcId) {
-      if (!confirm("WARNING: Are you absolutely sure you want to delete this memory archive?")) return;
-      const confirmStr = prompt("Type DELETE to permanently erase this historical year data out of existence:");
-      if (confirmStr !== 'DELETE') { alert("Aborted."); return; }
-      
-      const arcRow = document.getElementById(`arc-row-${arcId}`);
-      if (arcRow) { arcRow.style.opacity = '0.5'; arcRow.style.pointerEvents = 'none'; }
-      
-      try {
-        // Technically Firestore requires deleting all subdocuments first to prevent orphans.
-        // For simplicity in a single frontend function, we queue up recursive deletions (chunked by 400).
-        let batch = db.batch(); let count = 0;
-        async function comm() { if(count > 0) { await batch.commit(); batch = db.batch(); count = 0; } }
-        
-        const colsToWipe = ['users', 'attendance', 'results', 'quizScores', 'quizzes', 'announcements'];
-        for (const col of colsToWipe) {
-          const snap = await db.collection('archives').doc(arcId).collection(col).get();
-          for (const doc of snap.docs) { batch.delete(doc.ref); count++; if (count >= 400) await comm(); }
-        }
-        await comm();
-        await db.collection('archives').doc(arcId).delete();
-        
-        if (arcRow) { arcRow.style.display = 'none'; }
-        alert("Archive deleted permanently.");
-      } catch(e) {
-        console.error(e); alert("An error occurred trying to delete the archive.");
-        if (arcRow) { arcRow.style.opacity = '1'; arcRow.style.pointerEvents = 'auto'; }
-      }
-    }
-
-    // ── REVEAL ON SCROLL (landing page) ──
+    // ΓöÇΓöÇ REVEAL ON SCROLL (landing page) ΓöÇΓöÇ
     (function () {
       const obs = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
