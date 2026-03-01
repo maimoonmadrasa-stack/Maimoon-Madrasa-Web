@@ -3105,6 +3105,8 @@ let DB = {
       if (u.role === 'student') {
         const { present, absent, total } = getAttStats(u.id);
         const pct = total ? Math.round(present / total * 100) : 0;
+        const res = DB.results[u.id] || {};
+        
         // Auto-detect the latest exam term that has published results for the student's class
         const termOrder = ['public', 'final', 'halfYearly', 'quarterly'];
         let latestPublishedTerm = 'quarterly'; // Fallback
