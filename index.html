@@ -3902,8 +3902,8 @@ ${markSecHtml}
       const label = examType === 'halfYearly' ? '2nd Term' : examType === 'final' ? 'Final Exam' : examType === 'public' ? 'Public Exam' : '1st Term';
       
       return `
-      <div class="panel-header" style="margin-top:24px"><div class="panel-title">Top Rankers</div><span class="badge badge-yellow">${label}</span></div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px">
+      <div class="panel-header" style="margin-top:40px"><div class="panel-title">Top Rankers</div><span class="badge badge-yellow">${label}</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px">
         ${ranked.map((s, i) => {
           const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
           const isMe = s.id === myId;
@@ -3911,11 +3911,11 @@ ${markSecHtml}
           const bgC = isMe ? 'rgba(59,130,246,0.1)' : 'var(--surface)';
           const badge = isMe ? '<div style="position:absolute;top:-6px;right:-6px;background:var(--blue);color:#fff;font-size:9px;padding:2px 6px;border-radius:20px;font-weight:700;box-shadow:0 2px 6px var(--blue-glow)">You</div>' : '';
           const avatarBg = s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)';
-          return `<div class="glass" style="padding:16px;border-radius:12px;text-align:center;border:1px solid ${borderC};background:${bgC};position:relative">
+          return `<div class="glass" style="padding:16px 8px;border-radius:12px;text-align:center;border:1px solid ${borderC};background:${bgC};position:relative;display:flex;flex-direction:column;align-items:center;overflow:hidden;width:100%;">
             ${badge}
             <div style="font-size:24px;margin-bottom:8px">${medal}</div>
-            <div class="avatar" style="width:40px;height:40px;margin:0 auto 10px;font-size:14px;background:${avatarBg}">${s.name.charAt(0)}</div>
-            <div style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.name}</div>
+            <div class="avatar" style="width:40px;height:40px;margin:0 auto 10px;font-size:14px;background:${avatarBg};flex-shrink:0;">${s.name.charAt(0)}</div>
+            <div style="font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;max-width:100%;display:block;padding:0 4px;box-sizing:border-box;">${s.name}</div>
             <div style="font-size:11px;color:var(--text-muted);margin-top:4px">${s.total} Marks</div>
           </div>`;
         }).join('')}
