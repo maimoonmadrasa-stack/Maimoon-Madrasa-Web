@@ -38,20 +38,20 @@
     }
 
     [data-theme="light"] {
-      --bg: #ffffff;
-      --bg2: #f8fafc;
+      --bg: #f3f6fa;
+      --bg2: #eaeff5;
       --solid-surface: #ffffff;
-      --surface: rgba(255, 255, 255, 0.85);
+      --surface: rgba(255, 255, 255, 0.95);
       --surface-hover: #ffffff;
-      --border: rgba(255, 255, 255, 0.6);
+      --border: rgba(15, 31, 61, 0.12);
       --border-bright: rgba(59, 130, 246, 0.3);
       --text: #0f1f3d;
-      --text-muted: rgba(15, 31, 61, 0.6);
+      --text-muted: rgba(15, 31, 61, 0.65);
       --text-dim: rgba(15, 31, 61, 0.4);
-      --glass: rgba(255, 255, 255, 0.8);
-      --glass-strong: rgba(255, 255, 255, 0.9);
-      --shadow: 0 8px 32px rgba(15, 31, 61, 0.08);
-      --shadow-blue: 0 4px 20px rgba(59, 130, 246, 0.08);
+      --glass: rgba(255, 255, 255, 0.9);
+      --glass-strong: rgba(255, 255, 255, 0.95);
+      --shadow: 0 4px 12px rgba(15, 31, 61, 0.05);
+      --shadow-blue: 0 4px 16px rgba(59, 130, 246, 0.08);
     }
 
     * {
@@ -194,6 +194,11 @@
       -webkit-mask-composite: xor;
       mask-composite: exclude;
       pointer-events: none;
+    }
+
+    [data-theme="light"] .glass::before,
+    [data-theme="light"] .glass-strong::before {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(15, 31, 61, 0.06) 100%);
     }
 
     .btn {
@@ -530,11 +535,11 @@
     }
 
     [data-theme="light"] .stat-card {
-      background: rgba(255, 255, 255, 0.6);
-      box-shadow: 0 4px 16px rgba(234, 238, 248, 0.4);
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 4px 12px rgba(15, 31, 61, 0.04);
     }
     [data-theme="light"] .stat-card::before {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.4) 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(15, 31, 61, 0.06) 100%);
     }
 
     .stat-card-label {
@@ -939,6 +944,11 @@
       margin-bottom: 8px;
       transition: all .2s;
     }
+    
+    [data-theme="light"] .user-row {
+      background: var(--bg2);
+      border-color: rgba(15, 31, 61, 0.08);
+    }
 
     .user-row:hover {
       border-color: var(--border-bright);
@@ -996,6 +1006,12 @@
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       margin-bottom: 8px;
+      background: var(--surface);
+    }
+    
+    [data-theme="light"] .result-subject {
+      background: var(--bg2);
+      border-color: rgba(15, 31, 61, 0.08);
     }
 
     .result-marks {
@@ -1121,6 +1137,11 @@
       color: var(--text);
       text-align: left;
     }
+    
+    [data-theme="light"] .class-label-btn {
+      background: var(--bg2);
+      border-color: rgba(15, 31, 61, 0.08);
+    }
 
     .class-label-btn:hover,
     .class-label-btn.open {
@@ -1148,6 +1169,11 @@
       border: 1px solid var(--border);
       margin-bottom: 8px;
       background: var(--surface);
+    }
+    
+    [data-theme="light"] .subject-card {
+      background: var(--bg2);
+      border-color: rgba(15, 31, 61, 0.08);
     }
 
     .subject-name {
