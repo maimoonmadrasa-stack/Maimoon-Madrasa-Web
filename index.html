@@ -375,6 +375,7 @@
       height: calc(100vh - 70px);
       overflow-y: auto;
       border-right: 1px solid var(--border);
+      border-radius: 0 !important; /* Specific user request to have no border radius on left menu */
       display: flex;
       flex-direction: column;
     }
@@ -1345,14 +1346,20 @@
       color: var(--blue);
     }
 
-    /* ── SIDEBAR OVERLAY (mobile) ── */
     .sidebar-overlay {
       display: none;
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, .55);
       z-index: 149;
-      backdrop-filter: blur(3px);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    [data-theme="light"] .sidebar-overlay {
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
 
     .sidebar-overlay.open {
