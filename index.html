@@ -3116,12 +3116,6 @@ let DB = {
     <div class="stat-card glass"><div class="stat-card-label">Quizzes Done</div><div class="stat-card-value" id="ovCardQz">${quizCount}</div></div>`;
           panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">Recent Announcements</div></div><div id="ovAnnList" style="margin-bottom: 24px;"></div>
           <div class="panel-header" style="margin-top:24px"><div class="panel-title">Top Rankers</div></div>
-          <div class="tabs" id="overviewRankTabs" style="margin-bottom:16px; overflow-x: auto; white-space: nowrap;">
-            <button class="tab-btn active" onclick="switchOverviewRankTab('firstTerm', this)">1st Term</button>
-            <button class="tab-btn" onclick="switchOverviewRankTab('halfYearly', this)">2nd Term</button>
-            <button class="tab-btn" onclick="switchOverviewRankTab('final', this)">Final Exam</button>
-            <button class="tab-btn" onclick="switchOverviewRankTab('public', this)">Public Exam</button>
-          </div>
           <div id="ovRankList"></div>`;
         } else {
           try {
@@ -3137,12 +3131,24 @@ let DB = {
         const annHtml = [...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 2).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} · ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div>${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;margin-top:8px">` : ''}</div>`).join('');
         if (document.getElementById('ovAnnList') && document.getElementById('ovAnnList').innerHTML !== annHtml) document.getElementById('ovAnnList').innerHTML = annHtml;
         
-        // Sync the rankers renderer with an explicit tracking variable specifically for the overview, to prevent conflicts with the actual "Results" tab
-        window.currentOverviewRankTab = window.currentOverviewRankTab || 'firstTerm';
+        // Auto-detect the latest exam term that has published results for the student's class
+        const termOrder = ['public', 'final', 'halfYearly', 'quarterly'];
+        let latestPublishedTerm = 'quarterly'; // Fallback
+        
+        // Find the latest term where ANY student in this class has results
+        const classStudents = DB.users.filter(s => s.role === 'student' && s.standard === u.standard);
+        for (const term of termOrder) {
+            const hasResultsInTerm = classStudents.some(s => (DB.results[s.id] || {})[term] && (DB.results[s.id] || {})[term].length > 0);
+            if (hasResultsInTerm) {
+                latestPublishedTerm = term;
+                break;
+            }
+        }
+        
+        window.currentOverviewRankTab = latestPublishedTerm;
         const rankHtml = renderTop3Rankers(u.standard, window.currentOverviewRankTab, u.id);
         if (document.getElementById('ovRankList') && document.getElementById('ovRankList').innerHTML !== rankHtml) {
           document.getElementById('ovRankList').innerHTML = rankHtml;
-          // Ensure the empty state message still displays a label
           if(!rankHtml) {
               const label = window.currentOverviewRankTab === 'halfYearly' ? '2nd Term' : window.currentOverviewRankTab === 'final' ? 'Final Exam' : window.currentOverviewRankTab === 'public' ? 'Public Exam' : '1st Term';
               document.getElementById('ovRankList').innerHTML = `<div class="info-strip">No rank data yet for ${label}.</div>`;
