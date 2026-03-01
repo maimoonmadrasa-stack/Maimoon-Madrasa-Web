@@ -2584,6 +2584,10 @@
               <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3z" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>Announcements</div>
+          <div class="sidebar-item" onclick="showSection('requests',this)"><svg viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>Request Admins</div>
           <div class="sidebar-item" id="navPreviousYears" onclick="showSection('archives',this)" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>Previous Years</div>
         </div>
         <div class="sidebar-section" id="adminNav" style="display:none;">
@@ -2618,6 +2622,10 @@
               <circle cx="12" cy="12" r="3" />
               <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14" />
             </svg>Control Center</div>
+          <div class="sidebar-item" onclick="showSection('requests',this)"><svg viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>Requests</div>
         </div>
         <div style="margin-top:auto;padding-top:16px;">
           <button class="btn btn-danger" onclick="doLogout()" style="width:100%;justify-content:center;font-size:12px;">
@@ -2708,6 +2716,13 @@
           </div>
           <div id="archivesContent"></div>
         </div>
+        <div class="dash-section" id="section-requests">
+          <div class="dash-header">
+            <h2 class="dash-title" id="requestsTitle">Request Admins</h2>
+            <p class="dash-sub" id="requestsSub">Send feedback, query, or report issues directly to admins.</p>
+          </div>
+          <div id="requestsContent"></div>
+        </div>
       </main>
     </div>
   </div>
@@ -2782,7 +2797,8 @@ let DB = {
   subjects: {},
   nextAnnouncementId: 1,
   nextUserId: 1,
-  examSessions: {quarterly:true, halfYearly:true, final:false, public:false}
+  examSessions: {quarterly:true, halfYearly:true, final:false, public:false},
+  adminRequests: []
 };
 // ----------------------------------------------------------------------
 
@@ -2986,6 +3002,13 @@ let DB = {
               }
               resolve();
             }));
+          }),
+          new Promise(resolve => {
+            window.firebaseUnlisteners.push(db.collection('adminRequests').onSnapshot(snap => {
+              DB.adminRequests = snap.docs.map(d => ({id: d.id, ...d.data()}));
+              if (initialLoadComplete) { renderActiveSectionGently(); }
+              resolve();
+            }));
           })
         ]);
 
@@ -3110,6 +3133,7 @@ let DB = {
       else if (sid === 'members') renderMembersList();
       else if (sid === 'controlcenter') renderControlCenter();
       else if (sid === 'archives') renderArchives();
+      else if (sid === 'requests') renderRequests();
       else if (sid === 'attendance') {
         if (u.role === 'student') renderAttendance();
         else if (u.role === 'admin' && attendanceSelectedCls) loadAdminAttendanceClass(attendanceSelectedCls);
@@ -5686,6 +5710,132 @@ ${markSecHtml}
       } catch(e) {
         console.error(e); alert("An error occurred trying to delete the archive.");
         if (arcRow) { arcRow.style.opacity = '1'; arcRow.style.pointerEvents = 'auto'; }
+      }
+    }
+
+    // REQUEST ADMINS
+    function renderRequests() {
+      const el = document.getElementById('requestsContent');
+      if (!el) return;
+      
+      const u = DB.currentUser;
+      const isAdmin = u.role === 'admin';
+      
+      let html = '';
+      
+      if (isAdmin) {
+        // Admin View
+        const pending = DB.adminRequests.filter(r => r.status === 'pending').sort((a,b) => b.timestamp - a.timestamp);
+        const resolved = DB.adminRequests.filter(r => r.status !== 'pending').sort((a,b) => b.timestamp - a.timestamp);
+        
+        html += `<div class="panel glass" style="margin-bottom:20px"><div class="panel-header"><div class="panel-title">Pending Requests</div><span class="badge badge-orange">${pending.length}</span></div>`;
+        if (pending.length === 0) {
+          html += `<div style="padding:14px;color:var(--text-dim);text-align:center">No pending requests.</div>`;
+        } else {
+          html += pending.map(r => `
+            <div class="user-row" style="margin-bottom:10px;background:var(--surface);border:1px solid var(--border);border-left:3px solid #f59e0b;padding:12px 14px;border-radius:var(--radius-sm);align-items:flex-start">
+              <div style="flex:1">
+                <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">${new Date(r.timestamp).toLocaleString()}</div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">${r.requesterName} <span class="badge badge-blue">${r.requesterRole}</span></div>
+                <div style="font-size:13px;color:var(--text);margin-bottom:10px;white-space:pre-wrap;">${r.text}</div>
+              </div>
+              <div style="display:flex;gap:6px;flex-direction:column">
+                <button class="btn btn-primary" onclick="updateAdminRequestStatus('${r.id}', 'approved')" style="font-size:11px;padding:6px 12px;background:linear-gradient(135deg,#34d399,#059669);color:#fff;border:none">Approve</button>
+                <button class="btn btn-ghost" onclick="updateAdminRequestStatus('${r.id}', 'rejected')" style="font-size:11px;padding:6px 12px;color:#ef4444;border:1px solid rgba(239,68,68,0.3)">Reject</button>
+              </div>
+            </div>
+          `).join('');
+        }
+        html += `</div>`;
+        
+        html += `<div class="panel glass"><div class="panel-header"><div class="panel-title">Resolved Requests</div><span class="badge badge-blue">${resolved.length}</span></div>`;
+        if (resolved.length === 0) {
+          html += `<div style="padding:14px;color:var(--text-dim);text-align:center">No resolved requests yet.</div>`;
+        } else {
+          html += resolved.map(r => `
+            <div class="user-row" style="margin-bottom:10px;background:var(--surface);border:1px solid var(--border);border-left:3px solid ${r.status === 'approved' ? '#10b981' : '#ef4444'};padding:12px 14px;border-radius:var(--radius-sm);align-items:flex-start">
+              <div style="flex:1">
+                <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">${new Date(r.timestamp).toLocaleString()}</div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">${r.requesterName} <span class="badge badge-blue">${r.requesterRole}</span></div>
+                <div style="font-size:13px;color:var(--text);margin-bottom:6px;white-space:pre-wrap;">${r.text}</div>
+                <span class="badge ${r.status === 'approved' ? 'badge-green' : 'badge-red'}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span>
+              </div>
+            </div>
+          `).join('');
+        }
+        html += `</div>`;
+        
+      } else {
+        // Student / Teacher View
+        html += `<div class="panel glass" style="margin-bottom:20px"><div class="panel-header"><div class="panel-title">Submit a Request</div></div>
+          <div class="form-group" style="margin-bottom:14px">
+            <textarea class="form-input" id="newReqText" rows="3" placeholder="Describe your request to the admins (e.g. Password reset, bug report...)" style="resize:vertical"></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="submitAdminRequest(event)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Send Request</button>
+        </div>`;
+        
+        const myReqs = DB.adminRequests.filter(r => r.requesterId === u.id).sort((a,b) => b.timestamp - a.timestamp);
+        html += `<div class="panel glass"><div class="panel-header"><div class="panel-title">My Requests</div></div>`;
+        if (myReqs.length === 0) {
+          html += `<div style="padding:14px;color:var(--text-dim);text-align:center">You haven't made any requests yet.</div>`;
+        } else {
+          html += myReqs.map(r => {
+            const badgeColor = r.status === 'pending' ? 'badge-orange' : (r.status === 'approved' ? 'badge-green' : 'badge-red');
+            return `
+            <div class="user-row" style="margin-bottom:10px;background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:var(--radius-sm);align-items:flex-start">
+              <div style="flex:1">
+                <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">${new Date(r.timestamp).toLocaleString()}</div>
+                <div style="font-size:13px;color:var(--text);margin-bottom:8px;white-space:pre-wrap;">${r.text}</div>
+                <span class="badge ${badgeColor}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span>
+              </div>
+            </div>
+          `}).join('');
+        }
+        html += `</div>`;
+      }
+      
+      el.innerHTML = html;
+    }
+
+    async function submitAdminRequest(event) {
+      const textEl = document.getElementById('newReqText');
+      if (!textEl) return;
+      const text = textEl.value.trim();
+      if (!text) return alert("Request cannot be empty.");
+      
+      const btn = event.currentTarget;
+      const orig = btn.innerHTML;
+      btn.innerHTML = 'Sending...'; btn.disabled = true;
+      
+      const u = DB.currentUser;
+      const req = {
+        requesterId: u.id,
+        requesterName: u.name,
+        requesterRole: u.role,
+        text: text,
+        status: 'pending',
+        timestamp: Date.now()
+      };
+      
+      try {
+        await db.collection('adminRequests').add(req);
+        textEl.value = '';
+        alert("Request sent successfully.");
+      } catch(e) {
+        console.error(e);
+        alert("Failed to send request.");
+      } finally {
+        btn.innerHTML = orig; btn.disabled = false;
+      }
+    }
+
+    async function updateAdminRequestStatus(reqId, newStatus) {
+      if (!confirm(`Mark this request as ${newStatus}?`)) return;
+      try {
+        await db.collection('adminRequests').doc(reqId).update({ status: newStatus });
+      } catch(e) {
+        console.error(e);
+        alert("Failed to update status.");
       }
     }
 
