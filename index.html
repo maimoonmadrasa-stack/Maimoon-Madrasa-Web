@@ -2612,7 +2612,7 @@
             <p class="dash-sub" id="overviewSub"></p>
           </div>
           <div class="cards-grid" id="overviewCards"></div>
-          <div class="panel glass" id="overviewPanel"></div>
+          <div id="overviewPanel" style="display:flex;flex-direction:column;gap:24px;"></div>
         </div>
         <div class="dash-section" id="section-attendance">
           <div class="dash-header">
@@ -3132,8 +3132,8 @@ let DB = {
           cardsEl.innerHTML = `<div class="stat-card glass blue"><div class="stat-card-label">Attendance</div><div class="stat-card-value" id="ovCardAtt">${pct}%</div><div class="progress-bar" style="margin-top:10px"><div class="progress-fill" id="ovCardAttBar" style="width:${pct}%"></div></div><svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
     <div class="stat-card glass"><div class="stat-card-label" id="ovCardLatestTermLbl">${termLabel} Total</div><div class="stat-card-value" id="ovCardLatestTermScore" style="color:var(--text); font-size: 20px;">${latestExamResults.length ? `${totalMarks} <span style="font-size:12px;color:var(--text-muted);font-weight:600">/ ${maxMarks}</span>` : '—'}</div></div>
     <div class="stat-card glass"><div class="stat-card-label">Quizzes Done</div><div class="stat-card-value" id="ovCardQz">${quizCount}</div></div>`;
-          panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">Recent Announcements</div></div><div id="ovAnnList" style="margin-bottom: 24px;"></div>
-          <div id="ovRankList" style="margin-bottom: 40px;"></div>`;
+          panelEl.innerHTML = `<div class="panel glass"><div class="panel-header"><div class="panel-title">Recent Announcements</div></div><div id="ovAnnList"></div></div>
+          <div id="ovRankList"></div>`;
         } else {
           try {
             document.getElementById('ovCardAtt').textContent = pct + '%';
@@ -3152,7 +3152,7 @@ let DB = {
         if (document.getElementById('ovRankList') && document.getElementById('ovRankList').innerHTML !== rankHtml) {
           document.getElementById('ovRankList').innerHTML = rankHtml;
           if(!rankHtml) {
-              document.getElementById('ovRankList').innerHTML = `<div class="panel-header" style="margin-top:24px"><div class="panel-title">Top Rankers</div><span class="badge badge-yellow">${termLabel}</span></div><div class="info-strip">No rank data yet for ${termLabel}.</div>`;
+              document.getElementById('ovRankList').innerHTML = `<div class="panel glass"><div class="panel-header"><div class="panel-title">Top Rankers</div><span class="badge badge-yellow">${termLabel}</span></div><div class="info-strip" style="margin: 0px 16px 16px 16px">No rank data yet for ${termLabel}.</div></div>`;
           }
         }
         
@@ -3165,7 +3165,7 @@ let DB = {
           cardsEl.innerHTML = `<div class="stat-card glass blue"><div class="stat-card-label">My Students</div><div class="stat-card-value" id="ovTchStu">${myS.length}</div></div>
     <div class="stat-card glass"><div class="stat-card-label">Active Quizzes</div><div class="stat-card-value" id="ovTchQz">${activeQz}</div></div>
     <div class="stat-card glass"><div class="stat-card-label">Announcements</div><div class="stat-card-value" id="ovTchAnn">${DB.announcements.length}</div></div>`;
-          panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">My Students</div></div><div id="ovTchTable"></div>`;
+          panelEl.innerHTML = `<div class="panel glass"><div class="panel-header"><div class="panel-title">My Students</div></div><div id="ovTchTable"></div></div>`;
         } else {
           try {
             document.getElementById('ovTchStu').textContent = myS.length;
@@ -3187,7 +3187,7 @@ let DB = {
     <div class="stat-card glass"><div class="stat-card-label">Usthas</div><div class="stat-card-value" id="ovAdmTch">${teachers.length}</div></div>
     <div class="stat-card glass"><div class="stat-card-label">Active Quizzes</div><div class="stat-card-value" id="ovAdmQz">${activeQz}</div></div>
     <div class="stat-card glass"><div class="stat-card-label">Classes</div><div class="stat-card-value" id="ovAdmCls">10</div></div>`;
-          panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">Student Overview</div></div><div id="ovAdmTable"></div>`;
+          panelEl.innerHTML = `<div class="panel glass"><div class="panel-header"><div class="panel-title">Student Overview</div></div><div id="ovAdmTable"></div></div>`;
         } else {
           try {
             document.getElementById('ovAdmStu').textContent = students.length;
@@ -3902,8 +3902,9 @@ ${markSecHtml}
       const label = examType === 'halfYearly' ? '2nd Term' : examType === 'final' ? 'Final Exam' : examType === 'public' ? 'Public Exam' : '1st Term';
       
       return `
-      <div class="panel-header" style="margin-top:40px"><div class="panel-title">Top Rankers</div><span class="badge badge-yellow">${label}</span></div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px">
+      <div class="panel glass">
+        <div class="panel-header"><div class="panel-title">Top Rankers</div><span class="badge badge-yellow">${label}</span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;padding-bottom:16px;padding-left:16px;padding-right:16px;">
         ${ranked.map((s, i) => {
           const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
           const isMe = s.id === myId;
@@ -3919,7 +3920,7 @@ ${markSecHtml}
             <div style="font-size:11px;color:var(--text-muted);margin-top:4px">${s.total} Marks</div>
           </div>`;
         }).join('')}
-      </div>`;
+      </div></div>`;
     }
     function showStudentMarkDetail(sid, examType) {
       const s = DB.users.find(u => u.id === sid); if (!s) return;
