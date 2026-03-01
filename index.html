@@ -58,6 +58,13 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+    }
+
+    /* Hide Chrome/Safari/Edge scrollbar */
+    *::-webkit-scrollbar {
+      display: none;
     }
 
     body {
@@ -1041,8 +1048,6 @@
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
       box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
-      max-height: 90vh;
-      overflow-y: auto;
       animation: scaleIn .3s ease;
     }
     .modal::before {
@@ -2418,8 +2423,8 @@
             stroke="currentColor" stroke-width="2">
             <polyline points="15 18 9 12 15 6" />
           </svg>Back</button></div>
-      <div class="login-card glass"
-        style="animation:scaleIn .4s ease;">
+      <div class="login-card glass-strong"
+        style="animation:scaleIn .4s ease;box-shadow:0 0 0 1px var(--border-bright),0 20px 60px rgba(0,0,0,.5);">
         <div style="display:flex;align-items:center;gap:14px;margin-bottom:32px;">
           <div
             style="width:48px;height:48px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px var(--blue-glow);">
@@ -2730,26 +2735,28 @@
       <div class="modal-title">Edit User</div>
       <div class="modal-sub">Update user information</div>
       <input type="hidden" id="editUserId">
-      <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input"
-          id="editUserName"></div>
-      <div class="form-group"><label class="form-label">Username</label><input type="text" class="form-input"
-          id="editUserUsername"></div>
-      <div class="form-group"><label class="form-label">Password</label><input type="text" class="form-input"
-          id="editUserPass"></div>
-      <div id="editStudentFields">
-        <div class="form-row" style="margin-bottom:14px;">
-          <div class="form-group" style="margin:0;"><label class="form-label">Class</label><select class="form-select"
-              id="editUserClass"></select></div>
-          <div class="form-group" style="margin:0;"><label class="form-label">Gender</label><select class="form-select"
-              id="editUserGender">
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select></div>
+      <div style="max-height: 55vh; overflow-y: auto; margin: 0 -24px; padding: 0 24px;">
+        <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input"
+            id="editUserName"></div>
+        <div class="form-group"><label class="form-label">Username</label><input type="text" class="form-input"
+            id="editUserUsername"></div>
+        <div class="form-group"><label class="form-label">Password</label><input type="text" class="form-input"
+            id="editUserPass"></div>
+        <div id="editStudentFields">
+          <div class="form-row" style="margin-bottom:14px;">
+            <div class="form-group" style="margin:0;"><label class="form-label">Class</label><select class="form-select"
+                id="editUserClass"></select></div>
+            <div class="form-group" style="margin:0;"><label class="form-label">Gender</label><select class="form-select"
+                id="editUserGender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select></div>
+          </div>
         </div>
-      </div>
-      <div id="editTeacherFields" style="display:none;">
-        <div class="form-group"><label class="form-label">Assigned Classes (Ctrl/Cmd for multiple)</label><select
-            class="form-select" id="editUserClasses" multiple style="height:140px;"></select></div>
+        <div id="editTeacherFields" style="display:none;">
+          <div class="form-group"><label class="form-label">Assigned Classes (Ctrl/Cmd for multiple)</label><select
+              class="form-select" id="editUserClasses" multiple style="height:140px;"></select></div>
+        </div>
       </div>
       <button class="btn btn-primary" onclick="saveEditUser()"
         style="width:100%;justify-content:center;margin-top:8px;">Save Changes</button>
@@ -2768,7 +2775,7 @@
       <div class="modal-sub" id="editMarksSub"></div>
       <input type="hidden" id="editMarksSid">
       <input type="hidden" id="editMarksExamType">
-      <div id="editMarksSubjectList"></div>
+      <div id="editMarksSubjectList" style="max-height: 55vh; overflow-y: auto; margin: 0 -24px; padding: 0 24px;"></div>
       <button class="btn btn-primary" onclick="saveMarks()"
         style="width:100%;justify-content:center;margin-top:8px;">Save Marks</button>
     </div>
@@ -3212,6 +3219,17 @@ let DB = {
       const u = DB.currentUser;
       const el = document.getElementById('attendanceContent');
       document.getElementById('attendanceSub').textContent = u.role === 'student' ? 'Your personal attendance record.' : u.role === 'teacher' ? 'Mark attendance for your classes.' : 'View attendance by class.';
+      
+      const attClosed = DB.examSessions && DB.examSessions.attendance === false;
+      if (attClosed && !window.isArchiveMode && (u.role === 'admin' || u.role === 'teacher')) {
+        el.innerHTML = `<div class="empty glass" style="border-radius:var(--radius-lg);padding:60px 20px;text-align:center;margin-top:20px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:54px;height:54px;color:var(--text-muted);margin:0 auto 16px;display:block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <div style="font-size:18px;font-weight:600;margin-bottom:8px;">Not Available Right Now</div>
+          <p style="color:var(--text-muted);font-size:13px;max-width:400px;margin:0 auto;">Attendance tracking has not yet been started or is temporarily closed.</p>
+        </div>`;
+        return;
+      }
+
       if (u.role === 'student') {
         const attData = DB.attendance[u.id] || { days: [] };
         const { present, absent, total } = getAttStats(u.id);
@@ -4909,8 +4927,8 @@ ${markSecHtml}
     // CONTROL CENTER
     function renderControlCenter() {
       const el = document.getElementById('controlCenterContent'); if (!el) return;
-      const sessions = DB.examSessions || { quarterly: true, halfYearly: true, final: false, public: false };
-      const exams = [{ key: 'quarterly', label: '1st Term (Quarterly)', desc: 'First quarterly examination' }, { key: 'halfYearly', label: '2nd Term (Half-Yearly)', desc: 'Second half-yearly examination' }, { key: 'final', label: 'Final / Yearly Exam', desc: 'End of year final examination' }, { key: 'public', label: 'Public Exam', desc: 'External public examination for eligible classes' }];
+      const sessions = DB.examSessions || { quarterly: true, halfYearly: true, final: false, public: false, attendance: true };
+      const exams = [{ key: 'attendance', label: 'Daily Attendance', desc: 'Enable/disable daily attendance marking system-wide' }, { key: 'quarterly', label: '1st Term (Quarterly)', desc: 'First quarterly examination' }, { key: 'halfYearly', label: '2nd Term (Half-Yearly)', desc: 'Second half-yearly examination' }, { key: 'final', label: 'Final / Yearly Exam', desc: 'End of year final examination' }, { key: 'public', label: 'Public Exam', desc: 'External public examination for eligible classes' }];
       el.innerHTML = `<div class="info-strip" style="margin-bottom:20px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Enable a session to allow Usthas to enter or edit marks for that exam type. Disable to lock editing.</div>
   <div class="panel glass">
     <div class="panel-header"><div class="panel-title">Exam Editing Sessions</div><div style="font-size:12px;color:var(--text-muted)">Toggle to open/close</div></div>
