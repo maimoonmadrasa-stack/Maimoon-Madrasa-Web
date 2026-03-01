@@ -616,6 +616,16 @@
       background: rgba(249, 115, 22, .15);
       color: #fb923c;
     }
+    
+    .badge-code {
+      background: rgba(59, 130, 246, .15);
+      color: var(--blue-light);
+    }
+    
+    [data-theme='light'] .badge-code {
+      background: rgba(34, 197, 94, .15); /* Shift to friendly Green */
+      color: #22c55e;
+    }
 
     .progress-bar {
       height: 6px;
@@ -5303,7 +5313,7 @@ ${markSecHtml}
             const badge = m.gender === 'male' ? 'badge-blue' : 'badge-yellow';
             return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
           <div class="avatar" style="width:30px;height:30px;font-size:12px;background:${bg}">${m.name.charAt(0)}</div>
-          <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} · ${m.class}</div></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name} ${m.studentCode ? `<span class="badge badge-code" style="margin-left:6px;font-size:10px">Code: ${m.studentCode}</span>` : ''}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} · ${m.class}</div></div>
           <span class="badge ${badge}" style="font-size:10px">${m.gender === 'male' ? 'Male' : 'Female'}</span>
         </div>`;
           }).join('');
@@ -5346,7 +5356,7 @@ ${markSecHtml}
         html += `<div style="font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--blue-light);text-transform:uppercase;padding:6px 0 4px">Boys (${boys.length})</div>`;
         html += boys.map(s => `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
       <div class="avatar" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,#3b82f6,#1d4ed8)">${s.name.charAt(0)}</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">@${s.username}</div></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${s.name} ${s.studentCode ? `<span class="badge badge-code" style="margin-left:6px;font-size:10px">Code: ${s.studentCode}</span>` : ''}</div><div style="font-size:11px;color:var(--text-muted)">@${s.username}</div></div>
       <span class="badge badge-blue" style="font-size:10px">Male</span>
     </div>`).join('');
       }
@@ -5354,7 +5364,7 @@ ${markSecHtml}
         html += `<div style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#f9a8d4;text-transform:uppercase;padding:6px 0 4px">Girls (${girls.length})</div>`;
         html += girls.map(s => `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
       <div class="avatar" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,#ec4899,#be185d)">${s.name.charAt(0)}</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">@${s.username}</div></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${s.name} ${s.studentCode ? `<span class="badge badge-code" style="margin-left:6px;font-size:10px">Code: ${s.studentCode}</span>` : ''}</div><div style="font-size:11px;color:var(--text-muted)">@${s.username}</div></div>
       <span class="badge badge-yellow" style="font-size:10px">Female</span>
     </div>`).join('');
       }
