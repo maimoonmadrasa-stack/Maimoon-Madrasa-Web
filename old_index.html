@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 
 <head>
@@ -8,7 +8,7 @@
   </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maimoon Madrasa — Academic Portal</title>
+  <title>Maimoon Madrasa ΓÇö Academic Portal</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Cinzel:wght@400;600;700;900&display=swap"
     rel="stylesheet">
@@ -58,13 +58,6 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      scrollbar-width: none; /* Firefox */
-      -ms-overflow-style: none; /* IE/Edge */
-    }
-
-    /* Hide Chrome/Safari/Edge scrollbar */
-    *::-webkit-scrollbar {
-      display: none;
     }
 
     body {
@@ -90,9 +83,9 @@
     .orb {
       position: absolute;
       border-radius: 50%;
-      filter: blur(100px);
-      opacity: .25;
-      animation: orbFloat 14s ease-in-out infinite alternate;
+      filter: blur(80px);
+      opacity: .18;
+      animation: orbFloat 12s ease-in-out infinite;
       will-change: transform;
       transform: translateZ(0);
     }
@@ -106,33 +99,36 @@
     }
 
     .orb2 {
-      width: 400px;
-      height: 400px;
-      background: #8b5cf6; /* Added purple hue for depth */
-      bottom: -50px;
-      left: -100px;
-      animation-delay: -4s;
+      width: 350px;
+      height: 350px;
+      background: #1d4ed8;
+      bottom: 100px;
+      left: -80px;
+      animation-delay: 4s;
     }
 
     .orb3 {
-      width: 300px;
-      height: 300px;
-      background: #06b6d4; /* Added cyan hue for dynamic lighting */
-      top: 40%;
-      left: 60%;
-      animation-delay: -8s;
+      width: 250px;
+      height: 250px;
+      background: #60a5fa;
+      top: 50%;
+      left: 50%;
+      animation-delay: 8s;
     }
 
     [data-theme="light"] .orb {
-      display: none;
+      opacity: .1;
     }
 
     @keyframes orbFloat {
-      0% {
+
+      0%,
+      100% {
         transform: translate(0, 0) scale(1);
       }
-      100% {
-        transform: translate(50px, -40px) scale(1.15);
+
+      50% {
+        transform: translate(30px, -30px) scale(1.08);
       }
     }
 
@@ -142,28 +138,24 @@
       inset: 0;
       pointer-events: none;
       z-index: 1;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
-      opacity: .35;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: .4;
       transform: translateZ(0);
       will-change: transform;
-    }
-
-    [data-theme="light"] body::before {
-      opacity: .15;
     }
 
     .glass {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
     }
 
     .glass-strong {
       background: var(--glass-strong);
       border: 1px solid var(--border);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border-radius: var(--radius-lg);
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
     }
 
     .btn {
@@ -240,9 +232,6 @@
       z-index: 1000;
       box-shadow: var(--shadow), var(--shadow-blue);
       transition: all .4s;
-      background: var(--glass);
-      backdrop-filter: blur(20px) saturate(160%);
-      -webkit-backdrop-filter: blur(20px) saturate(160%);
     }
 
     .nav-brand {
@@ -352,7 +341,6 @@
       height: calc(100vh - 70px);
       overflow-y: auto;
       border-right: 1px solid var(--border);
-      border-radius: 0 !important; /* Specific user request to have no border radius on left menu */
       display: flex;
       flex-direction: column;
     }
@@ -483,14 +471,6 @@
       border-radius: var(--radius);
       position: relative;
       overflow: hidden;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      transition: all .2s;
-    }
-
-    .stat-card:hover {
-      border-color: var(--border-bright);
-      transform: translateY(-2px);
     }
 
     .stat-card-label {
@@ -895,11 +875,6 @@
       margin-bottom: 8px;
       transition: all .2s;
     }
-    
-    [data-theme="light"] .user-row {
-      background: var(--bg2);
-      border-color: rgba(15, 31, 61, 0.08);
-    }
 
     .user-row:hover {
       border-color: var(--border-bright);
@@ -957,12 +932,6 @@
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       margin-bottom: 8px;
-      background: var(--surface);
-    }
-    
-    [data-theme="light"] .result-subject {
-      background: var(--bg2);
-      border-color: rgba(15, 31, 61, 0.08);
     }
 
     .result-marks {
@@ -1016,12 +985,10 @@
       border-radius: var(--radius-lg);
       padding: 40px 36px;
       position: relative;
-      background: var(--glass-strong);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .5), 0 0 0 1px var(--border-bright);
+      max-height: 90vh;
+      overflow-y: auto;
       animation: scaleIn .3s ease;
-      border: 1px solid var(--border);
     }
 
     .modal-close {
@@ -1076,11 +1043,6 @@
       color: var(--text);
       text-align: left;
     }
-    
-    [data-theme="light"] .class-label-btn {
-      background: var(--bg2);
-      border-color: rgba(15, 31, 61, 0.08);
-    }
 
     .class-label-btn:hover,
     .class-label-btn.open {
@@ -1108,11 +1070,6 @@
       border: 1px solid var(--border);
       margin-bottom: 8px;
       background: var(--surface);
-    }
-    
-    [data-theme="light"] .subject-card {
-      background: var(--bg2);
-      border-color: rgba(15, 31, 61, 0.08);
     }
 
     .subject-name {
@@ -1294,7 +1251,7 @@
       }
     }
 
-    /* ── HAMBURGER BUTTON (mobile only) ── */
+    /* ΓöÇΓöÇ HAMBURGER BUTTON (mobile only) ΓöÇΓöÇ */
     .hamburger {
       display: none;
       width: 36px;
@@ -1315,20 +1272,14 @@
       color: var(--blue);
     }
 
+    /* ΓöÇΓöÇ SIDEBAR OVERLAY (mobile) ΓöÇΓöÇ */
     .sidebar-overlay {
       display: none;
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, .55);
       z-index: 149;
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-    }
-
-    [data-theme="light"] .sidebar-overlay {
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(3px);
     }
 
     .sidebar-overlay.open {
@@ -1584,6 +1535,16 @@
       width: 6px;
     }
 
+    .dash-main .glass {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    .dash-main .glass-strong {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
     ::-webkit-scrollbar-track {
       background: transparent;
     }
@@ -1593,7 +1554,7 @@
       border-radius: 3px;
     }
 
-    /* ── LANDING PAGE ── */
+    /* ΓöÇΓöÇ LANDING PAGE ΓöÇΓöÇ */
     #landingPage {
       overflow-y: auto;
     }
@@ -1781,25 +1742,30 @@
     }
 
     .feature-card {
-      background: var(--surface);
+      padding: 28px;
       border-radius: var(--radius-lg);
-      padding: 40px 32px;
-      text-align: center;
       transition: all 0.3s;
       position: relative;
       overflow: hidden;
-      border: 1px solid var(--border);
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, var(--blue-glow), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
     }
 
     .feature-card:hover {
+      transform: translateY(-4px);
       border-color: var(--border-bright);
-      transform: translateY(-4px);
-      box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.3);
-    }
-
-    .feature-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.3);
     }
 
     .feature-icon {
@@ -1823,7 +1789,7 @@
 
     .landing-nav {
       position: fixed;
-      top: 24px;
+      top: 16px;
       left: 50%;
       transform: translateX(-50%);
       width: calc(100% - 40px);
@@ -1834,36 +1800,8 @@
       padding: 12px 20px;
       border-radius: 50px;
       z-index: 1000;
-      /* Webild.io Glassmorphism Effect */
-      background-color: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow), var(--shadow-blue);
       transition: all 0.4s;
-    }
-
-    [data-theme="light"] .landing-nav {
-      background-color: rgba(255, 255, 255, 0.45);
-      box-shadow: 0 4px 12px rgba(234, 238, 248, 0.4);
-    }
-
-    /* The secret crisp 1px gradient mask border */
-    .landing-nav::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      padding: 1px;
-      border-radius: 50px;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.05) 100%);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-
-    [data-theme="light"] .landing-nav::before {
-      background: linear-gradient(#fff 0 86%, #fff 100%);
     }
 
     .lp-footer {
@@ -2045,10 +1983,8 @@
       border-color: rgba(59, 130, 246, 0.2);
     }
 
-    /* Light Theme Modal specific overrides */
     [data-theme="light"] .modal {
-      background: var(--surface);
-      box-shadow: 0 24px 80px rgba(59, 130, 246, 0.12);
+      background: rgba(238, 243, 255, 0.98);
     }
     
     /* Animation classes for live updates */
@@ -2087,7 +2023,7 @@
   <div id="landingPage" class="page active">
 
     <!-- Landing Nav -->
-    <nav class="landing-nav">
+    <nav class="landing-nav glass-strong">
       <div
         style="display:flex;align-items:center;gap:10px;font-family:'Poppins',sans-serif;font-weight:700;font-size:17px;color:var(--text);">
         <div
@@ -2677,28 +2613,26 @@
       <div class="modal-title">Edit User</div>
       <div class="modal-sub">Update user information</div>
       <input type="hidden" id="editUserId">
-      <div style="max-height: 55vh; overflow-y: auto; margin: 0 -24px; padding: 0 24px;">
-        <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input"
-            id="editUserName"></div>
-        <div class="form-group"><label class="form-label">Username</label><input type="text" class="form-input"
-            id="editUserUsername"></div>
-        <div class="form-group"><label class="form-label">Password</label><input type="text" class="form-input"
-            id="editUserPass"></div>
-        <div id="editStudentFields">
-          <div class="form-row" style="margin-bottom:14px;">
-            <div class="form-group" style="margin:0;"><label class="form-label">Class</label><select class="form-select"
-                id="editUserClass"></select></div>
-            <div class="form-group" style="margin:0;"><label class="form-label">Gender</label><select class="form-select"
-                id="editUserGender">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select></div>
-          </div>
+      <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input"
+          id="editUserName"></div>
+      <div class="form-group"><label class="form-label">Username</label><input type="text" class="form-input"
+          id="editUserUsername"></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="text" class="form-input"
+          id="editUserPass"></div>
+      <div id="editStudentFields">
+        <div class="form-row" style="margin-bottom:14px;">
+          <div class="form-group" style="margin:0;"><label class="form-label">Class</label><select class="form-select"
+              id="editUserClass"></select></div>
+          <div class="form-group" style="margin:0;"><label class="form-label">Gender</label><select class="form-select"
+              id="editUserGender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select></div>
         </div>
-        <div id="editTeacherFields" style="display:none;">
-          <div class="form-group"><label class="form-label">Assigned Classes (Ctrl/Cmd for multiple)</label><select
-              class="form-select" id="editUserClasses" multiple style="height:140px;"></select></div>
-        </div>
+      </div>
+      <div id="editTeacherFields" style="display:none;">
+        <div class="form-group"><label class="form-label">Assigned Classes (Ctrl/Cmd for multiple)</label><select
+            class="form-select" id="editUserClasses" multiple style="height:140px;"></select></div>
       </div>
       <button class="btn btn-primary" onclick="saveEditUser()"
         style="width:100%;justify-content:center;margin-top:8px;">Save Changes</button>
@@ -2717,7 +2651,7 @@
       <div class="modal-sub" id="editMarksSub"></div>
       <input type="hidden" id="editMarksSid">
       <input type="hidden" id="editMarksExamType">
-      <div id="editMarksSubjectList" style="max-height: 55vh; overflow-y: auto; margin: 0 -24px; padding: 0 24px;"></div>
+      <div id="editMarksSubjectList"></div>
       <button class="btn btn-primary" onclick="saveMarks()"
         style="width:100%;justify-content:center;margin-top:8px;">Save Marks</button>
     </div>
@@ -2858,12 +2792,9 @@ let DB = {
               if (snap.exists) {
                 const sysData = snap.data();
                 DB.subjects = sysData.subjects || {};
-                DB.examSessions = sysData.examSessions || { quarterly: true, halfYearly: true, final: false, public: false, attendance: true };
+                DB.examSessions = sysData.examSessions || { quarterly: true, halfYearly: true, final: false, public: false };
                 DB.nextAnnouncementId = sysData.nextAnnouncementId || 1;
                 DB.nextUserId = sysData.nextUserId || 1;
-                if (initialLoadComplete) {
-                  renderAttendance();
-                }
                 if (!window.isSystemLocalEdit && initialLoadComplete) {
                   renderActiveSectionGently();
                 }
@@ -3090,7 +3021,7 @@ let DB = {
         
         if (needsFullRender) {
           cardsEl.innerHTML = `<div class="stat-card glass blue"><div class="stat-card-label">Attendance</div><div class="stat-card-value" id="ovCardAtt">${pct}%</div><div class="progress-bar" style="margin-top:10px"><div class="progress-fill" id="ovCardAttBar" style="width:${pct}%"></div></div><svg class="stat-card-icon" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-    <div class="stat-card glass"><div class="stat-card-label">Quarterly Avg</div><div class="stat-card-value" id="ovCardQAvg" style="color:${qAvg >= 60 ? '#22c55e' : '#ef4444'}">${qAvg || '—'}${qAvg ? '%' : ''}</div></div>
+    <div class="stat-card glass"><div class="stat-card-label">Quarterly Avg</div><div class="stat-card-value" id="ovCardQAvg" style="color:${qAvg >= 60 ? '#22c55e' : '#ef4444'}">${qAvg || 'ΓÇö'}${qAvg ? '%' : ''}</div></div>
     <div class="stat-card glass"><div class="stat-card-label">Quizzes Done</div><div class="stat-card-value" id="ovCardQz">${quizCount}</div></div>`;
           panelEl.innerHTML = `<div class="panel-header"><div class="panel-title">Recent Announcements</div></div><div id="ovAnnList"></div><div id="ovRankList"></div>`;
         } else {
@@ -3098,13 +3029,13 @@ let DB = {
             document.getElementById('ovCardAtt').textContent = pct + '%';
             document.getElementById('ovCardAttBar').style.width = pct + '%';
             const qaEl = document.getElementById('ovCardQAvg');
-            qaEl.textContent = qAvg ? qAvg + '%' : '—';
+            qaEl.textContent = qAvg ? qAvg + '%' : 'ΓÇö';
             qaEl.style.color = qAvg >= 60 ? '#22c55e' : '#ef4444';
             document.getElementById('ovCardQz').textContent = quizCount;
           } catch(e){}
         }
         
-        const annHtml = [...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 2).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} · ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div>${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;margin-top:8px">` : ''}</div>`).join('');
+        const annHtml = [...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 2).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} ┬╖ ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div>${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;margin-top:8px">` : ''}</div>`).join('');
         if (document.getElementById('ovAnnList') && document.getElementById('ovAnnList').innerHTML !== annHtml) document.getElementById('ovAnnList').innerHTML = annHtml;
         
         const rankHtml = renderTop3Rankers(u.standard, currentResultTab, u.id);
@@ -3156,7 +3087,7 @@ let DB = {
     function renderStudentTable(students) {
       if (!students.length) return '<div style="text-align:center;padding:20px;color:var(--text-dim);font-size:13px">No students.</div>';
       const sorted = [...students.filter(s => s.gender === 'male'), ...students.filter(s => s.gender === 'female')];
-      return `<div class="table-wrap"><table><thead><tr><th>Name</th><th>Class</th><th>Gender</th><th>Attendance</th><th>Status</th></tr></thead><tbody>${sorted.map(s => { const { present, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return `<tr><td><strong>${s.name}</strong></td><td>${s.class || '—'}</td><td><span class="badge ${s.gender === 'male' ? 'badge-blue' : 'badge-yellow'}">${s.gender || '—'}</span></td><td>${pct}%</td><td><span class="badge ${pct >= 60 ? 'badge-green' : 'badge-red'}">${pct >= 60 ? 'Good' : 'Low'}</span></td></tr>`; }).join('')}</tbody></table></div>`;
+      return `<div class="table-wrap"><table><thead><tr><th>Name</th><th>Class</th><th>Gender</th><th>Attendance</th><th>Status</th></tr></thead><tbody>${sorted.map(s => { const { present, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return `<tr><td><strong>${s.name}</strong></td><td>${s.class || 'ΓÇö'}</td><td><span class="badge ${s.gender === 'male' ? 'badge-blue' : 'badge-yellow'}">${s.gender || 'ΓÇö'}</span></td><td>${pct}%</td><td><span class="badge ${pct >= 60 ? 'badge-green' : 'badge-red'}">${pct >= 60 ? 'Good' : 'Low'}</span></td></tr>`; }).join('')}</tbody></table></div>`;
     }
 
     // ATTENDANCE
@@ -3164,17 +3095,6 @@ let DB = {
       const u = DB.currentUser;
       const el = document.getElementById('attendanceContent');
       document.getElementById('attendanceSub').textContent = u.role === 'student' ? 'Your personal attendance record.' : u.role === 'teacher' ? 'Mark attendance for your classes.' : 'View attendance by class.';
-      
-      const attClosed = DB.examSessions && DB.examSessions.attendance === false;
-      if (attClosed && !window.isArchiveMode && (u.role === 'admin' || u.role === 'teacher')) {
-        el.innerHTML = `<div class="empty glass" style="border-radius:var(--radius-lg);padding:60px 20px;text-align:center;margin-top:20px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:54px;height:54px;color:var(--text-muted);margin:0 auto 16px;display:block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <div style="font-size:18px;font-weight:600;margin-bottom:8px;">Not Available Right Now</div>
-          <p style="color:var(--text-muted);font-size:13px;max-width:400px;margin:0 auto;">Attendance tracking has not yet been started or is temporarily closed.</p>
-        </div>`;
-        return;
-      }
-
       if (u.role === 'student') {
         const attData = DB.attendance[u.id] || { days: [] };
         const { present, absent, total } = getAttStats(u.id);
@@ -3234,7 +3154,7 @@ let DB = {
         <div style="display:flex;flex-direction:column;gap:14px">
           <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:2px">Present Days</div><div style="font-size:28px;font-weight:800;color:#22c55e">${present}</div></div>
           <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:2px">Absent Days</div><div style="font-size:28px;font-weight:800;color:#ef4444">${absent}</div></div>
-          <div style="font-size:12px;color:${pct >= 75 ? '#22c55e' : '#ef4444'};font-weight:600">${pct >= 75 ? '✓ Satisfactory' : '⚠ Below 75% requirement'}</div>
+          <div style="font-size:12px;color:${pct >= 75 ? '#22c55e' : '#ef4444'};font-weight:600">${pct >= 75 ? 'Γ£ô Satisfactory' : 'ΓÜá Below 75% requirement'}</div>
         </div>
       </div>
     </div>
@@ -3315,7 +3235,7 @@ ${markSecHtml}
         const students = DB.users.filter(s => s.role === 'student' && s.standard === cls);
         if (!students.length) continue;
         
-        html += `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls} — Overall Summary</div><span class="badge badge-blue">${students.length} students</span></div>
+        html += `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls} ΓÇö Overall Summary</div><span class="badge badge-blue">${students.length} students</span></div>
     <div class="table-wrap"><table><thead><tr><th>Student</th><th>Present</th><th>Absent</th><th>%</th><th>Status</th></tr></thead>
       <tbody>${students.map(s => { const { present, absent, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; return { ...s, _attPct: pct, present, absent }; }).sort((a,b) => b._attPct - a._attPct).map(s => `<tr><td><strong>${s.name}</strong></td><td style="color:#22c55e">${s.present}</td><td style="color:#ef4444">${s.absent}</td><td>${s._attPct}%</td><td><span class="badge ${s._attPct >= 60 ? 'badge-green' : 'badge-red'}">${s._attPct >= 60 ? 'Good' : 'Low'}</span></td></tr>`).join('')}</tbody></table></div></div>`;
       }
@@ -3392,7 +3312,7 @@ ${markSecHtml}
                 const cells = daysArray.map(d => {
                   const dateStr = `${selMonth}-${String(d).padStart(2, '0')}`;
                   const st = recordMap[dateStr];
-                  let cellContent = `<td style="text-align:center;padding:4px;border-bottom:1px solid var(--border);border-left:1px dashed var(--border-light);color:var(--border);">·</td>`;
+                  let cellContent = `<td style="text-align:center;padding:4px;border-bottom:1px solid var(--border);border-left:1px dashed var(--border-light);color:var(--border);">┬╖</td>`;
                   if (st === 'P') cellContent = `<td style="text-align:center;padding:4px;border-bottom:1px solid var(--border);border-left:1px dashed var(--border-light);"><div style="width:18px;height:18px;border-radius:4px;background:#22c55e;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;margin:0 auto;">P</div></td>`;
                   if (st === 'A') cellContent = `<td style="text-align:center;padding:4px;border-bottom:1px solid var(--border);border-left:1px dashed var(--border-light);"><div style="width:18px;height:18px;border-radius:4px;background:#ef4444;color:white;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;margin:0 auto;">A</div></td>`;
                   return cellContent;
@@ -3429,14 +3349,14 @@ ${markSecHtml}
       document.getElementById('attendanceContent').innerHTML = `
     <button class="btn btn-ghost" onclick="renderAttendance()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
     <div class="panel glass"><div class="panel-header">
-      <div class="panel-title">Class ${cls} — Attendance</div>
+      <div class="panel-title">Class ${cls} ΓÇö Attendance</div>
       <div style="display:flex;gap:6px;align-items:center">
-        <button class="tab-btn ${offset === -2 ? 'active' : ''}" onclick="loadAttendanceClass(${cls},-2)" style="font-size:11px;padding:5px 12px">−2 Days</button>
+        <button class="tab-btn ${offset === -2 ? 'active' : ''}" onclick="loadAttendanceClass(${cls},-2)" style="font-size:11px;padding:5px 12px">ΓêÆ2 Days</button>
         <button class="tab-btn ${offset === -1 ? 'active' : ''}" onclick="loadAttendanceClass(${cls},-1)" style="font-size:11px;padding:5px 12px">Yesterday</button>
         <button class="tab-btn ${offset === 0 ? 'active' : ''}" onclick="loadAttendanceClass(${cls},0)" style="font-size:11px;padding:5px 12px">Today</button>
       </div>
     </div>
-    <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;padding:6px 10px;background:rgba(59,130,246,.08);border-radius:8px;display:inline-block">📅 ${dayLabel} — ${dateStr}</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;padding:6px 10px;background:rgba(59,130,246,.08);border-radius:8px;display:inline-block">≡ƒôà ${dayLabel} ΓÇö ${dateStr}</div>
     <div style="position:relative;margin-bottom:14px">
       <input type="text" class="form-input" id="attSearch-${cls}" placeholder="Search student..." oninput="filterAttSearch(${cls},${offset})" style="padding-left:38px;font-size:12px">
       <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -3455,7 +3375,7 @@ ${markSecHtml}
           <span class="badge ${status === 'P' ? 'badge-green' : status === 'A' ? 'badge-red' : 'badge-yellow'}" id="att-status-${s.id}">${status === 'P' ? 'Present' : status === 'A' ? 'Absent' : 'Not Marked'}</span>
           <button class="btn btn-success" onclick="markAtt(${s.id},'P','${dateStr}')" style="padding:5px 10px;font-size:11px">P</button>
           <button class="btn btn-danger" onclick="markAtt(${s.id},'A','${dateStr}')" style="padding:5px 10px;font-size:11px">A</button>
-          <button class="btn btn-ghost" onclick="markAtt(${s.id},null,'${dateStr}')" style="padding:5px 10px;font-size:11px;opacity:.7">—</button>
+          <button class="btn btn-ghost" onclick="markAtt(${s.id},null,'${dateStr}')" style="padding:5px 10px;font-size:11px;opacity:.7">ΓÇö</button>
         </div>
       </div>`;
       }).join('')}
@@ -3518,14 +3438,14 @@ ${markSecHtml}
       const dayLabel = offset === 0 ? 'Today' : offset === -1 ? 'Yesterday' : '2 Days Ago';
       el.innerHTML = `<div class="panel glass">
     <div class="panel-header">
-      <div class="panel-title">Class ${cls} — Attendance</div>
+      <div class="panel-title">Class ${cls} ΓÇö Attendance</div>
       <div style="display:flex;gap:6px;align-items:center">
-        <button class="tab-btn ${offset === -2 ? 'active' : ''}" onclick="loadAdminAttClass(${cls},-2)" style="font-size:11px;padding:5px 12px">−2 Days</button>
+        <button class="tab-btn ${offset === -2 ? 'active' : ''}" onclick="loadAdminAttClass(${cls},-2)" style="font-size:11px;padding:5px 12px">ΓêÆ2 Days</button>
         <button class="tab-btn ${offset === -1 ? 'active' : ''}" onclick="loadAdminAttClass(${cls},-1)" style="font-size:11px;padding:5px 12px">Yesterday</button>
         <button class="tab-btn ${offset === 0 ? 'active' : ''}" onclick="loadAdminAttClass(${cls},0)" style="font-size:11px;padding:5px 12px">Today</button>
       </div>
     </div>
-    <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;padding:6px 10px;background:rgba(59,130,246,.08);border-radius:8px;display:inline-block">📅 ${dayLabel} — ${dateStr}</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;padding:6px 10px;background:rgba(59,130,246,.08);border-radius:8px;display:inline-block">≡ƒôà ${dayLabel} ΓÇö ${dateStr}</div>
     <div style="position:relative;margin-bottom:14px">
       <input type="text" class="form-input" id="adminAttSearch-${cls}" placeholder="Search student..." oninput="filterAdminAttSearch(${cls})" style="padding-left:38px;font-size:12px">
       <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -3726,7 +3646,7 @@ ${markSecHtml}
       if (examType === 'public') fs = students.filter(s => isPublicClass(s.standard));
       const label = examType === 'halfYearly' ? '2nd Term' : examType === 'final' ? 'Final Exam' : examType === 'public' ? 'Public Exam' : '1st Term';
       if (!fs.length) { el.innerHTML = `<div class="info-strip">No students eligible for ${label} in this class.</div>`; return; }
-      el.innerHTML = `<div class="panel glass"><div class="panel-header"><div class="panel-title">Class ${cls} — ${label} (View Only)</div></div>
+      el.innerHTML = `<div class="panel glass"><div class="panel-header"><div class="panel-title">Class ${cls} ΓÇö ${label} (View Only)</div></div>
   ${fs.map(s => {
         const res = (DB.results[s.id] || {})[examType] || [];
         const hasM = res.length > 0;
@@ -3757,7 +3677,7 @@ ${markSecHtml}
         </div>`;
       }).join('')}</div>
   <div class="panel glass" style="margin-top:16px"><div class="panel-header" style="align-items:center;">
-    <div class="panel-title">Class ${cls} — ${label} Ranked</div></div>
+    <div class="panel-title">Class ${cls} ΓÇö ${label} Ranked</div></div>
     <div class="table-wrap"><table><thead><tr><th>Rank</th><th>Student</th><th>Gender</th><th>%</th><th>Status</th></tr></thead>
     <tbody>${fs.map(s => {
         const res = (DB.results[s.id] || {})[examType] || [];
@@ -3779,8 +3699,8 @@ ${markSecHtml}
         if (a._hasRes && !b._hasRes) return -1;
         return b._resPct - a._resPct;
       }).map((s, i) => {
-        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
-        return `<tr><td><span style="font-weight:600;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-muted)'}">${medal}</span></td><td><strong>${s.name}</strong></td><td style="color:var(--text-muted);text-transform:capitalize">${s.gender}</td><td><span style="font-weight:600;color:${s._passed ? '#22c55e' : (s._hasRes ? '#ef4444' : 'var(--text-dim)')}">${s._hasRes ? s._resPct + '%' : '—'}</span></td><td><span class="badge ${s._passed ? 'badge-green' : (s._hasRes ? 'badge-red' : 'badge-yellow')}">${s._passed ? 'Pass' : (s._hasRes ? 'Fail' : 'Pending')}</span></td></tr>`
+        const medal = i === 0 ? '≡ƒÑç' : i === 1 ? '≡ƒÑê' : i === 2 ? '≡ƒÑë' : '#' + (i + 1);
+        return `<tr><td><span style="font-weight:600;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-muted)'}">${medal}</span></td><td><strong>${s.name}</strong></td><td style="color:var(--text-muted);text-transform:capitalize">${s.gender}</td><td><span style="font-weight:600;color:${s._passed ? '#22c55e' : (s._hasRes ? '#ef4444' : 'var(--text-dim)')}">${s._hasRes ? s._resPct + '%' : 'ΓÇö'}</span></td><td><span class="badge ${s._passed ? 'badge-green' : (s._hasRes ? 'badge-red' : 'badge-yellow')}">${s._passed ? 'Pass' : (s._hasRes ? 'Fail' : 'Pending')}</span></td></tr>`
       }).join('')}</tbody></table></div>
   </div>`;
     }
@@ -3815,12 +3735,12 @@ ${markSecHtml}
       }).filter(s => s.hasMarks).sort((a, b) => b.total - a.total);
       if (!ranked.length) return '<div style="text-align:center;padding:20px;color:var(--text-dim);font-size:12px">No class results published for this exam yet.</div>';
       const label = examType === 'halfYearly' ? '2nd Term' : examType === 'final' ? 'Final Exam' : examType === 'public' ? 'Public Exam' : '1st Term';
-      return `<div class="panel-header"><div class="panel-title">Class ${std} Rankings — ${label}</div><span class="badge badge-blue">${ranked.length} students</span></div>
+      return `<div class="panel-header"><div class="panel-title">Class ${std} Rankings ΓÇö ${label}</div><span class="badge badge-blue">${ranked.length} students</span></div>
   <div class="table-wrap"><table>
     <thead><tr><th style="padding:10px 6px">Rank</th><th style="padding:10px 6px">Student</th><th style="padding:10px 6px">Score</th><th style="padding:10px 6px">Status</th><th style="padding:10px 6px">Details</th></tr></thead>
     <tbody>${ranked.map((s, i) => {
         const isMe = s.id === myId;
-        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
+        const medal = i === 0 ? '≡ƒÑç' : i === 1 ? '≡ƒÑê' : i === 2 ? '≡ƒÑë' : '#' + (i + 1);
         return `<tr style="${isMe ? 'background:rgba(59,130,246,0.12);font-weight:700;' : ''}">
         <td style="padding:10px 6px"><span style="font-weight:700;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-dim)'}">${medal}</span></td>
         <td style="padding:10px 6px"><div style="display:flex;align-items:center;gap:6px">
@@ -3851,7 +3771,7 @@ ${markSecHtml}
       <div class="panel-header" style="margin-top:24px"><div class="panel-title">Top Rankers</div><span class="badge badge-yellow">${label}</span></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px">
         ${ranked.map((s, i) => {
-          const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
+          const medal = i === 0 ? '≡ƒÑç' : i === 1 ? '≡ƒÑê' : '≡ƒÑë';
           const isMe = s.id === myId;
           const borderC = i === 0 ? 'rgba(234,179,8,0.4)' : i === 1 ? 'rgba(200,200,200,0.4)' : 'rgba(251,146,60,0.4)';
           const bgC = isMe ? 'rgba(59,130,246,0.1)' : 'var(--surface)';
@@ -3875,8 +3795,8 @@ ${markSecHtml}
       modal.style.cssText = 'position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);';
       const body = `<div style="background:var(--glass-strong);border:1px solid var(--border-bright);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:420px;margin:20px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:scaleIn .25s ease;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div><div style="font-size:16px;font-weight:700">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">${s.class} · ${label}</div></div>
-      <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:14px;">✕</button>
+      <div><div style="font-size:16px;font-weight:700">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">${s.class} ┬╖ ${label}</div></div>
+      <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:14px;">Γ£ò</button>
     </div>
     ${res.length ? renderExamData(res, s.standard) : '<div style="text-align:center;padding:20px;color:var(--text-dim);font-size:13px">No marks recorded.</div>'}
   </div>`;
@@ -3916,7 +3836,7 @@ ${markSecHtml}
       const isOpen = DB.examSessions && DB.examSessions[examType] !== false;
       if (!fs.length) { el.innerHTML = `<div class="info-strip">No students eligible for ${label} in Class ${cls}.</div>`; return; }
       el.innerHTML = `<div class="panel glass"><div class="panel-header" style="align-items:center;">
-      <div><div class="panel-title">Class ${cls} — ${label}</div>
+      <div><div class="panel-title">Class ${cls} ΓÇö ${label}</div>
     ${!isOpen ? '<span class="badge badge-red">Editing Closed</span>' : '<span class="badge badge-green">Editing Open</span>'}</div>
     ${isOpen ? `<label style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;cursor:pointer;background:var(--surface);padding:6px 14px;border-radius:20px;border:1px solid ${teacherEditMode ? 'var(--blue)' : 'var(--border)'}">
       <input type="checkbox" onchange="toggleTeacherEditMode(this.checked)" ${teacherEditMode ? 'checked' : ''}> Edit Mode
@@ -3942,7 +3862,7 @@ ${markSecHtml}
         }
         return `<div class="user-row" data-name="${s.name.toLowerCase()}"><div class="user-meta">
       <div class="avatar" style="width:34px;height:34px;font-size:12px;background:${s.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)'}">${s.name.charAt(0)}</div>
-      <div><div style="font-size:13px;font-weight:600">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">${s.class}${hasM ? " · " + total + "/" + max + " marks" : ""}</div></div>
+      <div><div style="font-size:13px;font-weight:600">${s.name}</div><div style="font-size:11px;color:var(--text-muted)">${s.class}${hasM ? " ┬╖ " + total + "/" + max + " marks" : ""}</div></div>
     </div>
     <div class="user-actions">
       ${teacherEditMode && isOpen ? `
@@ -3959,7 +3879,7 @@ ${markSecHtml}
       }).join('')}
   </div></div>
   <div class="panel glass" style="margin-top:16px"><div class="panel-header" style="align-items:center;">
-    <div class="panel-title">Class ${cls} — ${label} Ranked</div></div>
+    <div class="panel-title">Class ${cls} ΓÇö ${label} Ranked</div></div>
     <div class="table-wrap"><table><thead><tr><th>Rank</th><th>Student</th><th>Gender</th><th>%</th><th>Status</th></tr></thead>
     <tbody>${fs.map(s => {
         const res = (DB.results[s.id] || {})[examType] || [];
@@ -3981,8 +3901,8 @@ ${markSecHtml}
         if (a._hasRes && !b._hasRes) return -1;
         return b._resPct - a._resPct;
       }).map((s, i) => {
-        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
-        return `<tr><td><span style="font-weight:600;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-muted)'}">${medal}</span></td><td><strong>${s.name}</strong></td><td style="color:var(--text-muted);text-transform:capitalize">${s.gender}</td><td><span style="font-weight:600;color:${s._passed ? '#22c55e' : (s._hasRes ? '#ef4444' : 'var(--text-dim)')}">${s._hasRes ? s._resPct + '%' : '—'}</span></td><td><span class="badge ${s._passed ? 'badge-green' : (s._hasRes ? 'badge-red' : 'badge-yellow')}">${s._passed ? 'Pass' : (s._hasRes ? 'Fail' : 'Pending')}</span></td></tr>`
+        const medal = i === 0 ? '≡ƒÑç' : i === 1 ? '≡ƒÑê' : i === 2 ? '≡ƒÑë' : '#' + (i + 1);
+        return `<tr><td><span style="font-weight:600;color:${i === 0 ? '#eab308' : i === 1 ? 'rgba(200,200,200,.9)' : i === 2 ? '#fb923c' : 'var(--text-muted)'}">${medal}</span></td><td><strong>${s.name}</strong></td><td style="color:var(--text-muted);text-transform:capitalize">${s.gender}</td><td><span style="font-weight:600;color:${s._passed ? '#22c55e' : (s._hasRes ? '#ef4444' : 'var(--text-dim)')}">${s._hasRes ? s._resPct + '%' : 'ΓÇö'}</span></td><td><span class="badge ${s._passed ? 'badge-green' : (s._hasRes ? 'badge-red' : 'badge-yellow')}">${s._passed ? 'Pass' : (s._hasRes ? 'Fail' : 'Pending')}</span></td></tr>`
         }).join('')}</tbody></table></div>
   </div>`;
     }
@@ -4001,8 +3921,8 @@ ${markSecHtml}
       document.getElementById('editMarksSid').value = sid;
       document.getElementById('editMarksExamType').value = examType;
       const lbl = examType === 'halfYearly' ? 'Half-Yearly' : examType === 'model' ? 'Model Exam' : examType === 'public' ? 'Public Exam' : examType.charAt(0).toUpperCase() + examType.slice(1);
-      document.getElementById('editMarksTitle').textContent = 'Edit Marks — ' + s.name;
-      document.getElementById('editMarksSub').textContent = s.class + ' · ' + lbl;
+      document.getElementById('editMarksTitle').textContent = 'Edit Marks ΓÇö ' + s.name;
+      document.getElementById('editMarksSub').textContent = s.class + ' ┬╖ ' + lbl;
       const sl = document.getElementById('editMarksSubjectList');
       if (!subjects.length) { sl.innerHTML = `<div class="info-strip">No subjects for Class ${s.standard}. Add them in the Subjects section first.</div>`; document.getElementById('editMarksModal').classList.add('open'); return; }
       sl.innerHTML = subjects.map(sub => {
@@ -4012,14 +3932,14 @@ ${markSecHtml}
         const cm = ex && !isAbs ? ex.marks : '';
         return `<div class="panel glass" style="padding:14px;margin-bottom:10px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div><div style="font-size:13px;font-weight:600">${sub.name}</div><div style="font-size:11px;color:var(--text-muted)">Total: ${sub.total} · Pass: ${sub.pass}</div></div>
+        <div><div style="font-size:13px;font-weight:600">${sub.name}</div><div style="font-size:11px;color:var(--text-muted)">Total: ${sub.total} ┬╖ Pass: ${sub.pass}</div></div>
         <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
           <input type="checkbox" id="abs-${sk}" ${isAbs ? 'checked' : ''} onchange="toggleAbsent('${sk}')">
           <span style="font-size:11px;color:#ef4444;font-weight:600">Mark Absent</span>
         </label>
       </div>
       <div id="mi-${sk}" ${isAbs ? 'style="display:none"' : ''}>
-        <input type="number" class="form-input" id="m-${sk}" placeholder="Marks (0–${sub.total})" value="${cm}" min="0" max="${sub.total}">
+        <input type="number" class="form-input" id="m-${sk}" placeholder="Marks (0ΓÇô${sub.total})" value="${cm}" min="0" max="${sub.total}">
       </div>
       ${isAbs ? '<div style="text-align:center;padding:8px;background:rgba(239,68,68,.1);border-radius:8px;color:#ef4444;font-size:12px;font-weight:600">Marked as Absent</div>' : ''}
     </div>`;
@@ -4092,7 +4012,7 @@ ${markSecHtml}
       return `<div class="user-row" id="quiz-row-${q.id}" style="transition: all 0.3s ease;">
         <div class="user-meta">
           <div class="avatar" id="quiz-icon-${q.id}" style="background:${q.active ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#6b7280,#4b5563)'}">Q</div>
-          <div><div style="font-size:13px;font-weight:600">${q.title}</div><div style="font-size:11px;color:var(--text-muted)">${q.questions.length} questions · ${q.subject}</div></div>
+          <div><div style="font-size:13px;font-weight:600">${q.title}</div><div style="font-size:11px;color:var(--text-muted)">${q.questions.length} questions ┬╖ ${q.subject}</div></div>
         </div>
         <div class="user-actions">
           ${actions}
@@ -4108,7 +4028,7 @@ ${markSecHtml}
         if (!active.length) { el.innerHTML = `<div class="empty glass" style="border-radius:var(--radius-lg)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><p>No active quizzes right now.</p></div>`; return; }
         el.innerHTML = active.map(q => {
           const sk = u.id + '_' + q.id; const done = DB.quizScores[sk] !== undefined;
-          return `<div class="quiz-card glass"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div><h3 style="font-size:15px;font-weight:700">${q.title}</h3><div style="font-size:11px;color:var(--text-muted);margin-top:4px">${q.questions.length} questions · ${q.subject}</div></div>${done ? `<span class="badge badge-green">Score: ${DB.quizScores[sk]}/${q.questions.length}</span>` : `<span class="badge badge-blue">Active</span>`}</div>
+          return `<div class="quiz-card glass"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div><h3 style="font-size:15px;font-weight:700">${q.title}</h3><div style="font-size:11px;color:var(--text-muted);margin-top:4px">${q.questions.length} questions ┬╖ ${q.subject}</div></div>${done ? `<span class="badge badge-green">Score: ${DB.quizScores[sk]}/${q.questions.length}</span>` : `<span class="badge badge-blue">Active</span>`}</div>
       ${done ? `<div style="font-size:12px;color:var(--text-muted)">Completed. Score: <strong style="color:var(--blue)">${DB.quizScores[sk]}/${q.questions.length} (${Math.round(DB.quizScores[sk] / q.questions.length * 100)}%)</strong></div>` : `<button class="btn btn-primary" onclick="startQuiz(${q.id})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>Start Quiz</button>`}</div>`;
         }).join('');
       } else if (u.role === 'teacher') {
@@ -4142,7 +4062,7 @@ ${markSecHtml}
       modal.innerHTML = `<div style="background:var(--glass-strong);border:1px solid var(--border-bright);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;margin:20px;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:scaleIn .25s ease;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <div style="font-size:16px;font-weight:700">Edit Announcement</div>
-      <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);">✕</button>
+      <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);">Γ£ò</button>
     </div>
     <div class="form-group"><label class="form-label">Title</label><input type="text" class="form-input" id="editAnnTitle" value="${a.title.replace(/"/g, '&quot;')}"></div>
     <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="editAnnText" rows="4" style="resize:vertical;line-height:1.6">${a.text}</textarea></div>
@@ -4212,7 +4132,7 @@ ${markSecHtml}
     <div style="display:grid;gap:6px">${q.opts.map((opt, oi) => `<div style="display:flex;align-items:center;gap:8px">
       <input type="radio" name="qc${qi}" ${q.ans === oi ? 'checked' : ''} onchange="quizBuilderQuestions[${qi}].ans=${oi}" style="cursor:pointer;accent-color:var(--blue);width:16px;height:16px">
       <input type="text" class="form-input" style="flex:1;font-size:12px" placeholder="Option ${String.fromCharCode(65 + oi)}" value="${opt.replace(/"/g, '&quot;')}" oninput="quizBuilderQuestions[${qi}].opts[${oi}]=this.value">
-      <span style="font-size:10px;color:${q.ans === oi ? '#22c55e' : 'var(--text-dim)'};width:50px">${q.ans === oi ? '✓ Correct' : 'Correct?'}</span>
+      <span style="font-size:10px;color:${q.ans === oi ? '#22c55e' : 'var(--text-dim)'};width:50px">${q.ans === oi ? 'Γ£ô Correct' : 'Correct?'}</span>
     </div>`).join('')}</div>
     <div style="font-size:10px;color:var(--text-dim);margin-top:6px">Select radio button to mark correct answer</div>
   </div>`).join('');
@@ -4226,11 +4146,11 @@ ${markSecHtml}
       if (!quiz) { renderQuiz(); return; }
       document.getElementById('quizContent').innerHTML = `<button class="btn btn-ghost" onclick="renderQuiz()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
   <div class="panel glass"><div class="panel-header"><div class="panel-title">${quiz.title}</div><span class="badge ${quiz.active ? 'badge-green' : 'badge-yellow'}">${quiz.active ? 'Active' : 'Inactive'}</span></div>
-  <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">${quiz.questions.length} questions · ${quiz.subject}</div>
+  <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">${quiz.questions.length} questions ┬╖ ${quiz.subject}</div>
   ${quiz.questions.map((q, i) => `<div class="panel glass" style="margin-bottom:10px;padding:14px"><div style="font-weight:700;margin-bottom:8px;font-size:13px">Q${i + 1}: ${q.q}</div>
     ${q.opts.map((o, oi) => `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;margin-bottom:4px;background:${oi === q.ans ? 'rgba(34,197,94,.1)' : 'var(--surface)'};border:1px solid ${oi === q.ans ? 'rgba(34,197,94,.3)' : 'var(--border)'}">
       <div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;background:${oi === q.ans ? '#22c55e' : 'var(--border)'};color:${oi === q.ans ? '#fff' : 'var(--text-muted)'}">${String.fromCharCode(65 + oi)}</div>
-      <span style="font-size:12px;color:${oi === q.ans ? '#22c55e' : 'var(--text-muted)'}">${o}</span>${oi === q.ans ? '<span style="font-size:10px;color:#22c55e;margin-left:auto">✓ Correct</span>' : ''}
+      <span style="font-size:12px;color:${oi === q.ans ? '#22c55e' : 'var(--text-muted)'}">${o}</span>${oi === q.ans ? '<span style="font-size:10px;color:#22c55e;margin-left:auto">Γ£ô Correct</span>' : ''}
     </div>`).join('')}</div>`).join('')}</div>`;
     }
     async function createQuiz() {
@@ -4319,7 +4239,7 @@ ${markSecHtml}
       if (optIdx === correct) quizState.score++;
       for (let i = 0; i < q.opts.length; i++) { const e = document.getElementById('qo' + i); if (!e) continue; e.style.pointerEvents = 'none'; if (i === correct) e.classList.add('correct'); else if (i === optIdx) e.classList.add('wrong'); else e.classList.add('disabled'); }
       const fb = document.getElementById('quizFb'); fb.style.display = 'block';
-      fb.innerHTML = `<div class="info-strip" style="background:${optIdx === correct ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)'};border-color:${optIdx === correct ? 'rgba(34,197,94,.3)' : 'rgba(239,68,68,.3)'};color:${optIdx === correct ? '#22c55e' : '#ef4444'}">${optIdx === correct ? '✓ Correct!' : '✗ Incorrect. Correct answer: ' + q.opts[correct]}</div>`;
+      fb.innerHTML = `<div class="info-strip" style="background:${optIdx === correct ? 'rgba(34,197,94,.1)' : 'rgba(239,68,68,.1)'};border-color:${optIdx === correct ? 'rgba(34,197,94,.3)' : 'rgba(239,68,68,.3)'};color:${optIdx === correct ? '#22c55e' : '#ef4444'}">${optIdx === correct ? 'Γ£ô Correct!' : 'Γ£ù Incorrect. Correct answer: ' + q.opts[correct]}</div>`;
       document.getElementById('quizNext').style.display = 'flex';
     }
     function nextQ() { const quiz = DB.quizzes.find(q => q.id === quizState.qid); quizState.current++; showQuizQ(quiz); }
@@ -4337,9 +4257,9 @@ ${markSecHtml}
       const el = document.getElementById('quizContent');
       el.innerHTML = `<button class="btn btn-ghost" onclick="renderQuiz()" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
   <div class="panel glass">
-    <div class="panel-header"><div class="panel-title">${quiz.title} — Student Scores</div><div style="font-size:12px;color:var(--text-muted)">${scores.length} / ${students.length} students completed</div></div>
+    <div class="panel-header"><div class="panel-title">${quiz.title} ΓÇö Student Scores</div><div style="font-size:12px;color:var(--text-muted)">${scores.length} / ${students.length} students completed</div></div>
     ${scores.length ? `<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Student</th><th>Class</th><th>Score</th><th>Percentage</th></tr></thead>
-    <tbody>${scores.map((s, i) => { const pct = Math.round(s.score / quiz.questions.length * 100); return `<tr><td><strong style="color:${i === 0 ? '#eab308' : i === 1 ? 'var(--text-muted)' : i === 2 ? '#fb923c' : 'var(--text-dim)'}">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1)}</strong></td><td><strong>${s.name}</strong></td><td>${s.class || '—'}</td><td><strong style="color:var(--blue)">${s.score} / ${quiz.questions.length}</strong></td><td><span class="badge ${pct >= 60 ? 'badge-green' : 'badge-red'}">${pct}%</span></td></tr>`; }).join('')}</tbody></table></div>` : `<div style="text-align:center;padding:30px;color:var(--text-dim);font-size:13px">No students have completed this quiz yet.</div>`}
+    <tbody>${scores.map((s, i) => { const pct = Math.round(s.score / quiz.questions.length * 100); return `<tr><td><strong style="color:${i === 0 ? '#eab308' : i === 1 ? 'var(--text-muted)' : i === 2 ? '#fb923c' : 'var(--text-dim)'}">${i === 0 ? '≡ƒÑç' : i === 1 ? '≡ƒÑê' : i === 2 ? '≡ƒÑë' : '#' + (i + 1)}</strong></td><td><strong>${s.name}</strong></td><td>${s.class || 'ΓÇö'}</td><td><strong style="color:var(--blue)">${s.score} / ${quiz.questions.length}</strong></td><td><span class="badge ${pct >= 60 ? 'badge-green' : 'badge-red'}">${pct}%</span></td></tr>`; }).join('')}</tbody></table></div>` : `<div style="text-align:center;padding:30px;color:var(--text-dim);font-size:13px">No students have completed this quiz yet.</div>`}
   </div>`;
     }
     async function toggleQuiz(qid) { 
@@ -4398,7 +4318,7 @@ ${markSecHtml}
       const canPost = u.role === 'admin' || u.role === 'teacher';
       const canEdit = canPost && (u.role === 'admin' || a.author === u.name);
       return `<div class="announcement glass" style="position:relative; transition: all 0.3s ease" id="ann-${a.id}">
-      <div class="announcement-meta">${a.date} · <strong>${a.author}</strong> · <span class="badge badge-blue" style="font-size:9px">${a.role}</span></div>
+      <div class="announcement-meta">${a.date} ┬╖ <strong>${a.author}</strong> ┬╖ <span class="badge badge-blue" style="font-size:9px">${a.role}</span></div>
       <div style="font-weight:600;margin-bottom:6px;font-size:14px" id="ann-title-${a.id}">${a.title}</div>
       <div class="announcement-text" id="ann-text-${a.id}">${a.text}</div>
       ${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;">` : ''}
@@ -4453,7 +4373,7 @@ ${markSecHtml}
       modal.innerHTML = `<div style="background:var(--glass-strong);border:1px solid var(--border-bright);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;margin:20px;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:scaleIn .25s ease;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <div style="font-size:16px;font-weight:700">Edit Announcement</div>
-      <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);">✕</button>
+      <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);">Γ£ò</button>
     </div>
     <div class="form-group"><label class="form-label">Title</label><input type="text" class="form-input" id="editAnnTitle" value="${a.title.replace(/"/g, '&quot;')}"></div>
     <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="editAnnText" rows="4" style="resize:vertical;line-height:1.6">${a.text}</textarea></div>
@@ -4548,13 +4468,13 @@ ${markSecHtml}
       const avatarBg = u.role === 'admin' ? 'linear-gradient(135deg,#f59e0b,#d97706)' : u.role === 'teacher' ? 'linear-gradient(135deg,#8b5cf6,#6d28d9)' : u.gender === 'female' ? 'linear-gradient(135deg,#ec4899,#be185d)' : 'linear-gradient(135deg,#3b82f6,#1d4ed8)';
       const roleBadge = u.role === 'admin' ? 'badge-orange' : u.role === 'teacher' ? 'badge-purple' : 'badge-blue';
       const roleLabel = u.role === 'admin' ? 'Admin' : u.role === 'teacher' ? 'Ustha' : 'Student';
-      const subtext = u.role === 'admin' ? 'Administrator' : (u.role === 'teacher' ? 'Classes: ' + (u.assignedClasses || []).map(c => 'C' + c).join(', ') : (u.class || '') + (u.gender ? ' · ' + u.gender : ''));
+      const subtext = u.role === 'admin' ? 'Administrator' : (u.role === 'teacher' ? 'Classes: ' + (u.assignedClasses || []).map(c => 'C' + c).join(', ') : (u.class || '') + (u.gender ? ' ┬╖ ' + u.gender : ''));
       return `<div class="user-row" id="user-row-${u.id}" style="transition: all 0.3s ease;">
     <div class="user-meta">
       <div class="avatar" style="background:${avatarBg}">${u.name.charAt(0)}</div>
       <div>
         <div style="font-size:13px;font-weight:600" id="user-name-${u.id}">${u.name}</div>
-        <div style="font-size:11px;color:var(--text-muted)" id="user-subtext-${u.id}">@${u.username} · ${subtext}</div>
+        <div style="font-size:11px;color:var(--text-muted)" id="user-subtext-${u.id}">@${u.username} ┬╖ ${subtext}</div>
       </div>
     </div>
     <div class="user-actions">
@@ -4709,8 +4629,8 @@ ${markSecHtml}
         const subtextEl = document.getElementById(`user-subtext-${uid}`);
         if(nameEl) { nameEl.textContent = newName; nameEl.style.animation = 'scaleIn 0.3s ease'; }
         if(subtextEl) {
-          const subtxt = u.role === 'admin' ? 'Administrator' : (u.role === 'teacher' ? 'Classes: ' + (u.assignedClasses || []).map(c => 'C' + c).join(', ') : (u.class || '') + (u.gender ? ' · ' + u.gender : ''));
-          subtextEl.textContent = `@${newUsername} · ${subtxt}`;
+          const subtxt = u.role === 'admin' ? 'Administrator' : (u.role === 'teacher' ? 'Classes: ' + (u.assignedClasses || []).map(c => 'C' + c).join(', ') : (u.class || '') + (u.gender ? ' ┬╖ ' + u.gender : ''));
+          subtextEl.textContent = `@${newUsername} ┬╖ ${subtxt}`;
         }
         setTimeout(() => { if(nameEl) nameEl.style.animation = ''; }, 350);
         
@@ -4759,8 +4679,8 @@ ${markSecHtml}
       });
       const subs = DB.subjects[cls] || [];
       const el = document.getElementById('subClsContent');
-      el.innerHTML = `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls} — Subjects</div><span class="badge badge-blue">${subs.length} subjects</span></div>
-    ${subs.length ? subs.map((s, i) => `<div class="subject-card" id="subcard-${cls}-${i}"><div><div class="subject-name">${s.name}</div><div class="subject-meta">Total: ${s.total} · Pass Mark: ${s.pass}</div></div><div style="display:flex;gap:6px"><button class="icon-btn" onclick="editSubInline(${cls},${i})" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn danger" onclick="removeSub(${cls},${i})" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></div>`).join('') : `<div style="text-align:center;padding:16px;color:var(--text-dim);font-size:12px">No subjects added yet.</div>`}
+      el.innerHTML = `<div class="panel glass" style="margin-bottom:16px"><div class="panel-header"><div class="panel-title">Class ${cls} ΓÇö Subjects</div><span class="badge badge-blue">${subs.length} subjects</span></div>
+    ${subs.length ? subs.map((s, i) => `<div class="subject-card" id="subcard-${cls}-${i}"><div><div class="subject-name">${s.name}</div><div class="subject-meta">Total: ${s.total} ┬╖ Pass Mark: ${s.pass}</div></div><div style="display:flex;gap:6px"><button class="icon-btn" onclick="editSubInline(${cls},${i})" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="icon-btn danger" onclick="removeSub(${cls},${i})" title="Delete"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></div>`).join('') : `<div style="text-align:center;padding:16px;color:var(--text-dim);font-size:12px">No subjects added yet.</div>`}
   </div>
   <div class="panel glass"><div class="panel-header"><div class="panel-title">Add Subject to Class ${cls}</div></div>
     <div class="form-row" style="margin-bottom:12px">
@@ -4859,7 +4779,7 @@ ${markSecHtml}
   <div class="panel glass">
     <div class="panel-header"><div class="panel-title">Student Performance</div></div>
     <div class="table-wrap"><table><thead><tr><th>Student</th><th>Class</th><th>Gender</th><th>Attendance</th><th>Quarterly Avg</th><th>Quizzes</th></tr></thead>
-    <tbody>${students.map(s => { const { present, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; const res = DB.results[s.id] || {}; const qAvg = (res.quarterly || []).length ? Math.round((res.quarterly || []).reduce((a, b) => a + (b.marks || 0), 0) / (res.quarterly || []).length) : 0; const qz = Object.keys(DB.quizScores).filter(k => k.startsWith(s.id + '_')).length; return `<tr><td><strong>${s.name}</strong></td><td>${s.class || '—'}</td><td><span class="badge ${s.gender === 'male' ? 'badge-blue' : 'badge-yellow'}">${s.gender}</span></td><td><span class="badge ${pct >= 75 ? 'badge-green' : 'badge-red'}">${pct}%</span></td><td>${qAvg || '—'}${qAvg ? '%' : ''}</td><td>${qz}</td></tr>`; }).join('')}</tbody></table></div>
+    <tbody>${students.map(s => { const { present, total } = getAttStats(s.id); const pct = total ? Math.round(present / total * 100) : 0; const res = DB.results[s.id] || {}; const qAvg = (res.quarterly || []).length ? Math.round((res.quarterly || []).reduce((a, b) => a + (b.marks || 0), 0) / (res.quarterly || []).length) : 0; const qz = Object.keys(DB.quizScores).filter(k => k.startsWith(s.id + '_')).length; return `<tr><td><strong>${s.name}</strong></td><td>${s.class || 'ΓÇö'}</td><td><span class="badge ${s.gender === 'male' ? 'badge-blue' : 'badge-yellow'}">${s.gender}</span></td><td><span class="badge ${pct >= 75 ? 'badge-green' : 'badge-red'}">${pct}%</span></td><td>${qAvg || 'ΓÇö'}${qAvg ? '%' : ''}</td><td>${qz}</td></tr>`; }).join('')}</tbody></table></div>
   </div>
   <div class="panel glass" style="margin-top:20px"><div class="panel-header"><div class="panel-title">Gender Distribution</div></div>
     <div style="display:flex;gap:20px;flex-wrap:wrap">
@@ -4872,8 +4792,8 @@ ${markSecHtml}
     // CONTROL CENTER
     function renderControlCenter() {
       const el = document.getElementById('controlCenterContent'); if (!el) return;
-      const sessions = DB.examSessions || { quarterly: true, halfYearly: true, final: false, public: false, attendance: true };
-      const exams = [{ key: 'attendance', label: 'Daily Attendance', desc: 'Enable/disable daily attendance marking system-wide' }, { key: 'quarterly', label: '1st Term (Quarterly)', desc: 'First quarterly examination' }, { key: 'halfYearly', label: '2nd Term (Half-Yearly)', desc: 'Second half-yearly examination' }, { key: 'final', label: 'Final / Yearly Exam', desc: 'End of year final examination' }, { key: 'public', label: 'Public Exam', desc: 'External public examination for eligible classes' }];
+      const sessions = DB.examSessions || { quarterly: true, halfYearly: true, final: false, public: false };
+      const exams = [{ key: 'quarterly', label: '1st Term (Quarterly)', desc: 'First quarterly examination' }, { key: 'halfYearly', label: '2nd Term (Half-Yearly)', desc: 'Second half-yearly examination' }, { key: 'final', label: 'Final / Yearly Exam', desc: 'End of year final examination' }, { key: 'public', label: 'Public Exam', desc: 'External public examination for eligible classes' }];
       el.innerHTML = `<div class="info-strip" style="margin-bottom:20px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Enable a session to allow Usthas to enter or edit marks for that exam type. Disable to lock editing.</div>
   <div class="panel glass">
     <div class="panel-header"><div class="panel-title">Exam Editing Sessions</div><div style="font-size:12px;color:var(--text-muted)">Toggle to open/close</div></div>
@@ -4958,7 +4878,7 @@ ${markSecHtml}
             if (m._type === 'teacher') {
               return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
             <div class="avatar" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,#8b5cf6,#6d28d9)">${m.name.charAt(0)}</div>
-            <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} · Classes: ${(m.assignedClasses || []).map(c => 'C' + c).join(', ')}</div></div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} ┬╖ Classes: ${(m.assignedClasses || []).map(c => 'C' + c).join(', ')}</div></div>
             <span class="badge badge-purple">Ustha</span>
           </div>`;
             }
@@ -4966,7 +4886,7 @@ ${markSecHtml}
             const badge = m.gender === 'male' ? 'badge-blue' : 'badge-yellow';
             return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
           <div class="avatar" style="width:30px;height:30px;font-size:12px;background:${bg}">${m.name.charAt(0)}</div>
-          <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} · ${m.class}</div></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} ┬╖ ${m.class}</div></div>
           <span class="badge ${badge}" style="font-size:10px">${m.gender === 'male' ? 'Male' : 'Female'}</span>
         </div>`;
           }).join('');
@@ -4990,7 +4910,7 @@ ${markSecHtml}
     <div class="class-content" id="mc-usthas">
       ${allTeachers.length ? allTeachers.map(t => `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
         <div class="avatar" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,#8b5cf6,#6d28d9)">${t.name.charAt(0)}</div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:600">${t.name}</div><div style="font-size:11px;color:var(--text-muted)">@${t.username} · Classes: ${(t.assignedClasses || []).map(c => 'C' + c).join(', ')}</div></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600">${t.name}</div><div style="font-size:11px;color:var(--text-muted)">@${t.username} ┬╖ Classes: ${(t.assignedClasses || []).map(c => 'C' + c).join(', ')}</div></div>
         <span class="badge badge-purple">Ustha</span>
       </div>`).join('') : '<div style="text-align:center;padding:14px;color:var(--text-dim);font-size:12px;border:1px solid var(--border);border-radius:var(--radius-sm);">No teachers registered.</div>'}
     </div>`;
@@ -5170,7 +5090,7 @@ ${markSecHtml}
       }
     }
 
-    // ── ARCHIVES & MEMORY MODE ──
+    // ΓöÇΓöÇ ARCHIVES & MEMORY MODE ΓöÇΓöÇ
     async function renderArchives() {
       const el = document.getElementById('archivesContent'); if (!el) return;
       el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-dim)"><div class="gl-spinner" style="margin:0 auto 16px;width:30px;height:30px;border-width:2px;display:block"></div>Fetching archives...</div>';
@@ -5343,7 +5263,7 @@ ${markSecHtml}
       }
     }
 
-    // ── REVEAL ON SCROLL (landing page) ──
+    // ΓöÇΓöÇ REVEAL ON SCROLL (landing page) ΓöÇΓöÇ
     (function () {
       const obs = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
