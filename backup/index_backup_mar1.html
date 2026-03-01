@@ -2422,7 +2422,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label" id="loginUserLabel">Username</label>
+          <label class="form-label">Username</label>
           <input type="text" class="form-input" id="loginUser" placeholder="Enter username">
         </div>
         <div class="form-group">
@@ -2469,20 +2469,6 @@
       });
       document.getElementById('tab-' + role).classList.remove('btn-ghost');
       document.getElementById('tab-' + role).classList.add('btn-primary');
-      
-      const lbl = document.getElementById('loginUserLabel');
-      const inp = document.getElementById('loginUser');
-      if (lbl && inp) {
-        if (role === 'student') {
-          lbl.textContent = 'Student Code';
-          inp.placeholder = 'Enter 4-digit code';
-          inp.type = 'number';
-        } else {
-          lbl.textContent = 'Username';
-          inp.placeholder = 'Enter username';
-          inp.type = 'text';
-        }
-      }
     }
     // Set default tab to admin on load
     window.addEventListener('DOMContentLoaded', function () {
@@ -2850,21 +2836,7 @@ let DB = {
       btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Signing In...';
       
       try {
-        let snapshot;
-        if (role === 'student') {
-          const studentCode = parseInt(user, 10);
-          if (isNaN(studentCode)) {
-             errEl.textContent = 'Student Code must be a number.'; 
-             errEl.style.display = 'block';
-             btn.disabled = false;
-             btn.innerHTML = 'Sign In <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>';
-             return;
-          }
-          snapshot = await db.collection('users').where('studentCode', '==', studentCode).where('role', '==', role).where('password', '==', pass).get();
-        } else {
-          snapshot = await db.collection('users').where('username', '==', user).where('role', '==', role).where('password', '==', pass).get();
-        }
-        
+        const snapshot = await db.collection('users').where('username', '==', user).where('role', '==', role).where('password', '==', pass).get();
         if (snapshot.empty) {
           errEl.textContent = 'Invalid credentials. Check username, role & password.'; 
           errEl.style.display = 'block';
@@ -4663,7 +4635,7 @@ ${markSecHtml}
       const avatarBg = u.role === 'admin' ? 'linear-gradient(135deg,#f59e0b,#d97706)' : u.role === 'teacher' ? 'linear-gradient(135deg,#8b5cf6,#6d28d9)' : u.gender === 'female' ? 'linear-gradient(135deg,#ec4899,#be185d)' : 'linear-gradient(135deg,#3b82f6,#1d4ed8)';
       const roleBadge = u.role === 'admin' ? 'badge-orange' : u.role === 'teacher' ? 'badge-purple' : 'badge-blue';
       const roleLabel = u.role === 'admin' ? 'Admin' : u.role === 'teacher' ? 'Ustha' : 'Student';
-      const subtext = u.role === 'admin' ? 'Administrator' : (u.role === 'teacher' ? 'Classes: ' + (u.assignedClasses || []).map(c => 'C' + c).join(', ') : (u.class || '') + (u.gender ? ' · ' + u.gender : '') + (u.studentCode ? ' · Code: ' + u.studentCode : ''));
+      const subtext = u.role === 'admin' ? 'Administrator' : (u.role === 'teacher' ? 'Classes: ' + (u.assignedClasses || []).map(c => 'C' + c).join(', ') : (u.class || '') + (u.gender ? ' · ' + u.gender : ''));
       return `<div class="user-row" id="user-row-${u.id}" style="transition: all 0.3s ease;">
     <div class="user-meta">
       <div class="avatar" style="background:${avatarBg}">${u.name.charAt(0)}</div>
@@ -4682,8 +4654,7 @@ ${markSecHtml}
 
     function renderUsers(searchQ) {
       const el = document.getElementById('usersContent');
-      const rawQ = typeof searchQ === 'string' ? searchQ : (document.getElementById('usersSearch')?.value || '');
-      const q = rawQ.toLowerCase().trim();
+      const q = (searchQ || document.getElementById('usersSearch')?.value || '').toLowerCase().trim();
       const allUsers = DB.users.filter(u => !(u.role === 'admin' && u.id === DB.currentUser.id));
       const nonAdmin = q ? allUsers.filter(u => u.name.toLowerCase().includes(q) || u.username.toLowerCase().includes(q) || u.role.toLowerCase().includes(q)) : allUsers;
       const clsOpts = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => `<option value="${n}">Class ${n}</option>`).join('');
@@ -4705,7 +4676,7 @@ ${markSecHtml}
   </div>
   <div class="panel glass"><div class="panel-header"><div class="panel-title">All Users</div><span class="badge badge-blue">${nonAdmin.length}</span></div>
   <div style="position:relative;margin-bottom:14px">
-    <input type="text" class="form-input" id="usersSearch" placeholder="Search by name, username or role..." value="${rawQ.replace(/"/g, '&quot;')}" oninput="renderUsers()" style="padding-left:40px;">
+    <input type="text" class="form-input" id="usersSearch" placeholder="Search by name, username or role..." value="${q}" oninput="renderUsers()" style="padding-left:40px;">
     <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   </div>
   <div id="usersList">
@@ -4714,7 +4685,7 @@ ${markSecHtml}
       // Populate edit modal class options
       const ec = document.getElementById('editUserClass'); const ecc = document.getElementById('editUserClasses');
       if (ec) { ec.innerHTML = clsOpts; } if (ecc) { ecc.innerHTML = clsOpts; }
-      if (rawQ) { const si = document.getElementById('usersSearch'); if (si) { si.focus(); si.setSelectionRange(si.value.length, si.value.length); } }
+      if (q) { const si = document.getElementById('usersSearch'); if (si) { si.focus(); si.setSelectionRange(si.value.length, si.value.length); } }
     }
     function toggleNUFields() {
       const r = document.getElementById('nuRole').value;
@@ -4736,10 +4707,7 @@ ${markSecHtml}
       if (role === 'student') {
         const cls = document.getElementById('nuClass').value;
         const gender = document.getElementById('nuGender').value;
-        const studentCodes = DB.users.filter(u => u.role === 'student' && u.studentCode).map(u => u.studentCode);
-        const maxCode = studentCodes.length > 0 ? Math.max(...studentCodes) : 999;
-        const studentCode = maxCode + 1;
-        nu = { id: nid, name, username, password: pass, role, class: `Standard ${cls}`, standard: parseInt(cls), gender, studentCode };
+        nu = { id: nid, name, username, password: pass, role, class: `Standard ${cls}`, standard: parseInt(cls), gender };
       } else if (role === 'teacher') {
         const sel = document.getElementById('nuAssigned');
         const ac = Array.from(sel.selectedOptions).map(o => parseInt(o.value));
@@ -4766,9 +4734,6 @@ ${markSecHtml}
           if(el) el.style.animation = 'scaleIn 0.3s ease';
         }
         renderMembersList();
-        if (nu.role === 'student' && nu.studentCode) {
-          alert(`Student registered successfully! Their unique Student Code for login is: ${nu.studentCode}`);
-        }
       } catch(e) {
         console.error("Error adding user:", e);
         alert("Failed to add user.");
@@ -4805,12 +4770,6 @@ ${markSecHtml}
       
       const newName = document.getElementById('editUserName').value.trim() || u.name;
       const newUsername = document.getElementById('editUserUsername').value.trim() || u.username;
-      
-      if (newUsername !== u.username && DB.users.find(usr => usr.username === newUsername && usr.id !== uid)) {
-        alert('Username is already used by another user.');
-        return;
-      }
-            
       const newPass = document.getElementById('editUserPass').value || u.password;
       
       let updates = { name: newName, username: newUsername, password: newPass };
@@ -4853,15 +4812,11 @@ ${markSecHtml}
         setTimeout(() => window.isUserLocalEdit = false, 1000);
         
         try {
-          const userToDelete = DB.users[idx];
-          if (userToDelete.role === 'student') {
-            const deletedNode = { ...userToDelete, deletedAt: new Date().toISOString() };
-            await db.collection('deleted_users').doc(uid.toString()).set(deletedNode);
-          }
-          
+          // Ideally you'd also delete attendance and results in a batch, 
+          // but for now deleting the central user document is most important
           await db.collection('users').doc(uid.toString()).delete();
           DB.users.splice(idx, 1);
-          // Linked collections (attendance, results) are ignored and natively recovered when the student is restored.
+          // Optionally also clean up linked collections here...
           
           const el = document.getElementById(`user-row-${uid}`);
           if (el) {
@@ -5043,145 +4998,9 @@ ${markSecHtml}
        <button class="btn btn-primary" onclick="upgradeStudents(this)" style="flex:1;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>Update Students Class (Upgrade)</button>
        <button class="btn btn-ghost" onclick="degradeStudents(this)" style="color:var(--text-muted);flex:1;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>Degrade Students Class</button>
     </div>
-    <div style="border-top:1px solid var(--border);padding-top:20px;display:flex;gap:10px;flex-wrap:wrap">
-       <button class="btn btn-ghost" onclick="runStudentCodeMigration(this)" style="color:var(--text-blue);flex:1;justify-content:center;border:1px solid var(--border)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>Initialize Student Login Codes (Run Once)</button>
-    </div>
     <div style="font-size:11px;color:var(--text-dim);margin-top:16px;text-align:center">Warning: These operations are destructive and affect all students simultaneously.</div>
-  </div>
-  <div class="panel glass" style="margin-top:24px">
-     <div class="panel-header" style="margin-bottom:16px"><div class="panel-title">Student Recovery Bin</div><div style="font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:4px"><span class="badge badge-purple">Max 5 Visible</span></div></div>
-     <div id="recoveryBinContent" style="text-align:center;padding:20px;color:var(--text-muted);font-size:13px">Loading recovery bin...</div>
   </div>`;
-      setTimeout(loadRecoveryBin, 100);
     }
-    
-    async function loadRecoveryBin() {
-      const el = document.getElementById('recoveryBinContent');
-      if (!el) return;
-      try {
-        const snap = await db.collection('deleted_users').orderBy('deletedAt', 'desc').get();
-        const now = new Date();
-        const docsToKeep = [];
-        const toDeleteIds = [];
-        
-        snap.forEach(doc => {
-           const data = doc.data();
-           const delDate = new Date(data.deletedAt);
-           const diffDays = Math.floor((now - delDate) / (1000 * 60 * 60 * 24));
-           if (diffDays >= 30) {
-             toDeleteIds.push(doc.id);
-           } else {
-             docsToKeep.push({ id: doc.id, ...data, diffDays });
-           }
-        });
-        
-        // Asynchronous silent purge of 30+ day old records
-        toDeleteIds.forEach(id => db.collection('deleted_users').doc(id).delete().catch(console.error));
-        
-        const top5 = docsToKeep.slice(0, 5);
-        if (top5.length === 0) {
-          el.innerHTML = '<div style="padding:10px 0;"><i>No recently deleted students in the bin.</i></div>';
-          return;
-        }
-        
-        el.innerHTML = top5.map(u => `
-          <div class="user-row" id="recovery-row-${u.id}" style="margin-bottom:10px;justify-content:space-between;background:var(--surface);padding:10px 14px;border-radius:var(--radius-sm);border:1px solid var(--border)">
-            <div style="text-align:left">
-              <div style="font-weight:600;font-size:13px">${u.name} <span class="badge badge-blue" style="margin-left:6px">Code: ${u.studentCode || 'N/A'}</span></div>
-              <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Deleted ${u.diffDays === 0 ? 'Today' : u.diffDays + ' day(s) ago'}</div>
-            </div>
-            <button class="btn btn-primary" onclick="recoverStudent('${u.id}', event)" style="font-size:11px;padding:6px 12px;background:linear-gradient(135deg,#3b82f6,#1d4ed8)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>Recover</button>
-          </div>
-        `).join('');
-      } catch (e) {
-        console.error(e);
-        el.innerHTML = 'Error loading recovery bin data.';
-      }
-    }
-
-    async function recoverStudent(uid, event) {
-      if (!confirm('Recover this student and restore their live data?')) return;
-      const btn = event.currentTarget;
-      const oldText = btn.innerHTML;
-      btn.innerHTML = 'Restoring...'; btn.disabled = true;
-      try {
-        const docRef = db.collection('deleted_users').doc(uid);
-        const docSnap = await docRef.get();
-        if (!docSnap.exists) { alert('Record not found.'); return; }
-        
-        const data = docSnap.data();
-        const { deletedAt, ...originalUser } = data; // Strip timestamp
-        
-        // 1. Formal Restore to live
-        await db.collection('users').doc(uid).set(originalUser);
-        DB.users.push(originalUser);
-        
-        // 2. Destroy from bin
-        await docRef.delete();
-        
-        // 3. UI State Wipe
-        const row = document.getElementById('recovery-row-' + uid);
-        if (row) {
-          row.style.opacity = '0';
-          setTimeout(() => { if(row) row.remove(); }, 300);
-        }
-        alert('Student successfully recovered back into the active ledger!');
-      } catch(e) {
-        console.error(e);
-        alert('Failed to recover student.');
-        btn.innerHTML = oldText; btn.disabled = false;
-      }
-    }
-
-    async function runStudentCodeMigration(btn) {
-      if (!confirm('This will assign a numeric Student Code (starting from 1000) to all students who currently do not have one. Proceed?')) return;
-      
-      const oldText = btn.innerHTML;
-      btn.innerHTML = 'Migrating...'; btn.disabled = true;
-      
-      try {
-        const students = DB.users.filter(u => u.role === 'student');
-        
-        // Find highest existing code just in case
-        const existingCodes = students.filter(s => s.studentCode).map(s => s.studentCode);
-        let nextCode = existingCodes.length > 0 ? Math.max(...existingCodes) + 1 : 1000;
-        
-        let batch = db.batch();
-        let ops = 0;
-        
-        for (let s of students) {
-          if (!s.studentCode) {
-            s.studentCode = nextCode++;
-            batch.update(db.collection('users').doc(s.id.toString()), { studentCode: s.studentCode });
-            ops++;
-            
-            if (ops >= 400) {
-               await batch.commit();
-               batch = db.batch();
-               ops = 0;
-            }
-          }
-        }
-        
-        if (ops > 0) {
-          await batch.commit();
-        }
-        
-        // Force sync locally
-        window.isUserLocalEdit = true;
-        setTimeout(() => window.isUserLocalEdit = false, 1000);
-        
-        alert(`Success! Assigned login codes to ${students.length - existingCodes.length} student(s).`);
-      } catch (e) {
-        console.error(e);
-        alert('Migration failed.');
-      } finally {
-        btn.innerHTML = oldText; btn.disabled = false;
-        renderControlCenter();
-        renderMembersList();
-      }
-    }
-    
     async function toggleExamSession(key) {
       if (!DB.examSessions) DB.examSessions = { quarterly: true, halfYearly: true, final: false, public: false };
       DB.examSessions[key] = !DB.examSessions[key];
