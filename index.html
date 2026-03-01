@@ -5738,10 +5738,12 @@ ${markSecHtml}
                 <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">${new Date(r.timestamp).toLocaleString()}</div>
                 <div style="font-weight:600;font-size:14px;margin-bottom:4px">${r.requesterName} <span class="badge badge-blue">${r.requesterRole}</span></div>
                 <div style="font-size:13px;color:var(--text);margin-bottom:10px;white-space:pre-wrap;">${r.text}</div>
+                ${r.adminComment ? `<div style="margin-bottom:10px;padding:8px;background:rgba(59,130,246,0.1);border-left:2px solid var(--blue);border-radius:4px;font-size:12px"><strong>Admin Reply:</strong> ${r.adminComment}</div>` : ''}
               </div>
               <div style="display:flex;gap:6px;flex-direction:column">
                 <button class="btn btn-primary" onclick="updateAdminRequestStatus('${r.id}', 'approved')" style="font-size:11px;padding:6px 12px;background:linear-gradient(135deg,#34d399,#059669);color:#fff;border:none">Approve</button>
                 <button class="btn btn-ghost" onclick="updateAdminRequestStatus('${r.id}', 'rejected')" style="font-size:11px;padding:6px 12px;color:#ef4444;border:1px solid rgba(239,68,68,0.3)">Reject</button>
+                <button class="btn btn-ghost" onclick="replyAdminRequest('${r.id}')" style="font-size:11px;padding:6px 12px;color:var(--blue);border:1px solid rgba(59,130,246,0.3)">Comment</button>
               </div>
             </div>
           `).join('');
@@ -5758,6 +5760,7 @@ ${markSecHtml}
                 <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">${new Date(r.timestamp).toLocaleString()}</div>
                 <div style="font-weight:600;font-size:14px;margin-bottom:4px">${r.requesterName} <span class="badge badge-blue">${r.requesterRole}</span></div>
                 <div style="font-size:13px;color:var(--text);margin-bottom:6px;white-space:pre-wrap;">${r.text}</div>
+                ${r.adminComment ? `<div style="margin-bottom:6px;padding:8px;background:rgba(59,130,246,0.1);border-left:2px solid var(--blue);border-radius:4px;font-size:12px"><strong>Admin Reply:</strong> ${r.adminComment}</div>` : ''}
                 <span class="badge ${r.status === 'approved' ? 'badge-green' : 'badge-red'}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span>
               </div>
             </div>
@@ -5786,6 +5789,7 @@ ${markSecHtml}
               <div style="flex:1">
                 <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">${new Date(r.timestamp).toLocaleString()}</div>
                 <div style="font-size:13px;color:var(--text);margin-bottom:8px;white-space:pre-wrap;">${r.text}</div>
+                ${r.adminComment ? `<div style="margin-bottom:8px;padding:8px;background:rgba(59,130,246,0.1);border-left:2px solid var(--blue);border-radius:4px;font-size:12px"><strong>Admin Reply:</strong> ${r.adminComment}</div>` : ''}
                 <span class="badge ${badgeColor}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span>
               </div>
             </div>
@@ -5836,6 +5840,16 @@ ${markSecHtml}
       } catch(e) {
         console.error(e);
         alert("Failed to update status.");
+      }
+    }
+
+    async function replyAdminRequest(reqId) {
+      const c = prompt("Enter your comment/reply for this request:");
+      if (!c) return;
+      try {
+        await db.collection('adminRequests').doc(reqId).update({ adminComment: c });
+      } catch(e) {
+        console.error(e); alert("Failed to add comment.");
       }
     }
 
