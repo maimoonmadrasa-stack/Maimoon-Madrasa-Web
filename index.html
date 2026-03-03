@@ -3280,7 +3280,9 @@ let DB = {
           cardsEl.innerHTML = `<div class="stat-card glass blue"><div class="stat-card-label">My Students</div><div class="stat-card-value" id="ovTchStu">${myS.length}</div></div>
     <div class="stat-card glass"><div class="stat-card-label">Active Quizzes</div><div class="stat-card-value" id="ovTchQz">${activeQz}</div></div>
     <div class="stat-card glass"><div class="stat-card-label">Announcements</div><div class="stat-card-value" id="ovTchAnn">${DB.announcements.length}</div></div>`;
-          panelEl.innerHTML = `<div class="panel glass"><div class="panel-header"><div class="panel-title">My Students</div></div><div id="ovTchTable"></div></div>`;
+          panelEl.innerHTML = `
+          <div class="panel glass"><div class="panel-header"><div class="panel-title">Class Performance (Total Marks %)</div></div><div id="ovTchClassStats"></div></div>
+          <div class="panel glass" style="margin-top:16px"><div class="panel-header"><div class="panel-title">Recent Announcements</div></div><div id="ovTchAnnList"></div></div>`;
         } else {
           try {
             document.getElementById('ovTchStu').textContent = myS.length;
@@ -3288,8 +3290,45 @@ let DB = {
             document.getElementById('ovTchAnn').textContent = DB.announcements.length;
           } catch(e){}
         }
-        const tblHtml = renderStudentTable(myS);
-        if (document.getElementById('ovTchTable') && document.getElementById('ovTchTable').innerHTML !== tblHtml) document.getElementById('ovTchTable').innerHTML = tblHtml;
+        
+        let classStatsHtml = '<div style="display:flex;flex-direction:column;gap:12px;padding:0 16px 16px">';
+        u.assignedClasses.forEach(cls => {
+          const classStudents = DB.users.filter(s => s.role === 'student' && s.standard === cls);
+          let totalClassObtained = 0;
+          let totalClassMax = 0;
+          
+          classStudents.forEach(s => {
+            const res = DB.results[s.id] || {};
+            // Gather all marks across all terms for this student
+            ['quarterly', 'halfYearly', 'final', 'public'].forEach(term => {
+              const termRes = res[term] || [];
+              const attendedSubjects = termRes.filter(r => !r.absent);
+              totalClassObtained += attendedSubjects.reduce((a, b) => a + (b.marks || 0), 0);
+              totalClassMax += attendedSubjects.reduce((a, b) => a + (b.max || 100), 0);
+            });
+          });
+          
+          const clsPct = totalClassMax ? Math.round((totalClassObtained / totalClassMax) * 100) : 0;
+          const barColor = clsPct >= 75 ? '#22c55e' : clsPct >= 50 ? '#eab308' : '#ef4444';
+          classStatsHtml += `
+            <div style="background:var(--surface);padding:12px;border-radius:var(--radius);border:1px solid var(--border);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <strong style="font-size:14px">Class ${cls}</strong>
+                <span style="font-size:16px;font-weight:700;color:${barColor}">${clsPct}%</span>
+              </div>
+              <div class="att-bar-track"><div class="att-bar-fill" style="width:${clsPct}%;background:${barColor}"></div></div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:6px;text-align:right">${totalClassObtained} / ${totalClassMax} Total Marks</div>
+            </div>`;
+        });
+        classStatsHtml += '</div>';
+        
+        if (document.getElementById('ovTchClassStats') && document.getElementById('ovTchClassStats').innerHTML !== classStatsHtml) {
+          document.getElementById('ovTchClassStats').innerHTML = classStatsHtml;
+          if(!u.assignedClasses.length) document.getElementById('ovTchClassStats').innerHTML = '<div class="info-strip" style="margin: 0px 16px 16px 16px">No classes assigned.</div>';
+        }
+        
+        const annHtml = [...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 5).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} · ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div>${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;margin-top:8px">` : ''}</div>`).join('');
+        if (document.getElementById('ovTchAnnList') && document.getElementById('ovTchAnnList').innerHTML !== annHtml) document.getElementById('ovTchAnnList').innerHTML = annHtml;
         
       } else {
         document.getElementById('overviewSub').textContent = 'Full system control';
