@@ -458,7 +458,7 @@
 
     .dash-section.active {
       display: block;
-      padding-bottom: 50px;
+      padding-bottom: 80px;
     }
 
     .dash-header {
@@ -4625,31 +4625,14 @@ ${markSecHtml}
     // ANNOUNCEMENTS
     let annImg = '';
     
-    function escapeHTML(str) {
-      if (!str) return '';
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    }
-
-    function parseSimpleMarkdown(text) {
-      if (!text) return '';
-      let parsed = escapeHTML(text);
-      // Bold **text**
-      parsed = parsed.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>');
-      // Italic *text*
-      parsed = parsed.replace(/\*([^\*]+)\*/g, '<em>$1</em>');
-      // Convert line breaks to <br>
-      parsed = parsed.replace(/\n/g, '<br>');
-      return parsed;
-    }
-    
     function getAnnHtml(a) {
       const u = DB.currentUser;
       const canPost = u.role === 'admin' || u.role === 'teacher';
       const canEdit = canPost && (u.role === 'admin' || a.author === u.name);
       return `<div class="announcement glass" style="position:relative; transition: all 0.3s ease" id="ann-${a.id}">
       <div class="announcement-meta">${a.date} · <strong>${a.author}</strong> · <span class="badge badge-blue" style="font-size:9px">${a.role}</span></div>
-      <div style="font-weight:600;margin-bottom:6px;font-size:14px" id="ann-title-${a.id}">${parseSimpleMarkdown(a.title)}</div>
-      <div class="announcement-text" id="ann-text-${a.id}">${parseSimpleMarkdown(a.text)}</div>
+      <div style="font-weight:600;margin-bottom:6px;font-size:14px" id="ann-title-${a.id}">${a.title}</div>
+      <div class="announcement-text" id="ann-text-${a.id}">${a.text}</div>
       ${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;">` : ''}
       ${canEdit ? `<div style="display:flex;gap:6px;margin-top:10px">
         <button class="icon-btn" onclick="openEditAnn(${a.id})" title="Edit"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
@@ -4662,11 +4645,8 @@ ${markSecHtml}
       const u = DB.currentUser; const el = document.getElementById('announcementsContent');
       const canPost = u.role === 'admin' || u.role === 'teacher';
       el.innerHTML = `${canPost ? `<div class="panel glass" style="margin-bottom:20px"><div class="panel-header"><div class="panel-title">Post Announcement</div></div>
-    <div class="form-group" style="margin-bottom: 8px"><label class="form-label">Message</label><textarea class="form-input" id="annText" rows="3" placeholder="Write your announcement..." style="resize:vertical;line-height:1.6"></textarea></div>
-    <div style="display:flex; gap: 8px; margin-bottom: 16px;">
-      <button class="btn btn-ghost" onclick="insertFormatting('annText', '**', '**')" style="padding: 4px 10px; font-weight: 800; font-family: sans-serif; height: 28px;">B</button>
-      <button class="btn btn-ghost" onclick="insertFormatting('annText', '*', '*')" style="padding: 4px 10px; font-style: italic; font-family: serif; height: 28px;">I</button>
-    </div>
+    <div class="form-group"><label class="form-label">Title</label><input type="text" class="form-input" id="annTitle" placeholder="Announcement title"></div>
+    <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="annText" rows="3" placeholder="Write your announcement..." style="resize:vertical;line-height:1.6"></textarea></div>
     <div class="form-group"><label class="form-label">Attach Image (optional)</label>
       <input type="file" id="annImgInput" accept="image/*" style="display:none" onchange="previewAnnImg(this)">
       <div style="display:flex;align-items:center;gap:10px">
@@ -4707,11 +4687,8 @@ ${markSecHtml}
       <div style="font-size:16px;font-weight:700">Edit Announcement</div>
       <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--surface);border:1px solid var(--border);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);">✕</button>
     </div>
-    <div class="form-group" style="margin-bottom: 8px"><label class="form-label">Message</label><textarea class="form-input" id="editAnnText" rows="4" style="resize:vertical;line-height:1.6">${a.text}</textarea></div>
-    <div style="display:flex; gap: 8px; margin-bottom: 16px;">
-      <button class="btn btn-ghost" onclick="insertFormatting('editAnnText', '**', '**')" style="padding: 4px 10px; font-weight: 800; font-family: sans-serif; height: 28px;">B</button>
-      <button class="btn btn-ghost" onclick="insertFormatting('editAnnText', '*', '*')" style="padding: 4px 10px; font-style: italic; font-family: serif; height: 28px;">I</button>
-    </div>
+    <div class="form-group"><label class="form-label">Title</label><input type="text" class="form-input" id="editAnnTitle" value="${a.title.replace(/"/g, '&quot;')}"></div>
+    <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="editAnnText" rows="4" style="resize:vertical;line-height:1.6">${a.text}</textarea></div>
     <div style="display:flex;gap:10px;margin-top:6px">
       <button class="btn btn-primary" onclick="saveEditAnn(${annId})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>Save</button>
       <button class="btn btn-ghost" onclick="this.closest('[style*=fixed]').remove()">Cancel</button>
