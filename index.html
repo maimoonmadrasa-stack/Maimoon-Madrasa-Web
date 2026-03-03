@@ -458,7 +458,7 @@
 
     .dash-section.active {
       display: block;
-      padding-bottom: 30px;
+      padding-bottom: 50px;
     }
 
     .dash-header {
@@ -1424,7 +1424,7 @@
       }
     }
 
-    @media(max-width:420px) {
+    @media(max-width:600px) {
 
       /* Dashboard topbar */
       #dash-brand-text {
@@ -4440,7 +4440,7 @@ ${markSecHtml}
 
       return `
       <div class="panel-header" style="margin-top:24px"><div class="panel-title">Top Rankers</div><span class="badge badge-yellow">${label}</span></div>
-      <div style="overflow-x:auto;padding-bottom:12px;margin:0 -12px;padding:0 12px;">
+      <div style="overflow-x:auto;padding-top:12px;padding-bottom:12px;margin:0 -12px;padding-left:12px;padding-right:12px;">
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;min-width:max-content;">
         ${ranked.map((s, i) => {
           const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
