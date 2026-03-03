@@ -8,6 +8,7 @@
   </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="240">
   <title>Maimoon Madrasa — Academic Portal</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Cinzel:wght@400;600;700;900&display=swap"
@@ -6033,7 +6034,10 @@ ${markSecHtml}
                 ${r.adminComment ? `<div style="margin-bottom:6px;padding:8px;background:var(--reply-bg);border-left:2px solid var(--blue);border-radius:4px;font-size:12px"><strong>Admin Reply:</strong> ${r.adminComment}</div>` : ''}
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
                   <span class="badge ${r.status === 'approved' ? 'badge-green' : 'badge-red'}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span>
-                  <button class="btn btn-ghost" onclick="deleteAdminRequest('${r.id}')" style="font-size:11px;padding:6px 12px;color:var(--text-muted);border:1px solid var(--border)">Delete</button>
+                  <div style="display:flex;gap:6px">
+                    <button class="icon-btn" onclick="updateAdminRequestStatus('${r.id}', 'pending')" title="Mark as Pending (Edit)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                    <button class="btn btn-ghost" onclick="deleteAdminRequest('${r.id}')" style="font-size:11px;padding:6px 12px;color:var(--text-muted);border:1px solid var(--border)">Delete</button>
+                  </div>
                 </div>
               </div>
             </div>
