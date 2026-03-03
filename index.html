@@ -4169,7 +4169,7 @@ ${markSecHtml}
       const res = (DB.results[sid] || {})[examType] || [];
       document.getElementById('editMarksSid').value = sid;
       document.getElementById('editMarksExamType').value = examType;
-      const lbl = examType === 'halfYearly' ? 'Half-Yearly' : examType === 'model' ? 'Model Exam' : examType === 'public' ? 'Public Exam' : examType.charAt(0).toUpperCase() + examType.slice(1);
+      const lbl = examType === 'halfYearly' ? 'Half-Yearly' : examType === 'public' ? 'Public Exam' : examType.charAt(0).toUpperCase() + examType.slice(1);
       document.getElementById('editMarksTitle').textContent = 'Edit Marks — ' + s.name;
       document.getElementById('editMarksSub').textContent = s.class + ' · ' + lbl;
       const sl = document.getElementById('editMarksSubjectList');
@@ -5127,7 +5127,9 @@ ${markSecHtml}
       
       const el = document.getElementById('examSubClsContent');
       const allSubs = DB.subjects[cls] || [];
-      const exams = [{ key: 'quarterly', label: '1st Term (Quarterly)' }, { key: 'halfYearly', label: '2nd Term (Half-Yearly)' }, { key: 'final', label: 'Final Exam' }, { key: 'model', label: 'Model Exam' }, { key: 'public', label: 'Public Exam' }];
+      const exams = [{ key: 'quarterly', label: '1st Term (Quarterly)' }, { key: 'halfYearly', label: '2nd Term (Half-Yearly)' }];
+      if (isPublicClass(cls)) exams.push({ key: 'public', label: 'Public Exam' });
+      else exams.push({ key: 'final', label: 'Final Exam' });
       
       if (!allSubs.length) {
          el.innerHTML = `<div class="info-strip">No subjects added by Admin for Class ${cls} yet.</div>`;
