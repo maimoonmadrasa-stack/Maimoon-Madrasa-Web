@@ -5996,6 +5996,7 @@ ${markSecHtml}
         if (pending.length === 0) {
           html += `<div style="padding:14px;color:var(--text-dim);text-align:center">No pending requests.</div>`;
         } else {
+          html += `<div style="max-height: 60vh; overflow-y: auto; padding-right: 6px;">`;
           html += pending.map(r => {
             const rUser = DB.users.find(u => u.id === r.requesterId);
             const rCodeText = (rUser && rUser.studentCode) ? `<span class="badge badge-yellow" style="margin-left:4px">Code: ${rUser.studentCode}</span>` : '';
@@ -6015,6 +6016,7 @@ ${markSecHtml}
             </div>
           `;
           }).join('');
+          html += `</div>`;
         }
         html += `</div>`;
         
@@ -6022,6 +6024,7 @@ ${markSecHtml}
         if (resolved.length === 0) {
           html += `<div style="padding:14px;color:var(--text-dim);text-align:center">No resolved requests yet.</div>`;
         } else {
+          html += `<div style="max-height: 60vh; overflow-y: auto; padding-right: 6px;">`;
           html += resolved.map(r => {
             const rUser = DB.users.find(u => u.id === r.requesterId);
             const rCodeText = (rUser && rUser.studentCode) ? `<span class="badge badge-yellow" style="margin-left:4px">Code: ${rUser.studentCode}</span>` : '';
@@ -6043,6 +6046,7 @@ ${markSecHtml}
             </div>
           `;
           }).join('');
+          html += `</div>`;
         }
         html += `</div>`;
         
