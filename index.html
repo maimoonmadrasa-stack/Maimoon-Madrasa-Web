@@ -5436,10 +5436,10 @@ ${markSecHtml}
       const q = (searchQ || document.getElementById('membersSearch')?.value || '').toLowerCase().trim();
       const allStudents = DB.users.filter(u => u.role === 'student');
       const allTeachers = DB.users.filter(u => u.role === 'teacher');
-      const students = q ? allStudents.filter(s => s.name.toLowerCase().includes(q) || s.username.toLowerCase().includes(q)) : allStudents;
-      const teachers = q ? allTeachers.filter(t => t.name.toLowerCase().includes(q) || t.username.toLowerCase().includes(q)) : allTeachers;
+      const students = q ? allStudents.filter(s => s.name.toLowerCase().includes(q) || s.username.toLowerCase().includes(q) || s.role.toLowerCase().includes(q) || (s.studentCode && s.studentCode.toString().includes(q))) : allStudents;
+      const teachers = q ? allTeachers.filter(t => t.name.toLowerCase().includes(q) || t.username.toLowerCase().includes(q) || t.role.toLowerCase().includes(q)) : allTeachers;
       let html = `<div style="margin-bottom:16px;position:relative;">
-    <input type="text" class="form-input" id="membersSearch" placeholder="Search students or usthas by name..." value="${q}" oninput="renderMembersList()" style="padding-left:40px;">
+    <input type="text" class="form-input" id="membersSearch" placeholder="Search by name, code, username, or role..." value="${q}" oninput="renderMembersList()" style="padding-left:40px;">
     <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   </div>`;
       if (q) {
