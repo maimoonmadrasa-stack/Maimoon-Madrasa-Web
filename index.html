@@ -2819,8 +2819,7 @@ let DB = {
       const absent = days.filter(d => d.status === 'A').length;
       return { present, absent, total: present + absent };
     }
-    function isPublicClass(std) { return [6, 8, 10].includes(std); }
-
+    function isPublicClass(std) { return [5, 7, 10].includes(std || Number(std)); }
     // THEME
     let isDark = true;
     function toggleTheme() {
