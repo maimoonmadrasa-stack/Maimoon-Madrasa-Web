@@ -2585,6 +2585,7 @@
         </div>
         <div class="sidebar-section" id="socialsNav">
           <div class="sidebar-label">Socials</div>
+          <div class="sidebar-item" id="navUsthaMyStudents" style="display:none;" onclick="showSection('mystudents',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>My Students</div>
           <div class="sidebar-item" onclick="showSection('announcements',this)"><svg viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3z" />
@@ -2735,6 +2736,13 @@
             <p class="dash-sub" id="requestsSub">Send feedback, query, or report issues directly to admins.</p>
           </div>
           <div id="requestsContent"></div>
+        </div>
+        <div class="dash-section" id="section-mystudents">
+          <div class="dash-header">
+            <h2 class="dash-title">My Students</h2>
+            <p class="dash-sub">View students enrolled in your assigned classes.</p>
+          </div>
+          <div id="mystudentsContent"></div>
         </div>
       </main>
     </div>
@@ -3040,6 +3048,9 @@ let DB = {
         const navAdminReqs = document.getElementById('navAdminRequests');
         if (navAdminReqs) navAdminReqs.style.display = u.role === 'admin' ? 'flex' : 'none';
         
+        const navUsthaMyStudents = document.getElementById('navUsthaMyStudents');
+        if (navUsthaMyStudents) navUsthaMyStudents.style.display = u.role === 'teacher' ? 'flex' : 'none';
+        
         const navExmSubjs = document.getElementById('navTeacherExamSubjects');
         if (navExmSubjs) navExmSubjs.style.display = u.role === 'teacher' ? 'flex' : 'none';
         
@@ -3156,6 +3167,7 @@ let DB = {
       else if (sid === 'examsubjects') renderExamSubjects();
       else if (sid === 'analytics') renderAnalytics();
       else if (sid === 'members') renderMembersList();
+      else if (sid === 'mystudents') renderMyStudents();
       else if (sid === 'controlcenter') renderControlCenter();
       else if (sid === 'archives') renderArchives();
       else if (sid === 'requests') renderRequests();
@@ -5464,7 +5476,7 @@ ${markSecHtml}
             const badge = m.gender === 'male' ? 'badge-blue' : 'badge-yellow';
             return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
           <div class="avatar" style="width:30px;height:30px;font-size:12px;background:${bg}">${m.name.charAt(0)}</div>
-          <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name} ${m.studentCode ? `<span class="badge badge-code" style="margin-left:6px;font-size:10px">Code: ${m.studentCode}</span>` : ''}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} · ${m.class}</div></div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name} ${(m.studentCode && DB.currentUser.role === 'admin') ? `<span class="badge badge-code" style="margin-left:6px;font-size:10px">Code: ${m.studentCode}</span>` : ''}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} · Class ${m.standard}</div></div>
           <span class="badge ${badge}" style="font-size:10px">${m.gender === 'male' ? 'Male' : 'Female'}</span>
         </div>`;
           }).join('');
@@ -5499,6 +5511,55 @@ ${markSecHtml}
       // re-focus search if user was typing
       if (q) { const si = document.getElementById('membersSearch'); if (si) { si.focus(); si.setSelectionRange(si.value.length, si.value.length); } }
     }
+
+    // MY STUDENTS LIST (Usthas only)
+    function renderMyStudents(searchQ) {
+      const el = document.getElementById('mystudentsContent'); if (!el) return;
+      const u = DB.currentUser;
+      const ac = u.assignedClasses || [];
+      if (!ac.length) { el.innerHTML = '<div class="info-strip">You have no assigned classes so you cannot view any students right now.</div>'; return; }
+      const q = (searchQ || document.getElementById('myStudentsSearch')?.value || '').toLowerCase().trim();
+      
+      const allStudents = DB.users.filter(usr => usr.role === 'student' && ac.includes(usr.standard));
+      const students = q ? allStudents.filter(s => s.name.toLowerCase().includes(q) || s.username.toLowerCase().includes(q)) : allStudents;
+      
+      let html = `<div style="margin-bottom:16px;position:relative;">
+    <input type="text" class="form-input" id="myStudentsSearch" placeholder="Search my students by name or username..." value="${q}" oninput="renderMyStudents()" style="padding-left:40px;">
+    <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </div>`;
+
+      if (q) {
+        if (!students.length) {
+          html += '<div class="empty glass" style="border-radius:var(--radius-lg);padding:30px;text-align:center;color:var(--text-muted);font-size:13px;">No students found matching "' + q + '"</div>';
+        } else {
+          html += `<div class="panel glass"><div class="panel-header"><div class="panel-title">Search Results</div><span class="badge badge-blue">${students.length} found</span></div>`;
+          html += students.map(m => {
+            const bg = m.gender === 'male' ? 'linear-gradient(135deg,#3b82f6,#1d4ed8)' : 'linear-gradient(135deg,#ec4899,#be185d)';
+            const badge = m.gender === 'male' ? 'badge-blue' : 'badge-yellow';
+            return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
+          <div class="avatar" style="width:30px;height:30px;font-size:12px;background:${bg}">${m.name.charAt(0)}</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600">${m.name}</div><div style="font-size:11px;color:var(--text-muted)">@${m.username} · Class ${m.standard}</div></div>
+          <span class="badge ${badge}" style="font-size:10px">${m.gender === 'male' ? 'Male' : 'Female'}</span>
+        </div>`;
+          }).join('');
+          html += `</div>`;
+        }
+      } else {
+        ac.forEach(cls => {
+          const cs = allStudents.filter(s => s.standard === cls);
+          html += `<button class="class-label-btn" onclick="toggleMemberClass('my-${cls}',this)">
+        <span>Class ${cls}</span>
+        <div style="display:flex;align-items:center;gap:8px"><span class="badge badge-blue">${cs.length} student${cs.length !== 1 ? 's' : ''}</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="class-content" id="mc-my-${cls}">
+        ${cs.length ? renderMemberCards(cs) : '<div style="text-align:center;padding:14px;color:var(--text-dim);font-size:12px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;">No students enrolled in this class yet.</div>'}
+      </div>`;
+        });
+      }
+      el.innerHTML = html;
+      if (q) { const si = document.getElementById('myStudentsSearch'); if (si) { si.focus(); si.setSelectionRange(si.value.length, si.value.length); } }
+    }
+
     function renderMemberCards(students) {
       const boys = students.filter(s => s.gender === 'male');
       const girls = students.filter(s => s.gender === 'female');
@@ -5507,7 +5568,7 @@ ${markSecHtml}
         html += `<div style="font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--blue-light);text-transform:uppercase;padding:6px 0 4px">Boys (${boys.length})</div>`;
         html += boys.map(s => `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
       <div class="avatar" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,#3b82f6,#1d4ed8)">${s.name.charAt(0)}</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">${s.name} ${s.studentCode ? `<span class="badge badge-code" style="margin-left:6px;font-size:10px">Code: ${s.studentCode}</span>` : ''}</div><div style="font-size:11px;color:var(--text-muted)">@${s.username}</div></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${s.name} ${(s.studentCode && DB.currentUser.role === 'admin') ? `<span class="badge badge-code" style="margin-left:6px;font-size:10px">Code: ${s.studentCode}</span>` : ''}</div><div style="font-size:11px;color:var(--text-muted)">@${s.username}</div></div>
       <span class="badge badge-blue" style="font-size:10px">Male</span>
     </div>`).join('');
       }
@@ -5515,7 +5576,7 @@ ${markSecHtml}
         html += `<div style="font-size:10px;font-weight:600;letter-spacing:.08em;color:#f9a8d4;text-transform:uppercase;padding:6px 0 4px">Girls (${girls.length})</div>`;
         html += girls.map(s => `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);margin-bottom:6px;">
       <div class="avatar" style="width:30px;height:30px;font-size:12px;background:linear-gradient(135deg,#ec4899,#be185d)">${s.name.charAt(0)}</div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600">${s.name} ${s.studentCode ? `<span class="badge badge-code" style="margin-left:6px;font-size:10px">Code: ${s.studentCode}</span>` : ''}</div><div style="font-size:11px;color:var(--text-muted)">@${s.username}</div></div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${s.name} ${(s.studentCode && DB.currentUser.role === 'admin') ? `<span class="badge badge-code" style="margin-left:6px;font-size:10px">Code: ${s.studentCode}</span>` : ''}</div><div style="font-size:11px;color:var(--text-muted)">@${s.username}</div></div>
       <span class="badge badge-yellow" style="font-size:10px">Female</span>
     </div>`).join('');
       }
