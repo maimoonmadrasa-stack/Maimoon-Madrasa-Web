@@ -2820,6 +2820,34 @@
     </div>
   </div>
 
+  <!-- EDIT ADMIN REQUEST MODAL -->
+  <div class="modal-overlay" id="editAdminReqModal">
+    <div class="modal glass-strong">
+      <button class="modal-close" onclick="closeEditAdminReq()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg></button>
+      <div class="modal-title">Edit Request</div>
+      <div class="modal-sub">Update status or reply comment for this request.</div>
+      <input type="hidden" id="earId">
+      
+      <div class="form-group" style="margin-top:16px"><label class="form-label">Status</label>
+        <select class="form-select" id="earStatus">
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+          <option value="pending">Pending</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Comment / Reply</label>
+        <textarea class="form-input" id="earComment" rows="3" placeholder="Leave an optional comment for the user..."></textarea>
+      </div>
+      
+      <button class="btn btn-primary" onclick="saveEditAdminReq()"
+        style="width:100%;justify-content:center;margin-top:8px;">Save Changes</button>
+    </div>
+  </div>
+
   <script>
 let DB = {
   currentUser: null,
@@ -4311,6 +4339,38 @@ ${markSecHtml}
       }
     }
     function closeEditMarks() { document.getElementById('editMarksModal').classList.remove('open'); }
+
+    // EDIT ADMIN REQUEST MODAL ACTIONS
+    function openEditAdminReq(reqId) {
+      const r = DB.adminRequests.find(req => req.id === reqId);
+      if(!r) return;
+      document.getElementById('earId').value = r.id;
+      document.getElementById('earStatus').value = r.status;
+      document.getElementById('earComment').value = r.adminComment || '';
+      document.getElementById('editAdminReqModal').classList.add('open');
+    }
+    function closeEditAdminReq() { document.getElementById('editAdminReqModal').classList.remove('open'); }
+    async function saveEditAdminReq() {
+      const id = document.getElementById('earId').value;
+      const st = document.getElementById('earStatus').value;
+      const c = document.getElementById('earComment').value.trim();
+      
+      const btn = document.querySelector('#editAdminReqModal .btn-primary');
+      if(btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+      
+      try {
+        await db.collection('adminRequests').doc(id).update({
+          status: st,
+          adminComment: c
+        });
+        closeEditAdminReq();
+      } catch(e) {
+        console.error("Save Edit Admin Req Error:", e);
+        alert("Failed to update request.");
+      } finally {
+        if(btn) { btn.disabled = false; btn.textContent = 'Save Changes'; }
+      }
+    }
 
     // QUIZ
     let quizBuilderQuestions = [];
@@ -5996,7 +6056,7 @@ ${markSecHtml}
         if (pending.length === 0) {
           html += `<div style="padding:14px;color:var(--text-dim);text-align:center">No pending requests.</div>`;
         } else {
-          html += `<div style="max-height: 60vh; overflow-y: auto; padding-right: 6px;">`;
+          html += `<div style="max-height: 180vh; overflow-y: auto; padding-right: 6px;">`;
           html += pending.map(r => {
             const rUser = DB.users.find(u => u.id === r.requesterId);
             const rCodeText = (rUser && rUser.studentCode) ? `<span class="badge badge-yellow" style="margin-left:4px">Code: ${rUser.studentCode}</span>` : '';
@@ -6024,7 +6084,7 @@ ${markSecHtml}
         if (resolved.length === 0) {
           html += `<div style="padding:14px;color:var(--text-dim);text-align:center">No resolved requests yet.</div>`;
         } else {
-          html += `<div style="max-height: 60vh; overflow-y: auto; padding-right: 6px;">`;
+          html += `<div style="max-height: 180vh; overflow-y: auto; padding-right: 6px;">`;
           html += resolved.map(r => {
             const rUser = DB.users.find(u => u.id === r.requesterId);
             const rCodeText = (rUser && rUser.studentCode) ? `<span class="badge badge-yellow" style="margin-left:4px">Code: ${rUser.studentCode}</span>` : '';
@@ -6038,7 +6098,7 @@ ${markSecHtml}
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
                   <span class="badge ${r.status === 'approved' ? 'badge-green' : 'badge-red'}">${r.status.charAt(0).toUpperCase() + r.status.slice(1)}</span>
                   <div style="display:flex;gap:6px">
-                    <button class="icon-btn" onclick="updateAdminRequestStatus('${r.id}', 'pending')" title="Mark as Pending (Edit)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+                    <button class="icon-btn" onclick="openEditAdminReq('${r.id}')" title="Edit Request"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
                     <button class="btn btn-ghost" onclick="deleteAdminRequest('${r.id}')" style="font-size:11px;padding:6px 12px;color:var(--text-muted);border:1px solid var(--border)">Delete</button>
                   </div>
                 </div>
