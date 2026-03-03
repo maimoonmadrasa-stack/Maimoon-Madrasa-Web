@@ -3257,7 +3257,7 @@ let DB = {
           } catch(e){}
         }
         
-        const annHtml = [...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 2).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} · ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div>${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;margin-top:8px">` : ''}</div>`).join('');
+        const annHtml = [...DB.announcements].sort((a,b)=>b.id-a.id).slice(0, 5).map(a => `<div class="announcement glass"><div class="announcement-meta">${a.date} · ${a.author}</div><strong style="display:block;margin-bottom:4px;font-size:13px">${a.title}</strong><div class="announcement-text">${a.text}</div>${a.image ? `<img src="${a.image}" class="announcement-img" alt="" onclick="previewImage('${a.image}')" style="cursor:zoom-in;margin-top:8px">` : ''}</div>`).join('');
         if (document.getElementById('ovAnnList') && document.getElementById('ovAnnList').innerHTML !== annHtml) document.getElementById('ovAnnList').innerHTML = annHtml;
         
         window.currentOverviewRankTab = latestPublishedTerm;
