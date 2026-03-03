@@ -3049,6 +3049,7 @@ let DB = {
         renderOverview(); renderAttendance(); renderResults(); renderQuiz(); renderAnnouncements(); renderRequests();
         if (u.role === 'admin') { renderUsers(); renderSubjects(); renderAnalytics(); renderMembersList(); renderControlCenter(); }
         if (u.role === 'admin' || u.role === 'teacher') renderArchives();
+        if (u.role === 'teacher') renderExamSubjects();
         
       } catch (e) {
         console.error("Error fetching data:", e);
@@ -3147,6 +3148,7 @@ let DB = {
         if (!document.getElementById('nuName')?.value && !document.getElementById('usersSearch')?.value) renderUsers();
       }
       else if (sid === 'subjects') renderSubjects();
+      else if (sid === 'examsubjects') renderExamSubjects();
       else if (sid === 'analytics') renderAnalytics();
       else if (sid === 'members') renderMembersList();
       else if (sid === 'controlcenter') renderControlCenter();
