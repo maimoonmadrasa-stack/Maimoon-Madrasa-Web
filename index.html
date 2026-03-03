@@ -5995,11 +5995,14 @@ ${markSecHtml}
         if (pending.length === 0) {
           html += `<div style="padding:14px;color:var(--text-dim);text-align:center">No pending requests.</div>`;
         } else {
-          html += pending.map(r => `
+          html += pending.map(r => {
+            const rUser = DB.users.find(u => u.id === r.requesterId);
+            const rCodeText = (rUser && rUser.studentCode) ? `<span class="badge badge-yellow" style="margin-left:4px">Code: ${rUser.studentCode}</span>` : '';
+            return `
             <div class="user-row" style="margin-bottom:10px;background:var(--surface);border:1px solid var(--border);border-left:3px solid #f59e0b;padding:12px 14px;border-radius:var(--radius-sm);align-items:flex-start">
               <div style="flex:1">
                 <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">${new Date(r.timestamp).toLocaleString()}</div>
-                <div style="font-weight:600;font-size:14px;margin-bottom:4px">${r.requesterName} <span class="badge badge-blue">${r.requesterRole}</span></div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">${r.requesterName} <span class="badge badge-blue">${r.requesterRole}</span>${rCodeText}</div>
                 <div style="font-size:13px;color:var(--text);margin-bottom:10px;white-space:pre-wrap;">${r.text}</div>
                 ${r.adminComment ? `<div style="margin-bottom:10px;padding:8px;background:var(--reply-bg);border-left:2px solid var(--blue);border-radius:4px;font-size:12px"><strong>Admin Reply:</strong> ${r.adminComment}</div>` : ''}
               </div>
@@ -6009,7 +6012,8 @@ ${markSecHtml}
                 <button class="btn btn-ghost" onclick="replyAdminRequest('${r.id}')" style="font-size:11px;padding:6px 12px;color:var(--blue);border:1px solid rgba(59,130,246,0.3)">Comment</button>
               </div>
             </div>
-          `).join('');
+          `;
+          }).join('');
         }
         html += `</div>`;
         
@@ -6017,11 +6021,14 @@ ${markSecHtml}
         if (resolved.length === 0) {
           html += `<div style="padding:14px;color:var(--text-dim);text-align:center">No resolved requests yet.</div>`;
         } else {
-          html += resolved.map(r => `
+          html += resolved.map(r => {
+            const rUser = DB.users.find(u => u.id === r.requesterId);
+            const rCodeText = (rUser && rUser.studentCode) ? `<span class="badge badge-yellow" style="margin-left:4px">Code: ${rUser.studentCode}</span>` : '';
+            return `
             <div class="user-row" style="margin-bottom:10px;background:var(--surface);border:1px solid var(--border);border-left:3px solid ${r.status === 'approved' ? '#10b981' : '#ef4444'};padding:12px 14px;border-radius:var(--radius-sm);align-items:flex-start">
               <div style="flex:1">
                 <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">${new Date(r.timestamp).toLocaleString()}</div>
-                <div style="font-weight:600;font-size:14px;margin-bottom:4px">${r.requesterName} <span class="badge badge-blue">${r.requesterRole}</span></div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px">${r.requesterName} <span class="badge badge-blue">${r.requesterRole}</span>${rCodeText}</div>
                 <div style="font-size:13px;color:var(--text);margin-bottom:6px;white-space:pre-wrap;">${r.text}</div>
                 ${r.adminComment ? `<div style="margin-bottom:6px;padding:8px;background:var(--reply-bg);border-left:2px solid var(--blue);border-radius:4px;font-size:12px"><strong>Admin Reply:</strong> ${r.adminComment}</div>` : ''}
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
@@ -6030,7 +6037,8 @@ ${markSecHtml}
                 </div>
               </div>
             </div>
-          `).join('');
+          `;
+          }).join('');
         }
         html += `</div>`;
         
