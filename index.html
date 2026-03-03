@@ -1463,6 +1463,7 @@
       .table-wrap {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        max-width: calc(100vw - 48px);
       }
 
       /* Tabs */
@@ -4127,7 +4128,7 @@ ${markSecHtml}
     <div class="user-actions">
       ${teacherEditMode && isOpen ? `
       <span class="badge ${hasM ? 'badge-green' : 'badge-yellow'}">${hasM ? 'Entered' : 'Pending'}</span>
-      <button class="btn btn-ghost" onclick="openEditMarks(${s.id},'${examType}')" style="padding:6px 14px;font-size:11px;">
+      <button class="btn btn-ghost" id="editMarksBtn-${s.id}-${examType}" onclick="openEditMarks(${s.id},'${examType}')" style="padding:6px 14px;font-size:11px;">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         Edit Marks
       </button>` : `
@@ -4244,14 +4245,12 @@ ${markSecHtml}
           { merge: true }
         );
         closeEditMarks(); 
-        // Refresh the list for the current class instead of going back to class selection
-        if (DB.currentUser.role === 'teacher' && resultSelectedCls) {
-          loadResultClass(resultSelectedCls);
-        } else if (DB.currentUser.role === 'admin' && resultSelectedCls) {
-          loadAdminResultClass(resultSelectedCls);
-        } else {
-          renderResults();
-        }
+        document.getElementById(`editMarksBtn-${sid}-${examType}`).closest('.user-actions').innerHTML = `
+          <span class="badge badge-green">Entered</span>
+          <button class="btn btn-ghost" id="editMarksBtn-${sid}-${examType}" onclick="openEditMarks(${sid},'${examType}')" style="padding:6px 14px;font-size:11px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit Marks
+          </button>`;
       } catch(e) {
         console.error("Error saving marks to database:", e);
         alert("Failed to save marks. Check database connection.");
