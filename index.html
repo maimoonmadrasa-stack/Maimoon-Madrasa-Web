@@ -5553,7 +5553,7 @@ ${markSecHtml}
             <div style="font-size:11px;color:var(--text-dim);margin-top:8px">Your password is securely stored encrypted on our servers. Click the eye icon to verify it natively.</div>
           </div>
         </div>
-      \`;
+      `;
       el.innerHTML = html;
     }
 
@@ -5751,9 +5751,9 @@ ${markSecHtml}
         students.forEach(s => {
           const newStd = s.standard + 1;
           const ref = db.collection('users').doc(s.id.toString());
-          batch.update(ref, { standard: newStd, class: `Standard ${newStd}` });
+          batch.update(ref, { standard: newStd, 'class': `Standard ${newStd}` });
           s.standard = newStd;
-          s.class = `Standard ${newStd}`;
+          s['class'] = `Standard ${newStd}`;
         });
         await batch.commit();
         alert('Successfully upgraded all students by 1 class.');
@@ -5787,9 +5787,9 @@ ${markSecHtml}
           let newStd = s.standard - 1;
           if (newStd < 1) newStd = 1; // Prevent going below 1
           const ref = db.collection('users').doc(s.id.toString());
-          batch.update(ref, { standard: newStd, class: `Standard ${newStd}` });
+          batch.update(ref, { standard: newStd, 'class': `Standard ${newStd}` });
           s.standard = newStd;
-          s.class = `Standard ${newStd}`;
+          s['class'] = `Standard ${newStd}`;
         });
         await batch.commit();
         alert('Successfully degraded all students by 1 class.');
